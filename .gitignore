@@ -1,30 +1,120 @@
+# ============================================
+# Laravel 12 - Git Ignore
+# ============================================
+
+# ============================================
+# Dependencias
+# ============================================
 /vendor/
 node_modules/
 npm-debug.log
 yarn-error.log
+yarn.lock
+package-lock.json
 
-# Laravel 4 specific
-bootstrap/compiled.php
-app/storage/
-
-# Laravel 5 & Lumen specific
-public/storage
-public/hot
-
-# Laravel 5 & Lumen specific with changed public path
-public_html/storage
-public_html/hot
-
-storage/*.key
+# ============================================
+# Archivos de Entorno
+# ============================================
 .env
+.env.backup
+.env.production
+.env.local
+.env.*.local
+!.env.example
+!.env.local.example
+!.env.production.example
+
+# ============================================
+# Laravel Storage y Cache
+# ============================================
+/storage/*.key
+/storage/app/*
+!/storage/app/.gitkeep
+!/storage/app/public/.gitkeep
+!/storage/app/private/.gitkeep
+/storage/framework/cache/*
+!/storage/framework/cache/.gitkeep
+/storage/framework/sessions/*
+!/storage/framework/sessions/.gitkeep
+/storage/framework/testing/*
+!/storage/framework/testing/.gitkeep
+/storage/framework/views/*
+!/storage/framework/views/.gitkeep
+/storage/logs/*
+!/storage/logs/.gitkeep
+/storage/pail
+
+# ============================================
+# Build y Assets
+# ============================================
+/public/build
+/public/hot
+/public/storage
+/public_html/storage
+/public_html/hot
+
+# ============================================
+# Bootstrap
+# ============================================
+/bootstrap/compiled.php
+/bootstrap/cache/*
+!/bootstrap/cache/.gitkeep
+
+# ============================================
+# Testing
+# ============================================
+.phpunit.result.cache
+/coverage
+/.phpunit.cache
+
+# ============================================
+# IDE y Editores
+# ============================================
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+.phpactor.json
+
+# ============================================
+# Laravel Sail / Docker
+# ============================================
 Homestead.yaml
 Homestead.json
 /.vagrant
-.phpunit.result.cache
+docker-compose.override.yml
 
-/public/build
-/storage/pail
-.env.backup
-.env.production
-.phpactor.json
+# ============================================
+# Composer
+# ============================================
 auth.json
+composer.phar
+
+# ============================================
+# Base de Datos
+# ============================================
+*.sqlite
+*.sqlite-journal
+*.db
+
+# ============================================
+# Archivos Temporales
+# ============================================
+*.log
+*.tmp
+*.temp
+.cache/
+
+# ============================================
+# Archivos del Sistema
+# ============================================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Desktop.ini
