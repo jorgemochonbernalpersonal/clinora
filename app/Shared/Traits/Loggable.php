@@ -109,9 +109,17 @@ trait Loggable
      */
     protected function enrichContext(array $context = [], ?\Throwable $exception = null, array $additional = []): array
     {
+        try {
+            $userId = Auth::check() ? Auth::id() : null;
+            $userEmail = Auth::check() ? Auth::user()?->email : null;
+        } catch (\Exception $e) {
+            $userId = null;
+            $userEmail = null;
+        }
+
         $enriched = array_merge([
-            'user_id' => Auth::id(),
-            'user_email' => Auth::user()?->email,
+            'user_id' => $userId,
+            'user_email' => $userEmail,
             'timestamp' => now()->toIso8601String(),
             'environment' => config('app.env'),
         ], $additional, $context);
