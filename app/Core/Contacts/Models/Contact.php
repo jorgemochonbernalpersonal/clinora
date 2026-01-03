@@ -53,6 +53,9 @@ class Contact extends Model
         'current_medication',
         'insurance_company',
         'insurance_policy_number',
+        'referral_source',
+        'data_protection_consent',
+        'data_protection_consent_at',
         'notes',
         'tags',
         'profile_photo_path',
@@ -67,7 +70,9 @@ class Contact extends Model
         'first_appointment_date' => 'date',
         'tags' => 'array',
         'is_active' => 'boolean',
+        'data_protection_consent' => 'boolean',
         'archived_at' => 'datetime',
+        'data_protection_consent_at' => 'datetime',
     ];
 
     protected $appends = [

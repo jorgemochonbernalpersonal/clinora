@@ -51,6 +51,10 @@ class PatientForm extends Component
     // Notas
     public $notes;
     
+    // Marketing / Legal
+    public $referral_source;
+    public $data_protection_consent = false;
+    
     // File Upload
     public $photo;
 
@@ -98,6 +102,10 @@ class PatientForm extends Component
             
             // Notas
             'notes' => 'nullable|string',
+            
+            // Marketing / Legal
+            'referral_source' => 'nullable|string|max:255',
+            'data_protection_consent' => 'accepted',
             'photo' => 'nullable|image|max:1024', // 1MB Max
         ];
     }
@@ -122,7 +130,8 @@ class PatientForm extends Component
             'initial_consultation_reason', 'first_appointment_date',
             'medical_history', 'psychiatric_history', 'current_medication',
             'insurance_company', 'insurance_policy_number',
-            'notes'
+            'insurance_company', 'insurance_policy_number',
+            'notes', 'referral_source', 'data_protection_consent'
         ]);
         $this->gender = 'other';
         $this->address_country = 'España';
@@ -164,7 +173,10 @@ class PatientForm extends Component
         $this->current_medication = $patient->current_medication;
         $this->insurance_company = $patient->insurance_company;
         $this->insurance_policy_number = $patient->insurance_policy_number;
+        $this->insurance_policy_number = $patient->insurance_policy_number;
         $this->notes = $patient->notes;
+        $this->referral_source = $patient->referral_source;
+        $this->data_protection_consent = $patient->data_protection_consent;
     }
 
     public function save()
@@ -178,6 +190,15 @@ class PatientForm extends Component
 
         // Remove photo from validated array as it's not a column
         unset($validated['photo']);
+
+        // Handle GDPR Timestamp
+        if ($this->data_protection_consent) {
+             // If creating or if consent was not previously given
+             if (!$this->isEditing || !$this->patient->data_protection_consent) {
+                 $validated['data_protection_consent_at'] = now();
+             }
+             $validated['data_protection_consent'] = true;
+        }
 
         if ($this->isEditing) {
             $this->patient->update($validated);

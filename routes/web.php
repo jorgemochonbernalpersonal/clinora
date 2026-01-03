@@ -34,7 +34,7 @@ Route::post('/logout', function() {
 
 // Dashboard routes (protected)
 Route::middleware(['auth', 'verified'])->prefix('dashboard')->group(function () {
-    Route::get('/', fn() => view('dashboard.home'))->name('dashboard');
+    Route::get('/', \App\Livewire\DashboardHome::class)->name('dashboard');
     
     // Patients
     Route::get('/patients', \App\Livewire\Patients\PatientList::class)->name('patients.index');
