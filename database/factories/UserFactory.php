@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -24,10 +25,16 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
-            'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
+            'first_name' => fake()->firstName(),
+            'last_name' => fake()->lastName(),
+            'phone' => fake()->phoneNumber(),
+            'user_type' => 'professional',
+            'email_verified_at' => now(),
+            'is_active' => true,
+            'language' => 'es',
+            'timezone' => 'Europe/Madrid',
             'remember_token' => Str::random(10),
         ];
     }
@@ -39,6 +46,26 @@ class UserFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'email_verified_at' => null,
+        ]);
+    }
+
+    /**
+     * Create a professional user
+     */
+    public function professional(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'user_type' => 'professional',
+        ]);
+    }
+
+    /**
+     * Create an admin user
+     */
+    public function admin(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'user_type' => 'admin',
         ]);
     }
 }

@@ -1,4 +1,4 @@
-# MediPro365 - Arquitectura Laravel 12
+# Clinora - Arquitectura Laravel 12
 
 ## 📋 Índice
 
@@ -22,7 +22,7 @@
 ## 🎯 Visión General
 
 ### Propósito
-MediPro365 es una plataforma SaaS multi-profesional construida con **Laravel 12** y **MySQL**, diseñada con arquitectura modular para facilitar la expansión a múltiples profesiones de salud y bienestar.
+Clinora es una plataforma SaaS multi-profesional construida con **Laravel 12** y **MySQL**, diseñada con arquitectura modular para facilitar la expansión a múltiples profesiones de salud y bienestar.
 
 ### Principios Arquitectónicos
 - **Modularidad**: Separación clara entre Core y Módulos específicos

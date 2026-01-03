@@ -1,2 +1,32 @@
 User-agent: *
-Disallow:
+Allow: /
+
+# Disallow private areas
+Disallow: /dashboard/
+Disallow: /api/
+Disallow: /admin/
+Disallow: /login
+Disallow: /register
+Disallow: /2fa/
+Disallow: /email/verify
+Disallow: /logout
+
+# Allow public assets
+Allow: /css/
+Allow: /js/
+Allow: /images/
+Allow: /build/
+Allow: /storage/
+
+# Sitemaps
+Sitemap: https://clinora.com/sitemap.xml
+
+# Crawl-delay for respectful crawling
+Crawl-delay: 1
+
+# User-agent specific rules
+User-agent: Googlebot
+Crawl-delay: 0
+
+User-agent: Bingbot
+Crawl-delay: 1

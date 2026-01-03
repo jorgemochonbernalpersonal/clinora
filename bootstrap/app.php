@@ -11,8 +11,43 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        // Register middleware aliases
+        $middleware->alias([
+            'can.view.logs' => \App\Http\Middleware\CanViewSystemLogs::class,
+            'verified' => \App\Http\Middleware\EnsureEmailIsVerified::class,
+        ]);
+        
+        // Register request logging middleware (optional - can be enabled per route group)
+        // $middleware->web(append: [
+        //     \App\Http\Middleware\LogRequests::class,
+        // ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        //
+        // Log all exceptions
+        $exceptions->report(function (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error('Unhandled exception', [
+                'message' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+                'user_id' => auth()->id(),
+                'request_url' => request()?->fullUrl(),
+                'request_method' => request()?->method(),
+            ]);
+        });
+
+        // Render exceptions for API requests
+        $exceptions->render(function (\Throwable $e, $request) {
+            if ($request->expectsJson() || $request->is('api/*')) {
+                return response()->json([
+                    'success' => false,
+                    'message' => config('app.debug') ? $e->getMessage() : 'Error del servidor',
+                    'error' => config('app.debug') ? [
+                        'message' => $e->getMessage(),
+                        'file' => $e->getFile(),
+                        'line' => $e->getLine(),
+                    ] : null,
+                ], $e->getCode() >= 400 && $e->getCode() < 600 ? $e->getCode() : 500);
+            }
+        });
     })->create();
