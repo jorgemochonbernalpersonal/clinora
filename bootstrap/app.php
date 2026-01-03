@@ -25,12 +25,18 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withExceptions(function (Exceptions $exceptions): void {
         // Log all exceptions
         $exceptions->report(function (\Throwable $e) {
+            try {
+                $userId = auth()->check() ? auth()->id() : null;
+            } catch (\Exception $authException) {
+                $userId = null;
+            }
+
             \Illuminate\Support\Facades\Log::error('Unhandled exception', [
                 'message' => $e->getMessage(),
                 'file' => $e->getFile(),
                 'line' => $e->getLine(),
                 'trace' => $e->getTraceAsString(),
-                'user_id' => auth()->id(),
+                'user_id' => $userId,
                 'request_url' => request()?->fullUrl(),
                 'request_method' => request()?->method(),
             ]);
