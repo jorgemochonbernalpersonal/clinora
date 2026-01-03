@@ -16,8 +16,10 @@ return new class extends Migration
             $table->foreignId('user_id')->unique()->constrained()->onDelete('cascade');
             
             // Relación con contact (paciente) y professional
-            $table->foreignId('contact_id')->constrained()->onDelete('cascade');
-            $table->foreignId('professional_id')->constrained()->onDelete('cascade');
+            // Las foreign keys se agregarán en una migración posterior (2026_01_03_150535)
+            // para evitar problemas de orden de ejecución
+            $table->unsignedBigInteger('contact_id');
+            $table->unsignedBigInteger('professional_id');
             
             // Configuración del portal del paciente
             $table->timestamp('portal_activated_at')->nullable();
