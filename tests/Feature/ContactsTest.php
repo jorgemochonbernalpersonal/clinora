@@ -5,10 +5,12 @@ namespace Tests\Feature;
 use App\Core\Contacts\Models\Contact;
 use App\Core\Users\Models\Professional;
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class ContactsTest extends TestCase
 {
+    use RefreshDatabase;
     /**
      * Test that we can create contacts
      */
@@ -58,6 +60,47 @@ class ContactsTest extends TestCase
         $this->seedTestData();
 
         $this->assertDatabaseCount('contacts', 5);
+    }
+
+    /**
+     * Test that contacts can be archived
+     */
+    public function test_contact_can_be_archived(): void
+    {
+        $this->seedTestData();
+
+        $contact = Contact::first();
+        $contact->archive();
+
+        $this->assertFalse($contact->fresh()->is_active);
+        $this->assertNotNull($contact->fresh()->archived_at);
+    }
+
+    /**
+     * Test that contacts have full name attribute
+     */
+    public function test_contact_has_full_name(): void
+    {
+        $this->seedTestData();
+
+        $contact = Contact::first();
+        
+        $this->assertNotEmpty($contact->full_name);
+        $this->assertStringContainsString($contact->first_name, $contact->full_name);
+        $this->assertStringContainsString($contact->last_name, $contact->full_name);
+    }
+
+    /**
+     * Test that contacts can be soft deleted
+     */
+    public function test_contact_can_be_soft_deleted(): void
+    {
+        $this->seedTestData();
+
+        $contact = Contact::first();
+        $contact->delete();
+
+        $this->assertSoftDeleted('contacts', ['id' => $contact->id]);
     }
 }
 

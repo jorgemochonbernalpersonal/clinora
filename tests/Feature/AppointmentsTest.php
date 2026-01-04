@@ -6,10 +6,12 @@ use App\Core\Appointments\Models\Appointment;
 use App\Core\Contacts\Models\Contact;
 use App\Core\Users\Models\Professional;
 use App\Shared\Enums\AppointmentStatus;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class AppointmentsTest extends TestCase
 {
+    use RefreshDatabase;
     /**
      * Test that we can create appointments
      */
@@ -70,6 +72,53 @@ class AppointmentsTest extends TestCase
         $completedCount = Appointment::where('status', AppointmentStatus::COMPLETED->value)->count();
         
         $this->assertGreaterThan(0, $completedCount);
+    }
+
+    /**
+     * Test that appointments can be cancelled
+     */
+    public function test_appointment_can_be_cancelled(): void
+    {
+        $this->seedTestData();
+
+        $appointment = Appointment::where('status', AppointmentStatus::SCHEDULED->value)->first();
+        
+        if ($appointment && $appointment->canBeCancelled()) {
+            $appointment->cancel('Test cancellation');
+            
+            $this->assertEquals(AppointmentStatus::CANCELLED, $appointment->fresh()->status);
+            $this->assertEquals('Test cancellation', $appointment->fresh()->cancellation_reason);
+        }
+    }
+
+    /**
+     * Test that appointments can be completed
+     */
+    public function test_appointment_can_be_completed(): void
+    {
+        $this->seedTestData();
+
+        $appointment = Appointment::where('status', AppointmentStatus::SCHEDULED->value)->first();
+        
+        if ($appointment) {
+            $appointment->complete();
+            
+            $this->assertEquals(AppointmentStatus::COMPLETED, $appointment->fresh()->status);
+        }
+    }
+
+    /**
+     * Test that appointments calculate duration correctly
+     */
+    public function test_appointment_calculates_duration(): void
+    {
+        $this->seedTestData();
+
+        $appointment = Appointment::first();
+        
+        $expectedDuration = $appointment->start_time->diffInMinutes($appointment->end_time);
+        
+        $this->assertEquals($expectedDuration, $appointment->duration);
     }
 }
 

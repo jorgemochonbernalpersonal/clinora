@@ -32,13 +32,10 @@ class VerifyEmailNotification extends BaseVerifyEmail
         $verificationUrl = $this->verificationUrl($notifiable);
 
         return (new MailMessage)
-            ->subject('Verifica tu email - Clinora')
-            ->greeting("¡Hola {$notifiable->first_name}!")
-            ->line('Gracias por registrarte en Clinora.')
-            ->line('Por favor, verifica tu dirección de email haciendo clic en el botón de abajo:')
-            ->action('Verificar Email', $verificationUrl)
-            ->line('Este enlace expirará en 24 horas.')
-            ->line('Si no creaste una cuenta, no es necesario que hagas nada.')
-            ->salutation('Saludos, El equipo de Clinora');
+            ->subject('Verifica tu cuenta en Clinora')
+            ->view('emails.auth.verify', [
+                'name' => $notifiable->first_name ?? $notifiable->name,
+                'url' => $verificationUrl,
+            ]);
     }
 }

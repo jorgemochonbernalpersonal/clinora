@@ -6,10 +6,12 @@ use App\Core\Contacts\Models\Contact;
 use App\Core\Users\Models\PatientUser;
 use App\Core\Users\Models\Professional;
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class PatientUserTest extends TestCase
 {
+    use RefreshDatabase;
     /**
      * Test that we can create a patient user
      */

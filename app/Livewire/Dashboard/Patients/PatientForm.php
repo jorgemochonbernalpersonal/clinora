@@ -173,7 +173,6 @@ class PatientForm extends Component
         $this->current_medication = $patient->current_medication;
         $this->insurance_company = $patient->insurance_company;
         $this->insurance_policy_number = $patient->insurance_policy_number;
-        $this->insurance_policy_number = $patient->insurance_policy_number;
         $this->notes = $patient->notes;
         $this->referral_source = $patient->referral_source;
         $this->data_protection_consent = $patient->data_protection_consent;

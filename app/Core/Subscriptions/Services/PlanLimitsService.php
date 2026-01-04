@@ -86,7 +86,7 @@ class PlanLimitsService
             ->where(function($query) use ($thirtyDaysAgo) {
                 // Has recent appointments
                 $query->whereHas('appointments', function($q) use ($thirtyDaysAgo) {
-                    $q->where('scheduled_at', '>=', $thirtyDaysAgo);
+                    $q->where('start_time', '>=', $thirtyDaysAgo);
                 })
                 // Or has recent clinical notes
                 ->orWhereHas('clinicalNotes', function($q) use ($thirtyDaysAgo) {

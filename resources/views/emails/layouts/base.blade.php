@@ -18,49 +18,51 @@
             background-color: #ffffff;
         }
         .email-header {
-            background: linear-gradient(135deg, #0EA5E9 0%, #0284c7 100%);
-            padding: 30px 20px;
+            background-color: #0F172A;
+            padding: 40px 20px;
             text-align: center;
         }
         .logo {
-            max-width: 180px;
+            max-width: 160px;
             height: auto;
         }
         .email-body {
             padding: 40px 30px;
+            background-color: #ffffff;
         }
         .email-footer {
-            background-color: #f8fafc;
+            background-color: #F8FAFC;
             padding: 30px;
             text-align: center;
-            border-top: 1px solid #e2e8f0;
+            border-top: 1px solid #E2E8F0;
         }
         h1 {
-            color: #1e293b;
+            color: #0F172A;
             font-size: 24px;
             margin: 0 0 20px 0;
-            font-weight: 600;
+            font-weight: 700;
         }
         p {
-            color: #475569;
+            color: #334155;
             font-size: 16px;
             line-height: 1.6;
             margin: 0 0 16px 0;
         }
         .button {
             display: inline-block;
-            padding: 14px 28px;
-            background: linear-gradient(135deg, #0EA5E9 0%, #0284c7 100%);
+            padding: 16px 32px;
+            background-color: #0F172A;
             color: #ffffff !important;
             text-decoration: none;
             border-radius: 8px;
             font-weight: 600;
-            margin: 20px 0;
+            margin: 25px 0;
             font-size: 16px;
-            box-shadow: 0 4px 6px rgba(14, 165, 233, 0.2);
+            box-shadow: 0 4px 6px rgba(15, 23, 42, 0.1);
+            transition: background-color 0.2s;
         }
         .button:hover {
-            background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+            background-color: #1E293B;
         }
         .stats-container {
             display: flex;
@@ -69,26 +71,26 @@
         }
         .stat-card {
             flex: 1;
-            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            background: linear-gradient(135deg, #f0fdfa 0%, #ccfbf1 100%);
             border-radius: 8px;
             padding: 20px;
             text-align: center;
-            border-left: 4px solid #0EA5E9;
+            border-left: 4px solid #06B6D4;
         }
         .stat-number {
             font-size: 32px;
             font-weight: 700;
-            color: #0EA5E9;
+            color: #06B6D4;
             margin: 0;
         }
         .stat-label {
             font-size: 14px;
-            color: #64748b;
+            color: #0E7490;
             margin: 5px 0 0 0;
         }
         .alert-box {
-            background-color: #fef3c7;
-            border-left: 4px solid #f59e0b;
+            background-color: #FFFBEB;
+            border-left: 4px solid #F59E0B;
             padding: 16px;
             border-radius: 8px;
             margin: 20px 0;
@@ -98,30 +100,30 @@
             color: #92400e;
         }
         .success-box {
-            background-color: #d1fae5;
-            border-left: 4px solid #10b981;
+            background-color: #F0FDF4;
+            border-left: 4px solid #10B981;
             padding: 16px;
             border-radius: 8px;
             margin: 20px 0;
         }
         .success-box p {
             margin: 0;
-            color: #065f46;
+            color: #065F46;
         }
         .footer-links {
             margin: 20px 0;
         }
         .footer-links a {
-            color: #64748b;
+            color: #64748B;
             text-decoration: none;
             margin: 0 10px;
             font-size: 14px;
         }
         .footer-links a:hover {
-            color: #0EA5E9;
+            color: #06B6D4;
         }
         .footer-text {
-            color: #94a3b8;
+            color: #94A3B8;
             font-size: 12px;
             margin: 10px 0;
         }

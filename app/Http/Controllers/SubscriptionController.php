@@ -52,7 +52,7 @@ class SubscriptionController extends Controller
             $activePatients = \App\Core\Contacts\Models\Contact::where('professional_id', $professional->id)
                 ->where(function($query) use ($startDate, $endDate) {
                     $query->whereHas('appointments', function($q) use ($startDate, $endDate) {
-                        $q->whereBetween('scheduled_at', [$startDate, $endDate]);
+                        $q->whereBetween('start_time', [$startDate, $endDate]);
                     })
                     ->orWhereHas('clinicalNotes', function($q) use ($startDate, $endDate) {
                         $q->whereBetween('created_at', [$startDate, $endDate]);

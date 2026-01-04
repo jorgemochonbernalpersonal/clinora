@@ -12,9 +12,15 @@
                 </a>
                 <button 
                     type="submit" 
-                    class="inline-flex items-center px-6 py-2 bg-primary-600 border border-transparent rounded-lg font-medium text-sm text-white shadow-sm hover:bg-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transition-colors"
+                    wire:loading.attr="disabled"
+                    wire:target="photo, save"
+                    class="inline-flex items-center px-6 py-2 bg-primary-600 border border-transparent rounded-lg font-medium text-sm text-white shadow-sm hover:bg-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                    <svg class="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                    <svg wire:loading.remove wire:target="save" class="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                    <svg wire:loading wire:target="save" class="animate-spin -ml-1 mr-3 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
                     {{ $isEditing ? 'Guardar Cambios' : 'Crear Paciente' }}
                 </button>
             </div>
@@ -49,6 +55,15 @@
                         <div>
                             <label class="block text-sm font-medium text-gray-700">Fecha de Nacimiento</label>
                             <input type="date" wire:model="date_of_birth" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Género</label>
+                            <select wire:model="gender" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 text-sm">
+                                <option value="other">Otro</option>
+                                <option value="male">Masculino</option>
+                                <option value="female">Femenino</option>
+                                <option value="prefer_not_to_say">Prefiero no decirlo</option>
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -131,7 +146,11 @@
                                     <input type="text" wire:model="insurance_policy_number" placeholder="Póliza" class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 text-sm">
                                 </div>
                             </div>
-                         </div>
+                    </div>
+                    
+                    <div class="border-t border-gray-100 pt-6">
+                        <h4 class="text-sm font-semibold text-gray-800 mb-3">Notas Administrativas</h4>
+                        <textarea wire:model="notes" rows="3" class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 text-sm" placeholder="Observaciones internas, recordatorios..."></textarea>
                     </div>
                 </div>
 
@@ -169,10 +188,15 @@
                             @endif
                         </div>
                         <label for="photo" class="absolute bottom-2 right-2 bg-primary-600 rounded-full p-2 cursor-pointer shadow-md hover:bg-primary-700 transition-colors text-white">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path></svg>
+                            <svg wire:loading.remove wire:target="photo" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path></svg>
+                            <svg wire:loading wire:target="photo" class="animate-spin w-5 h-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
                         </label>
                         <input type="file" id="photo" wire:model="photo" class="hidden" accept="image/*">
                     </div>
+                    @error('photo') <p class="text-xs text-red-500 mt-2">{{ $message }}</p> @enderror
                     <p class="text-sm text-gray-500 mb-6 text-center">Foto de Perfil</p>
 
                     <div class="w-full border-t border-gray-100 pt-4">
@@ -193,6 +217,7 @@
                                     <input type="text" wire:model="address_city" placeholder="Ciudad" class="block w-full rounded-md border-gray-300 text-xs">
                                     <input type="text" wire:model="address_postal_code" placeholder="CP" class="block w-full rounded-md border-gray-300 text-xs">
                                 </div>
+                                <input type="text" wire:model="address_country" placeholder="País" class="block w-full rounded-md border-gray-300 text-xs mt-2">
                             </div>
                         </div>
                     </div>
@@ -202,6 +227,7 @@
                         <div class="bg-red-50 p-3 rounded-lg space-y-2">
                              <input type="text" wire:model="emergency_contact_name" placeholder="Nombre Contacto" class="block w-full bg-white rounded border-red-200 text-sm">
                              <input type="tel" wire:model="emergency_contact_phone" placeholder="Teléfono" class="block w-full bg-white rounded border-red-200 text-sm">
+                             <input type="text" wire:model="emergency_contact_relationship" placeholder="Parentesco (ej: Pareja, Padre...)" class="block w-full bg-white rounded border-red-200 text-sm">
                         </div>
                     </div>
 

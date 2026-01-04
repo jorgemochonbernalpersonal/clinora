@@ -120,7 +120,7 @@ class SendWeeklySummaryCommand extends Command
     private function calculateWeeklyStats(Professional $professional, Carbon $start, Carbon $end): array
     {
         $appointmentsCompleted = \App\Core\Appointments\Models\Appointment::where('professional_id', $professional->id)
-            ->whereBetween('scheduled_at', [$start, $end])
+            ->whereBetween('start_time', [$start, $end])
             ->where('status', 'completed')
             ->count();
         
@@ -145,12 +145,11 @@ class SendWeeklySummaryCommand extends Command
     private function getUpcomingAppointments(Professional $professional, Carbon $start, Carbon $end): array
     {
         return \App\Core\Appointments\Models\Appointment::where('professional_id', $professional->id)
-            ->whereBetween('scheduled_at', [$start, $end])
+            ->whereBetween('start_time', [$start, $end])
             ->where('status', 'scheduled')
             ->with('contact')
-            ->orderBy('scheduled_at')
+            ->orderBy('start_time')
             ->limit(5)
-            ->get()
-            ->toArray();
+            ->get();
     }
 }

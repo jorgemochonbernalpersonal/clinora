@@ -5,10 +5,12 @@ namespace Tests\Feature;
 use App\Core\ClinicalNotes\Models\ClinicalNote;
 use App\Core\Contacts\Models\Contact;
 use App\Core\Users\Models\Professional;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class ClinicalNotesTest extends TestCase
 {
+    use RefreshDatabase;
     /**
      * Test that we can create clinical notes
      */

@@ -4,7 +4,6 @@ namespace Tests;
 
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 abstract class TestCase extends BaseTestCase
 {
@@ -18,7 +17,27 @@ abstract class TestCase extends BaseTestCase
         parent::setUp();
 
         // Asegurar que estamos usando la base de datos de test
-        $this->artisan('migrate', ['--database' => 'mysql'])->run();
+        // RefreshDatabase ya se encarga de ejecutar las migraciones automáticamente
+        // Solo verificamos que la conexión sea la correcta
+        $this->assertDatabaseConnectionIsTest();
+    }
+
+    /**
+     * Verificar que estamos usando la base de datos de tests
+     */
+    protected function assertDatabaseConnectionIsTest(): void
+    {
+        $database = config('database.connections.mysql.database');
+        
+        // En entorno de testing, la base de datos debe ser clinora_test
+        if (app()->environment('testing')) {
+            if ($database !== 'clinora_test' && $database !== ':memory:') {
+                throw new \RuntimeException(
+                    "Los tests deben usar la base de datos 'clinora_test' o ':memory:', pero se está usando '{$database}'. " .
+                    "Verifica tu configuración en phpunit.xml"
+                );
+            }
+        }
     }
 
     /**

@@ -54,7 +54,7 @@
                     <td style="padding: 12px; background-color: {{ $loop->even ? '#f8fafc' : 'transparent' }};">
                         <strong style="color: #1e293b;">{{ $appointment->contact->full_name }}</strong><br>
                         <span style="color: #64748b; font-size: 14px;">
-                            📆 {{ $appointment->scheduled_at->format('d/m/Y') }} a las {{ $appointment->scheduled_at->format('H:i') }}
+                            📆 {{ $appointment->start_time->format('d/m/Y') }} a las {{ $appointment->start_time->format('H:i') }}
                         </span>
                     </td>
                 </tr>
