@@ -10,14 +10,16 @@ class ForceLivewireAuth
 {
     public function handle(Request $request, Closure $next): Response
     {
-        // Log para debug
-        \Log::info('Livewire preview request', [
-            'url' => $request->fullUrl(),
-            'authenticated' => auth()->check(),
-            'user_id' => auth()->id(),
-            'session_id' => session()->getId(),
-            'cookies' => $request->cookies->all(),
-        ]);
+        if ($request->is('livewire/preview-file/*')) {
+            \Log::info('Livewire preview FULL DEBUG', [
+                'full_url' => $request->fullUrl(),
+                'query_params' => $request->query->all(),
+                'has_expires' => $request->has('expires'),
+                'has_signature' => $request->has('signature'),
+                'expires_value' => $request->query('expires'),
+                'signature_value' => $request->query('signature'),
+            ]);
+        }
         
         return $next($request);
     }
