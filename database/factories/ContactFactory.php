@@ -42,8 +42,6 @@ class ContactFactory extends Factory
             'medical_history' => fake()->optional()->paragraph(),
             'psychiatric_history' => fake()->optional()->paragraph(),
             'current_medication' => fake()->optional()->sentence(),
-            'insurance_company' => fake()->optional()->randomElement(['Adeslas', 'Sanitas', 'DKV', 'Asisa', 'Mapfre', 'Aegon']),
-            'insurance_policy_number' => fake()->optional()->numerify('#########'),
             'notes' => fake()->optional()->sentence(),
             'tags' => fake()->optional()->randomElements(['Urgente', 'VIP', 'Nuevo', 'Seguimiento'], fake()->numberBetween(0, 2)),
             'is_active' => true,

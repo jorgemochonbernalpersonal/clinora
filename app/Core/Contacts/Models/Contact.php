@@ -51,8 +51,6 @@ class Contact extends Model
         'medical_history',
         'psychiatric_history',
         'current_medication',
-        'insurance_company',
-        'insurance_policy_number',
         'referral_source',
         'data_protection_consent',
         'data_protection_consent_at',

@@ -44,10 +44,6 @@ class PatientForm extends Component
     public $psychiatric_history;
     public $current_medication;
     
-    // Seguro médico
-    public $insurance_company;
-    public $insurance_policy_number;
-    
     // Notas
     public $notes;
     
@@ -70,10 +66,14 @@ class PatientForm extends Component
             'last_name' => 'required|string|max:255',
             
             // Datos básicos opcionales
-            'dni' => 'nullable|string|max:20',
+            'dni' => ['nullable', 'string', 'max:20', function ($attribute, $value, $fail) {
+                if (!empty($value) && !$this->validateDni($value)) {
+                    $fail('El formato del DNI/NIE no es válido. Debe ser 8 dígitos + letra (DNI) o X/Y/Z + 7 dígitos + letra (NIE).');
+                }
+            }],
             'email' => 'nullable|email|max:255',
             'phone' => 'nullable|string|max:50',
-            'date_of_birth' => 'nullable|date',
+            'date_of_birth' => 'nullable|date|before:today',
             'gender' => 'nullable|in:male,female,other,prefer_not_to_say',
             'marital_status' => 'nullable|in:single,married,divorced,widowed,cohabiting,other',
             'occupation' => 'nullable|string|max:255',
@@ -96,10 +96,6 @@ class PatientForm extends Component
             'medical_history' => 'nullable|string',
             'psychiatric_history' => 'nullable|string',
             'current_medication' => 'nullable|string',
-            
-            // Seguro médico
-            'insurance_company' => 'nullable|string|max:255',
-            'insurance_policy_number' => 'nullable|string|max:100',
             
             // Notas
             'notes' => 'nullable|string',
@@ -131,7 +127,6 @@ class PatientForm extends Component
             'emergency_contact_name', 'emergency_contact_phone', 'emergency_contact_relationship',
             'initial_consultation_reason', 'first_appointment_date',
             'medical_history', 'psychiatric_history', 'current_medication',
-            'insurance_company', 'insurance_policy_number',
             'notes', 'referral_source', 'data_protection_consent', 'tags'
         ]);
         $this->gender = 'other';
@@ -172,8 +167,6 @@ class PatientForm extends Component
         $this->medical_history = $patient->medical_history;
         $this->psychiatric_history = $patient->psychiatric_history;
         $this->current_medication = $patient->current_medication;
-        $this->insurance_company = $patient->insurance_company;
-        $this->insurance_policy_number = $patient->insurance_policy_number;
         $this->notes = $patient->notes;
         $this->referral_source = $patient->referral_source;
         $this->data_protection_consent = $patient->data_protection_consent;
@@ -239,6 +232,58 @@ class PatientForm extends Component
         }
         
         return redirect()->route('patients.index');
+    }
+
+    /**
+     * Validate Spanish DNI/NIE format
+     */
+    protected function validateDni($dni): bool
+    {
+        if (empty($dni)) {
+            return true; // Optional field
+        }
+
+        $dni = strtoupper(trim($dni));
+        
+        // DNI: 8 digits + 1 letter
+        if (preg_match('/^[0-9]{8}[A-Z]$/', $dni)) {
+            $number = substr($dni, 0, 8);
+            $letter = substr($dni, 8, 1);
+            $letters = 'TRWAGMYFPDXBNJZSQVHLCKE';
+            $expectedLetter = $letters[$number % 23];
+            return $letter === $expectedLetter;
+        }
+        
+        // NIE: X/Y/Z + 7 digits + 1 letter
+        if (preg_match('/^[XYZ][0-9]{7}[A-Z]$/', $dni)) {
+            $firstChar = substr($dni, 0, 1);
+            $number = substr($dni, 1, 7);
+            $letter = substr($dni, 8, 1);
+            
+            // Replace X/Y/Z with 0/1/2
+            $number = str_replace(['X', 'Y', 'Z'], ['0', '1', '2'], $firstChar) . $number;
+            $letters = 'TRWAGMYFPDXBNJZSQVHLCKE';
+            $expectedLetter = $letters[$number % 23];
+            return $letter === $expectedLetter;
+        }
+        
+        return false;
+    }
+
+    /**
+     * Get computed age from date of birth
+     */
+    public function getAgeProperty()
+    {
+        if (!$this->date_of_birth) {
+            return null;
+        }
+        
+        try {
+            return \Carbon\Carbon::parse($this->date_of_birth)->age;
+        } catch (\Exception $e) {
+            return null;
+        }
     }
 
     public function render()
