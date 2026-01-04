@@ -47,7 +47,7 @@ package-lock.json
 # ============================================
 # Build y Assets
 # ============================================
-/public/build
+# /public/build  # Comentado para incluir build en producción
 /public/hot
 /public/storage
 /public_html/storage
