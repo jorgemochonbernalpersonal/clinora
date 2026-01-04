@@ -8,7 +8,7 @@
                     <li><a href="#caracteristicas" class="hover:text-white transition-colors">Características</a></li>
                     <li><a href="#precios" class="hover:text-white transition-colors">Precios</a></li>
                     <li><a href="#profesiones" class="hover:text-white transition-colors">Casos de Uso</a></li>
-                    <li><a href="#faq" class="hover:text-white transition-colors">Preguntas Frecuentes</a></li>
+                    <li><a href="{{ route('faqs') }}" class="hover:text-white transition-colors">Preguntas Frecuentes</a></li>
                 </ul>
             </div>
 
@@ -27,9 +27,9 @@
             <div>
                 <h3 class="text-white font-semibold mb-4">Empresa</h3>
                 <ul class="space-y-2">
-                    <li><a href="#" class="hover:text-white transition-colors">Sobre Nosotros</a></li>
-                    <li><a href="#" class="hover:text-white transition-colors">Contacto</a></li>
-                    <li><a href="#" class="hover:text-white transition-colors">Blog</a></li>
+                    <li><a href="{{ route('about') }}" class="hover:text-white transition-colors">Sobre Nosotros</a></li>
+                    <li><a href="{{ route('contact') }}" class="hover:text-white transition-colors">Contacto</a></li>
+                    <li><a href="{{ route('blog.index') }}" class="hover:text-white transition-colors">Blog</a></li>
                     <li><a href="#" class="hover:text-white transition-colors">Centro de Ayuda</a></li>
                 </ul>
             </div>

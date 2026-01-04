@@ -15,6 +15,15 @@
         <lastmod>{{ $entry['lastmod'] }}</lastmod>
         <changefreq>{{ $entry['changefreq'] }}</changefreq>
         <priority>{{ $entry['priority'] }}</priority>
+        @if(isset($entry['images']) && is_array($entry['images']))
+            @foreach($entry['images'] as $image)
+        <image:image>
+            <image:loc>{{ $image['loc'] }}</image:loc>
+            <image:caption>{{ $image['caption'] }}</image:caption>
+            <image:title>{{ $image['title'] }}</image:title>
+        </image:image>
+            @endforeach
+        @endif
     </url>
     @endforeach
     

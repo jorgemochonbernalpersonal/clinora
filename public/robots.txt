@@ -15,6 +15,11 @@ Allow: /legal/privacy
 Allow: /legal/terms
 Allow: /legal/gdpr
 Allow: /legal/cookies
+Allow: /blog
+Allow: /blog/
+Allow: /contacto
+Allow: /faqs
+Allow: /sobre-nosotros
 
 # ============================================
 # BLOQUEAR ÁREAS PRIVADAS (requieren autenticación)
@@ -151,8 +156,7 @@ Crawl-delay: 10
 # ============================================
 # SITEMAPS
 # ============================================
-# ✅ SEO: Sitemap principal (usar dominio correcto)
-Sitemap: https://clinora.com/sitemap.xml
+# ✅ SEO: Sitemap principal
 Sitemap: https://clinora.es/sitemap.xml
 
 # ============================================

@@ -41,6 +41,15 @@ Route::get('/legal/privacy', fn() => view('legal.privacy'))->name('legal.privacy
 Route::get('/legal/terms', fn() => view('legal.terms'))->name('legal.terms');
 Route::get('/legal/gdpr', fn() => view('legal.gdpr'))->name('legal.gdpr');
 
+// Public pages
+Route::get('/contacto', fn() => view('contacto'))->name('contact');
+Route::get('/faqs', fn() => view('faqs'))->name('faqs');
+Route::get('/sobre-nosotros', fn() => view('about'))->name('about');
+
+// Blog
+Route::get('/blog', [App\Http\Controllers\BlogController::class, 'index'])->name('blog.index');
+Route::get('/blog/{post:slug}', [App\Http\Controllers\BlogController::class, 'show'])->name('blog.show');
+
 // Auth routes
 Route::get('/login', fn() => view('auth.login'))->name('login')->middleware('guest');
 Route::get('/register', fn() => view('auth.register'))->name('register')->middleware('guest');
