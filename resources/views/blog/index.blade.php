@@ -6,21 +6,21 @@
 
 @push('structured_data')
 <script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Blog",
-  "name": "Blog de Clinora",
-  "description": "Artículos y recursos para profesionales de la salud",
-  "url": "{{ route('blog.index') }}",
-  "publisher": {
-    "@type": "Organization",
-    "name": "Clinora",
-    "logo": {
-      "@type": "ImageObject",
-      "url": "{{ asset('images/logo.png') }}"
-    }
-  }
-}
+{!! json_encode([
+    '@context' => 'https://schema.org',
+    '@type' => 'Blog',
+    'name' => 'Blog de Clinora',
+    'description' => 'Artículos y recursos para profesionales de la salud',
+    'url' => route('blog.index'),
+    'publisher' => [
+        '@type' => 'Organization',
+        'name' => 'Clinora',
+        'logo' => [
+            '@type' => 'ImageObject',
+            'url' => asset('images/logo.png')
+        ]
+    ]
+], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) !!}
 </script>
 @endpush
 
