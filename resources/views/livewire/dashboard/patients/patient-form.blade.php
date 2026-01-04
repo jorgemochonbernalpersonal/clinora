@@ -176,11 +176,11 @@
                 {{-- Foto y Status --}}
                 <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 flex flex-col items-center sticky top-24">
                      <div class="relative group mb-4">
-                        <div class="w-40 h-40 rounded-full overflow-hidden border-4 border-white shadow-lg bg-gray-100">
+                        <div class="w-40 h-40 rounded-full overflow-hidden border-4 border-white shadow-lg bg-gray-100" wire:key="photo-preview">
                             @if ($photo)
                                 <img src="{{ $photo->temporaryUrl() }}" class="w-full h-full object-cover">
                             @elseif ($patient && $patient->profile_photo_path)
-                                 <img src="{{ asset('storage/' . $patient->profile_photo_path) }}" class="w-full h-full object-cover">
+                                 <img src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($patient->profile_photo_path) }}" class="w-full h-full object-cover">
                             @else
                                 <div class="flex items-center justify-center w-full h-full text-gray-300 bg-gray-50">
                                      <svg class="w-20 h-20" fill="currentColor" viewBox="0 0 24 24"><path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
@@ -200,6 +200,12 @@
                     <p class="text-sm text-gray-500 mb-6 text-center">Foto de Perfil</p>
 
                     <div class="w-full border-t border-gray-100 pt-4">
+                        <label class="text-xs font-semibold text-gray-900 uppercase mb-2 block">Etiquetas / Tags</label>
+                        <input type="text" wire:model="tags" placeholder="Ej: VIP, Ansiedad, Mañanas..." class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 text-sm">
+                        <p class="text-[10px] text-gray-400 mt-1">Separadas por comas</p>
+                    </div>
+
+                    <div class="w-full border-t border-gray-100 pt-4 mt-4">
                         <h4 class="text-sm font-semibold text-gray-900 mb-3">Contacto Rápido</h4>
                         <div class="space-y-3">
                             <div>

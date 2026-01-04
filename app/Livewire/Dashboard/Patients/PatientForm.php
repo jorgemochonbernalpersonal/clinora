@@ -54,6 +54,7 @@ class PatientForm extends Component
     // Marketing / Legal
     public $referral_source;
     public $data_protection_consent = false;
+    public $tags;
     
     // File Upload
     public $photo;
@@ -107,6 +108,7 @@ class PatientForm extends Component
             'referral_source' => 'nullable|string|max:255',
             'data_protection_consent' => 'accepted',
             'photo' => 'nullable|image|max:1024', // 1MB Max
+            'tags' => 'nullable|string',
         ];
     }
     
@@ -130,8 +132,7 @@ class PatientForm extends Component
             'initial_consultation_reason', 'first_appointment_date',
             'medical_history', 'psychiatric_history', 'current_medication',
             'insurance_company', 'insurance_policy_number',
-            'insurance_company', 'insurance_policy_number',
-            'notes', 'referral_source', 'data_protection_consent'
+            'notes', 'referral_source', 'data_protection_consent', 'tags'
         ]);
         $this->gender = 'other';
         $this->address_country = 'España';
@@ -176,6 +177,7 @@ class PatientForm extends Component
         $this->notes = $patient->notes;
         $this->referral_source = $patient->referral_source;
         $this->data_protection_consent = $patient->data_protection_consent;
+        $this->tags = is_array($patient->tags) ? implode(', ', $patient->tags) : $patient->tags;
     }
 
     public function save()
@@ -213,6 +215,11 @@ class PatientForm extends Component
 
         // Remove photo from validated array as it's not a column
         unset($validated['photo']);
+
+        // Handle tags (convert comma string to array)
+        if ($this->tags) {
+            $validated['tags'] = array_map('trim', explode(',', $this->tags));
+        }
 
         // Handle GDPR Timestamp
         if ($this->data_protection_consent) {

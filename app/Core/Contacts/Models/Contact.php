@@ -82,7 +82,7 @@ class Contact extends Model
     public function getProfilePhotoUrlAttribute()
     {
         return $this->profile_photo_path
-                    ? asset('storage/' . $this->profile_photo_path)
+                    ? \Illuminate\Support\Facades\Storage::disk('public')->url($this->profile_photo_path)
                     : 'https://ui-avatars.com/api/?name='.urlencode($this->full_name).'&color=0EA5E9&background=E0F2FE';
     }
 

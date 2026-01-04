@@ -135,8 +135,8 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function getAvatarUrlAttribute(): string
     {
-        if ($this->avatar_path && \Storage::exists($this->avatar_path)) {
-            return \Storage::url($this->avatar_path);
+        if ($this->avatar_path && \Illuminate\Support\Facades\Storage::disk('public')->exists($this->avatar_path)) {
+            return \Illuminate\Support\Facades\Storage::disk('public')->url($this->avatar_path);
         }
         
         // Generate placeholder with initials
