@@ -29,11 +29,11 @@ class CheckProfessionalSubscription
             abort(403, 'Solo profesionales tienen acceso');
         }
 
-        // TODO: Implement actual subscription check
-        // For now, we'll allow all professionals
-        // if (!$user->professional?->hasActiveSubscription()) {
-        //     abort(403, 'Suscripción requerida');
-        // }
+        // Check if professional has an active subscription
+        if (!$user->professional?->hasActiveSubscription()) {
+            return redirect()->route('dashboard')
+                ->with('error', 'Tu suscripción no está activa. Por favor, contacta con soporte.');
+        }
 
         return $next($request);
     }

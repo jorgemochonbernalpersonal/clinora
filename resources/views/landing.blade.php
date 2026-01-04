@@ -7,36 +7,36 @@
 
 @push('structured_data')
 <script type="application/ld+json">
-{
-  "@@context": "https://schema.org",
-  "@@type": "SoftwareApplication",
-  "name": "Clinora",
-  "applicationCategory": "HealthApplication",
-  "operatingSystem": "Web",
-  "offers": {
-    "@@type": "Offer",
-    "price": "1",
-    "priceCurrency": "EUR",
-    "priceValidUntil": "2025-12-31",
-    "availability": "https://schema.org/InStock",
-    "url": "https://clinora.com/precios",
-    "description": "Desde €1 por paciente activo al mes"
-  },
-  "aggregateRating": {
-    "@@type": "AggregateRating",
-    "ratingValue": "4.8",
-    "reviewCount": "127"
-  },
-  "description": "Plataforma SaaS para gestión de clínicas de salud y bienestar",
-  "screenshot": "https://clinora.com/images/dashboard.jpg",
-  "featureList": [
-    "Gestión de citas",
-    "Teleconsulta",
-    "Facturación",
-    "Portal del paciente",
-    "Notas clínicas"
-  ]
-}
+{!! json_encode([
+    '@context' => 'https://schema.org',
+    '@type' => 'SoftwareApplication',
+    'name' => 'Clinora',
+    'applicationCategory' => 'HealthApplication',
+    'operatingSystem' => 'Web',
+    'offers' => [
+        '@type' => 'Offer',
+        'price' => '1',
+        'priceCurrency' => 'EUR',
+        'priceValidUntil' => '2025-12-31',
+        'availability' => 'https://schema.org/InStock',
+        'url' => 'https://clinora.com/precios',
+        'description' => 'Desde €1 por paciente activo al mes'
+    ],
+    'aggregateRating' => [
+        '@type' => 'AggregateRating',
+        'ratingValue' => '4.8',
+        'reviewCount' => '127'
+    ],
+    'description' => 'Plataforma SaaS para gestión de clínicas de salud y bienestar',
+    'screenshot' => 'https://clinora.com/images/dashboard.jpg',
+    'featureList' => [
+        'Gestión de citas',
+        'Teleconsulta',
+        'Facturación',
+        'Portal del paciente',
+        'Notas clínicas'
+    ]
+], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) !!}
 </script>
 @endpush
 
@@ -549,42 +549,5 @@
         </div>
     </section>
 
-    {{-- Final CTA Section --}}
-    <section class="py-20 bg-gradient-to-r from-primary-500 to-primary-600 text-white">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="max-w-3xl mx-auto text-center">
-                <h2 class="text-3xl sm:text-4xl font-bold mb-4">
-                    ¿Listo para transformar la gestión de tu clínica?
-                </h2>
-                <p class="text-xl mb-8 text-primary-100">
-                    Únete a cientos de profesionales que ya confían en Clinora
-                </p>
-                <a href="{{ route('register') }}" 
-                   class="inline-block bg-white text-primary-600 hover:bg-primary-50 px-8 py-4 rounded-lg font-semibold text-lg transition-colors shadow-lg hover:shadow-xl">
-                    Crear Cuenta Gratuita
-                </a>
-                <div class="mt-6 flex flex-wrap justify-center gap-6 text-sm text-primary-100">
-                    <div class="flex items-center gap-2">
-                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                        </svg>
-                        <span>Sin tarjeta de crédito</span>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                        </svg>
-                        <span>Cancelación en cualquier momento</span>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                        </svg>
-                        <span>Migración de datos gratuita</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
 @endsection
 

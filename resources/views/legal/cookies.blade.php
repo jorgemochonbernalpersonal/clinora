@@ -167,7 +167,7 @@
                     Si tienes alguna pregunta sobre nuestra política de cookies, contáctanos en:
                 </p>
                 <p class="text-primary-600 font-medium">
-                    📧 privacy@clinora.com
+                    📧 info@clinora.es
                 </p>
             </section>
         </div>

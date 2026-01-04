@@ -15,6 +15,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'can.view.logs' => \App\Http\Middleware\CanViewSystemLogs::class,
             'verified' => \App\Http\Middleware\EnsureEmailIsVerified::class,
+            'feature' => \App\Http\Middleware\CheckFeatureAccess::class,
         ]);
         
         // Register request logging middleware (optional - can be enabled per route group)

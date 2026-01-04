@@ -68,6 +68,60 @@ Route::post('/logout', function() {
 Route::middleware(['auth', 'verified'])->prefix('dashboard')->group(function () {
     Route::get('/', \App\Livewire\DashboardHome::class)->name('dashboard');
     
+    // Feature blocked preview
+    Route::get('/features/blocked/{feature}', function($feature) {
+        $blockedData = session('blocked_feature', []);
+        
+        // Feature-specific content
+        $featureDetails = [
+            'teleconsulta' => [
+                'title' => 'Teleconsulta',
+                'description' => 'Realiza videollamadas seguras con tus pacientes desde cualquier lugar.',
+                'benefits' => [
+                    'Videollamadas HD con cifrado end-to-end',
+                    'Grabación de sesiones (con consentimiento)',
+                    'Compartir pantalla para mostrar recursos',
+                    'Notas automáticas de la sesión',
+                    'Recordatorios automáticos a pacientes',
+                ]
+            ],
+            'evaluaciones' => [
+                'title' => 'Evaluaciones Psicológicas',
+                'description' => 'Administra y puntúa evaluaciones estandarizadas en minutos.',
+                'benefits' => [
+                    'BDI-II: Inventario de Depresión de Beck',
+                    'PHQ-9: Cuestionario de Salud del Paciente',
+                    'GAD-7: Escala de Ansiedad Generalizada',
+                    'Puntuación automática e interpretación',
+                    'Gráficos de progreso a lo largo del tiempo',
+                    'Exportación de resultados en PDF',
+                ]
+            ],
+            'portal_paciente' => [
+                'title' => 'Portal del Paciente',
+                'description' => 'Permite a tus pacientes reservar citas y acceder a sus documentos 24/7.',
+                'benefits' => [
+                    'Reserva de citas online',
+                    'Acceso a historial de sesiones',
+                    'Descarga de documentos e informes',
+                    'Completar formularios previos a la cita',
+                    'Notificaciones automáticas',
+                    'Interfaz personalizada con tu branding',
+                ]
+            ],
+        ];
+        
+        $details = $featureDetails[$feature] ?? [
+            'title' => ucfirst($feature),
+            'description' => 'Esta función premium no está disponible en tu plan actual.',
+            'benefits' => []
+        ];
+        
+        return view('features.blocked', array_merge([
+            'feature' => $feature,
+        ], $details));
+    })->name('features.blocked');
+    
     // Patients
     Route::get('/patients', \App\Livewire\Patients\PatientList::class)->name('patients.index');
     Route::get('/patients/create', \App\Livewire\Dashboard\Patients\PatientForm::class)->name('patients.create');
@@ -82,6 +136,15 @@ Route::middleware(['auth', 'verified'])->prefix('dashboard')->group(function () 
     Route::get('/clinical-notes', fn() => view('dashboard.clinical-notes.index'))->name('clinical-notes.index');
     Route::get('/clinical-notes/create', \App\Livewire\Dashboard\ClinicalNotes\ClinicalNoteForm::class)->name('clinical-notes.create');
     Route::get('/clinical-notes/{id}/edit', \App\Livewire\Dashboard\ClinicalNotes\ClinicalNoteForm::class)->name('clinical-notes.edit');
+    
+    // Subscription Management
+    Route::get('/subscription', [App\Http\Controllers\SubscriptionController::class, 'index'])->name('subscription.index');
+    Route::patch('/subscription/preferences', [App\Http\Controllers\SubscriptionController::class, 'updatePreferences'])->name('subscription.update-preferences');
+    
+    // Onboarding
+    Route::post('/onboarding/welcome-seen', [App\Http\Controllers\OnboardingController::class, 'welcomeSeen'])->name('onboarding.welcome-seen');
+    
+    // Settings
     Route::get('/profile', fn() => view('dashboard.profile'))->name('profile.settings');
     Route::get('/security', fn() => view('dashboard.security'))->name('security.settings');
     Route::get('/logs', [LogViewerController::class, 'index'])

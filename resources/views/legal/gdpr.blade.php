@@ -39,7 +39,7 @@
                     <p class="text-sm">
                         <strong>Identidad:</strong> Clinora S.L.<br>
                         <strong>Domicilio:</strong> Calle Principal 123, Madrid<br>
-                        <strong>Email:</strong> privacy@clinora.com
+                        <strong>Email:</strong> info@clinora.es
                     </p>
                 </div>
                 <div class="bg-gray-50 p-6 rounded-lg border border-gray-200">
@@ -100,7 +100,7 @@
                     Puedes ejercer cualquiera de estos derechos enviando una solicitud a nuestro equipo de privacidad. 
                     Te responderemos en un plazo máximo de 30 días.
                 </p>
-                <a href="mailto:privacy@clinora.com" class="inline-block bg-primary-600 hover:bg-primary-700 text-white font-semibold px-8 py-3 rounded-lg transition-colors shadow-lg">
+                <a href="mailto:info@clinora.es" class="inline-block bg-primary-600 hover:bg-primary-700 text-white font-semibold px-8 py-3 rounded-lg transition-colors shadow-lg">
                     Contactar con Privacidad
                 </a>
             </section>

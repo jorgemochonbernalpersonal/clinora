@@ -10,3 +10,6 @@ Artisan::command('inspire', function () {
 
 // Clean unverified users daily at 2:00 AM
 Schedule::command('users:clean-unverified')->dailyAt('02:00');
+
+// Send weekly summary emails every Sunday at 9:00 AM
+Schedule::command('send:weekly-summary')->weeklyOn(0, '09:00');

@@ -19,6 +19,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // Register observers for email notifications and onboarding tracking
+        \App\Core\Contacts\Models\Contact::observe(\App\Observers\ContactObserver::class);
+        \App\Core\Appointments\Models\Appointment::observe(\App\Observers\AppointmentObserver::class);
+        \App\Core\ClinicalNotes\Models\ClinicalNote::observe(\App\Observers\ClinicalNoteObserver::class);
     }
 }

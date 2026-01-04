@@ -5,9 +5,9 @@
             <div>
                 <h3 class="text-white font-semibold mb-4">Producto</h3>
                 <ul class="space-y-2">
-                    <li><a href="#caracteristicas" class="hover:text-white transition-colors">Características</a></li>
-                    <li><a href="#precios" class="hover:text-white transition-colors">Precios</a></li>
-                    <li><a href="#profesiones" class="hover:text-white transition-colors">Casos de Uso</a></li>
+                    <li><a href="{{ url('/') }}#caracteristicas" class="hover:text-white transition-colors">Características</a></li>
+                    <li><a href="{{ url('/') }}#precios" class="hover:text-white transition-colors">Precios</a></li>
+                    <li><a href="{{ url('/') }}#caracteristicas" class="hover:text-white transition-colors">Casos de Uso</a></li>
                     <li><a href="{{ route('faqs') }}" class="hover:text-white transition-colors">Preguntas Frecuentes</a></li>
                 </ul>
             </div>
@@ -16,10 +16,10 @@
             <div>
                 <h3 class="text-white font-semibold mb-4">Seguridad & Privacidad</h3>
                 <ul class="space-y-2">
-                    <li><a href="#" class="hover:text-white transition-colors">Autenticación 2FA</a></li>
-                    <li><a href="#" class="hover:text-white transition-colors">Verificación de Email</a></li>
-                    <li><a href="#" class="hover:text-white transition-colors">Cambio de Contraseña</a></li>
-                    <li><a href="#" class="hover:text-white transition-colors">Gestión de Perfil</a></li>
+                    <li><a href="javascript:void(0)" class="hover:text-white transition-colors">Autenticación 2FA</a></li>
+                    <li><a href="javascript:void(0)" class="hover:text-white transition-colors">Verificación de Email</a></li>
+                    <li><a href="javascript:void(0)" class="hover:text-white transition-colors">Cambio de Contraseña</a></li>
+                    <li><a href="javascript:void(0)" class="hover:text-white transition-colors">Gestión de Perfil</a></li>
                 </ul>
             </div>
 
@@ -30,7 +30,7 @@
                     <li><a href="{{ route('about') }}" class="hover:text-white transition-colors">Sobre Nosotros</a></li>
                     <li><a href="{{ route('contact') }}" class="hover:text-white transition-colors">Contacto</a></li>
                     <li><a href="{{ route('blog.index') }}" class="hover:text-white transition-colors">Blog</a></li>
-                    <li><a href="#" class="hover:text-white transition-colors">Centro de Ayuda</a></li>
+                    <li><a href="javascript:void(0)" class="hover:text-white transition-colors">Centro de Ayuda</a></li>
                 </ul>
             </div>
 

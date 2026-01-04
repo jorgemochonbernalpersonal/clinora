@@ -43,16 +43,16 @@
         {{-- Mobile Menu --}}
         <div class="hidden md:hidden" id="mobile-menu">
             <div class="px-2 pt-2 pb-3 space-y-1 border-t border-gray-200 mt-4">
-                <a href="#caracteristicas" class="block px-3 py-2 text-text-secondary hover:text-primary-600">
+                <a href="{{ url('/') }}#caracteristicas" class="mobile-nav-link block px-3 py-2 text-text-secondary hover:text-primary-600">
                     Características
                 </a>
-                <a href="#profesiones" class="block px-3 py-2 text-text-secondary hover:text-primary-600">
+                <a href="{{ url('/') }}#caracteristicas" class="mobile-nav-link block px-3 py-2 text-text-secondary hover:text-primary-600">
                     Para tu Profesión
                 </a>
-                <a href="#precios" class="block px-3 py-2 text-text-secondary hover:text-primary-600">
+                <a href="{{ url('/') }}#precios" class="mobile-nav-link block px-3 py-2 text-text-secondary hover:text-primary-600">
                     Precios
                 </a>
-                <a href="#faq" class="block px-3 py-2 text-text-secondary hover:text-primary-600">
+                <a href="{{ url('/') }}#faq" class="mobile-nav-link block px-3 py-2 text-text-secondary hover:text-primary-600">
                     FAQ
                 </a>
             </div>
@@ -62,9 +62,21 @@
 
 @push('scripts')
 <script>
-    document.getElementById('mobile-menu-button')?.addEventListener('click', function() {
-        const menu = document.getElementById('mobile-menu');
-        menu?.classList.toggle('hidden');
+    document.addEventListener('DOMContentLoaded', function() {
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileLinks = document.querySelectorAll('.mobile-nav-link');
+
+        mobileMenuButton?.addEventListener('click', function() {
+            mobileMenu?.classList.toggle('hidden');
+        });
+
+        // Cerrar menú al hacer click en un link
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu?.classList.add('hidden');
+            });
+        });
     });
 </script>
 @endpush

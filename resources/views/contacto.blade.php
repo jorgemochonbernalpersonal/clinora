@@ -6,25 +6,25 @@
 
 @push('structured_data')
 <script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "ContactPage",
-  "name": "Contacto - Clinora",
-  "description": "Formulario de contacto de Clinora",
-  "url": "{{ url('/contacto') }}",
-  "mainEntity": {
-    "@type": "Organization",
-    "name": "Clinora",
-    "url": "{{ url('/') }}",
-    "logo": "{{ asset('images/logo.png') }}",
-    "contactPoint": {
-      "@type": "ContactPoint",
-      "contactType": "customer support",
-      "email": "info@clinora.es",
-      "availableLanguage": ["es"]
-    }
-  }
-}
+{!! json_encode([
+    '@context' => 'https://schema.org',
+    '@type' => 'ContactPage',
+    'name' => 'Contacto - Clinora',
+    'description' => 'Formulario de contacto de Clinora',
+    'url' => url('/contacto'),
+    'mainEntity' => [
+        '@type' => 'Organization',
+        'name' => 'Clinora',
+        'url' => url('/'),
+        'logo' => asset('images/logo.png'),
+        'contactPoint' => [
+            '@type' => 'ContactPoint',
+            'contactType' => 'customer support',
+            'email' => 'info@clinora.es',
+            'availableLanguage' => ['es']
+        ]
+    ]
+], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) !!}
 </script>
 @endpush
 

@@ -2,6 +2,11 @@
 
 @section('title', 'Agenda')
 
+@push('styles')
+    {{-- FullCalendar CSS --}}
+    <link href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.css' rel='stylesheet' />
+@endpush
+
 @section('content')
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>
@@ -22,3 +27,9 @@
         @livewire('dashboard.appointments.calendar')
     </div>
 @endsection
+
+@push('scripts')
+    {{-- FullCalendar JS + Plugins + Localization --}}
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js'></script>
+    <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.10/locales/es.global.min.js'></script>
+@endpush

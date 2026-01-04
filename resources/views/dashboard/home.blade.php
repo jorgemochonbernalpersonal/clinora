@@ -4,17 +4,73 @@
 
 @php
     $user = session('user');
+    $professional = auth()->user()->professional;
+    $planLimits = app(\App\Core\Subscriptions\Services\PlanLimitsService::class);
+    $stats = $planLimits->getUsageStats($professional);
 @endphp
 
 @section('content')
-    {{-- Page Header --}}
-    <div class="mb-8">
-        <h1 class="text-3xl font-bold text-text-primary">
-            ¡Bienvenido, {{ $user['first_name'] ?? 'Doctor' }}!
-        </h1>
-        <p class="text-text-secondary mt-1">
-            Aquí tienes un resumen de tu actividad
-        </p>
+    {{-- Onboarding Components --}}
+    <x-onboarding.welcome-modal />
+    <x-onboarding.checklist />
+    
+    {{-- Upgrade Modal --}}
+    <x-upgrade-modal />
+    
+    {{-- Page Header with Subscription Info --}}
+    <div class="mb-8 flex items-start justify-between gap-6">
+        <div>
+            <h1 class="text-3xl font-bold text-text-primary">
+                ¡Bienvenido, {{ $user['first_name'] ?? 'Doctor' }}!
+            </h1>
+            <p class="text-text-secondary mt-1">
+                Aquí tienes un resumen de tu actividad
+            </p>
+        </div>
+        
+        {{-- Subscription Status Card --}}
+        <div class="bg-gradient-to-br from-primary-50 to-primary-100 rounded-lg p-4 border-2 border-primary-200 min-w-[280px]">
+            <div class="flex items-center justify-between mb-2">
+                <span class="text-sm text-text-secondary font-medium">Plan Actual</span>
+                <x-plan-badge :plan="$professional->subscription_plan->value" />
+            </div>
+            <p class="text-2xl font-bold text-text-primary mb-2">
+                {{ $professional->subscription_plan->label() }}
+            </p>
+            
+            @if($professional->isOnFreePlan())
+                <div class="mb-3">
+                    <div class="flex justify-between text-sm mb-1">
+                        <span class="text-text-secondary">Pacientes</span>
+                        <span class="font-semibold {{ $stats['is_at_limit'] ? 'text-warning-600' : 'text-text-primary' }}">
+                            {{ $stats['total_patients'] }} / {{ $stats['patient_limit'] }}
+                        </span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                        <div class="bg-primary-500 h-2 rounded-full transition-all" 
+                             style="width: {{ min($stats['percentage_used'], 100) }}%"></div>
+                    </div>
+                </div>
+                
+                @if(!$stats['can_add_patient'])
+                    <div class="bg-warning-100 border border-warning-300 rounded px-2 py-1 text-xs text-warning-700 mb-2">
+                        ⚠️ Límite alcanzado
+                    </div>
+                @endif
+                
+                <button onclick="document.querySelector('[x-data]').show = true" 
+                        class="w-full bg-primary-500 hover:bg-primary-600 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors flex items-center justify-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
+                    </svg>
+                    Actualizar Plan
+                </button>
+            @else
+                <div class="text-sm text-text-secondary">
+                    <span class="font-semibold text-text-primary">{{ $stats['active_patients'] }}</span> pacientes activos este mes
+                </div>
+            @endif
+        </div>
     </div>
 
     {{-- Stats Cards --}}

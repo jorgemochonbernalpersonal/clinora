@@ -67,6 +67,27 @@ class ContactController extends Controller
         try {
             $professional = $request->user()->professional;
             
+            // Check if professional can add a new patient
+            $planLimits = app(\App\Core\Subscriptions\Services\PlanLimitsService::class);
+            
+            if (!$planLimits->canAddPatient($professional)) {
+                $stats = $planLimits->getUsageStats($professional);
+                
+                return response()->json([
+                    'success' => false,
+                    'message' => '¡Has alcanzado el límite de pacientes de tu plan!',
+                    'error' => sprintf(
+                        'Tu plan %s permite hasta %d pacientes. Tienes %d pacientes activos.',
+                        $professional->subscription_plan->label(),
+                        $stats['patient_limit'],
+                        $stats['total_patients']
+                    ),
+                    'upgrade_required' => true,
+                    'current_plan' => $professional->subscription_plan->value,
+                    'usage_stats' => $stats,
+                ], 403);
+            }
+            
             $contact = $this->contactService->createForProfessional(
                 $professional,
                 $request->validated(),

@@ -96,7 +96,7 @@
                 <h2 class="text-2xl font-semibold text-text-primary mb-4">5. Tus Derechos</h2>
                 <p class="text-text-secondary mb-4">
                     Como usuario, tienes derecho a acceder, rectificar, suprimir, limitar, oponerte y portar tus datos. 
-                    Puedes ejercer estos derechos enviando un correo a <a href="mailto:privacy@clinora.com" class="text-primary-600 hover:underline">privacy@clinora.com</a>.
+                    Puedes ejercer estos derechos enviando un correo a <a href="mailto:info@clinora.es" class="text-primary-600 hover:underline">info@clinora.es</a>.
                 </p>
                 <p class="text-text-secondary mb-4">
                     Para más detalles sobre tus derechos bajo el RGPD, visita nuestra página de <a href="{{ route('legal.gdpr') }}" class="text-primary-600 hover:underline">Información RGPD</a>.
@@ -106,7 +106,7 @@
             {{-- Contacto --}}
             <section class="border-t border-gray-200 pt-8 mt-8">
                 <p class="text-text-secondary text-sm">
-                    Si tienes preguntas sobre esta Política de Privacidad, contáctanos en <a href="mailto:privacy@clinora.com" class="text-primary-600 hover:underline">privacy@clinora.com</a>.
+                    Si tienes preguntas sobre esta Política de Privacidad, contáctanos en <a href="mailto:info@clinora.es" class="text-primary-600 hover:underline">info@clinora.es</a>.
                     Empresa Responsable: Clinora S.L. - Calle Principal 123, Madrid, España.
                 </p>
             </section>

@@ -1,35 +1,34 @@
-@extends('layouts.app')
+@extends('layouts.guest')
 
-@section('title', 'Iniciar Sesión - Clinora')
+@section('title', 'Iniciar Sesión')
 
 @section('content')
-<div class="min-h-screen bg-gradient-to-b from-primary-50 to-background flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-md w-full">
+<div class="min-h-screen bg-gradient-to-br from-primary-50 to-primary-100 flex items-center justify-center p-4">
+    <div class="max-w-md w-full bg-white rounded-lg shadow-xl p-8">
         {{-- Logo --}}
-        <div class="text-center mb-8">
-            <h1 class="text-4xl font-bold text-primary-600 mb-2">Clinora</h1>
-            <p class="text-text-secondary">Inicia sesión en tu cuenta</p>
-        </div>
-
-        {{-- Card --}}
-        <div class="bg-surface rounded-lg shadow-lg p-8 border border-gray-200">
-            @livewire('auth.login-form')
-            
-            <div class="mt-6 text-center text-sm">
-                <p class="text-text-secondary">
-                    ¿No tienes cuenta? 
-                    <a href="{{ route('register') }}" class="text-primary-600 hover:text-primary-700 font-semibold">
-                        Regístrate gratis
-                    </a>
-                </p>
-            </div>
-        </div>
-
-        {{-- Back to home --}}
-        <div class="text-center mt-6">
-            <a href="{{ route('home') }}" class="text-text-secondary hover:text-text-primary text-sm">
-                ← Volver al inicio
+        <div class="flex justify-center mb-6">
+            <a href="{{ route('home') }}">
+                <img src="{{ asset('images/logo.png') }}" alt="Clinora" class="h-12 w-auto mix-blend-multiply">
             </a>
+        </div>
+
+        {{-- Title --}}
+        <h2 class="text-2xl font-bold text-center text-text-primary mb-2">
+            ¡Bienvenido de nuevo!
+        </h2>
+        <p class="text-center text-text-secondary mb-8">
+            Ingresa tus credenciales para acceder a tu cuenta
+        </p>
+
+        <livewire:auth.login-form />
+
+        <div class="mt-8 text-center text-sm">
+            <p class="text-text-secondary">
+                ¿Aún no tienes cuenta? 
+                <a href="{{ route('register') }}" class="font-semibold text-primary-600 hover:text-primary-700">
+                    Regístrate gratis
+                </a>
+            </p>
         </div>
     </div>
 </div>

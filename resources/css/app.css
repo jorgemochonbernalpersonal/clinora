@@ -136,3 +136,9 @@
     --color-error: var(--color-error-500);
     --color-info: var(--color-info-500);
 }
+
+@layer base {
+    html {
+        scroll-behavior: smooth;
+    }
+}

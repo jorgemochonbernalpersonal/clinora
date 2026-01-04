@@ -6,22 +6,22 @@
 
 @push('structured_data')
 <script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "AboutPage",
-  "name": "Sobre Nosotros - Clinora",
-  "description": "Información sobre Clinora y nuestra misión",
-  "url": "{{ url('/sobre-nosotros') }}",
-  "mainEntity": {
-    "@type": "Organization",
-    "name": "Clinora",
-    "url": "{{ url('/') }}",
-    "logo": "{{ asset('images/logo.png') }}",
-    "description": "Software de gestión para clínicas de salud y psicología",
-    "foundingDate": "2024",
-    "sameAs": []
-  }
-}
+{!! json_encode([
+    '@context' => 'https://schema.org',
+    '@type' => 'AboutPage',
+    'name' => 'Sobre Nosotros - Clinora',
+    'description' => 'Información sobre Clinora y nuestra misión',
+    'url' => url('/sobre-nosotros'),
+    'mainEntity' => [
+        '@type' => 'Organization',
+        'name' => 'Clinora',
+        'url' => url('/'),
+        'logo' => asset('images/logo.png'),
+        'description' => 'Software de gestión para clínicas de salud y psicología',
+        'foundingDate' => '2024',
+        'sameAs' => []
+    ]
+], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) !!}
 </script>
 @endpush
 
@@ -192,24 +192,4 @@
         </div>
     </section>
 
-    {{-- CTA Section --}}
-    <section class="py-20 bg-gradient-to-r from-primary-500 to-primary-600 text-white">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="max-w-3xl mx-auto text-center">
-                <h2 class="text-3xl sm:text-4xl font-bold mb-4">
-                    ¿Listo para simplificar tu consulta?
-                </h2>
-                <p class="text-xl mb-8 text-primary-100">
-                    Únete a los profesionales que ya confían en Clinora
-                </p>
-                <a href="{{ route('register') }}" 
-                   class="inline-block bg-white text-primary-600 hover:bg-primary-50 px-8 py-4 rounded-lg font-semibold text-lg transition-colors shadow-lg hover:shadow-xl">
-                    Crear Cuenta Gratuita
-                </a>
-                <p class="mt-4 text-sm text-primary-100">
-                    Sin tarjeta de crédito · Cancelación en cualquier momento
-                </p>
-            </div>
-        </div>
-    </section>
 @endsection

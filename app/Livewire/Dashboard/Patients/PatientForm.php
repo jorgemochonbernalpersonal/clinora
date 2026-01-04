@@ -181,6 +181,30 @@ class PatientForm extends Component
 
     public function save()
     {
+        // Check patient limits (only for new patients, not edits)
+        if (!$this->isEditing) {
+            $professional = auth()->user()->professional;
+            $planLimits = app(\App\Core\Subscriptions\Services\PlanLimitsService::class);
+            
+            if (!$planLimits->canAddPatient($professional)) {
+                $stats = $planLimits->getUsageStats($professional);
+                
+                session()->flash('error', sprintf(
+                    '¡Has alcanzado el límite de %d pacientes de tu plan %s!',
+                    $stats['patient_limit'],
+                    $professional->subscription_plan->label()
+                ));
+                
+                session()->flash('upgrade_required', [
+                    'feature' => 'patient-limit',
+                    'feature_name' => 'más pacientes',
+                    'required_plan' => 'Pro',
+                ]);
+                
+                return redirect()->route('patients.index');
+            }
+        }
+        
         $validated = $this->validate();
         $validated['professional_id'] = auth()->user()->professional->id;
 
@@ -205,7 +229,7 @@ class PatientForm extends Component
             session()->flash('success', 'Paciente actualizado correctamente.');
         } else {
             Contact::create($validated);
-            session()->flash('success', 'Paciente creado correctamente.');
+            session()->flash('success', '¡Paciente creado correctamente!');
         }
         
         return redirect()->route('patients.index');

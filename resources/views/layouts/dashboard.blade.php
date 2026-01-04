@@ -16,6 +16,7 @@
     
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
+    @stack('styles')
 </head>
 <body class="bg-background">
     <!-- Google Tag Manager (noscript) -->
@@ -146,6 +147,7 @@
     </div>
     
     @livewireScripts
+    @stack('scripts')
     
     {{-- Email Verification Modal --}}
     @livewire('auth.email-verification-modal')

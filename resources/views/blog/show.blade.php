@@ -9,31 +9,28 @@
 
 @push('structured_data')
 <script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BlogPosting",
-  "headline": "{{ $post->title }}",
-  "description": "{{ $post->excerpt }}",
-  "url": "{{ route('blog.show', $post) }}",
-  "datePublished": "{{ $post->published_at->toIso8601String() }}",
-  "dateModified": "{{ $post->updated_at->toIso8601String() }}",
-  "author": {
-    "@type": "Organization",
-    "name": "Clinora"
-  },
-  "publisher": {
-    "@type": "Organization",
-    "name": "Clinora",
-    "logo": {
-      "@type": "ImageObject",
-      "url": "{{ asset('images/logo.png') }}"
-    }
-  }
-  @if($post->featured_image)
-  ,
-  "image": "{{ $post->featured_image }}"
-  @endif
-}
+{!! json_encode(array_filter([
+    '@context' => 'https://schema.org',
+    '@type' => 'BlogPosting',
+    'headline' => $post->title,
+    'description' => $post->excerpt,
+    'url' => route('blog.show', $post),
+    'datePublished' => $post->published_at->toIso8601String(),
+    'dateModified' => $post->updated_at->toIso8601String(),
+    'author' => [
+        '@type' => 'Organization',
+        'name' => 'Clinora'
+    ],
+    'publisher' => [
+        '@type' => 'Organization',
+        'name' => 'Clinora',
+        'logo' => [
+            '@type' => 'ImageObject',
+            'url' => asset('images/logo.png')
+        ]
+    ],
+    'image' => $post->featured_image ?: null,
+]), JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) !!}
 </script>
 @endpush
 
