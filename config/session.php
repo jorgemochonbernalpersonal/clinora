@@ -169,7 +169,7 @@ return [
     |
     */
 
-    'secure' => env('SESSION_SECURE_COOKIE', str_starts_with(config('app.url', ''), 'https') ? true : null),
+    'secure' => env('SESSION_SECURE_COOKIE') ?? (env('APP_URL') && str_starts_with(env('APP_URL'), 'https://') ? true : null),
 
     /*
     |--------------------------------------------------------------------------
