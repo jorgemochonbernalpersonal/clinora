@@ -18,6 +18,9 @@ return Application::configure(basePath: dirname(__DIR__))
             'feature' => \App\Http\Middleware\CheckFeatureAccess::class,
         ]);
         
+        // Debug middleware for Livewire preview
+        $middleware->appendToGroup('web', \App\Http\Middleware\ForceLivewireAuth::class);
+        
         // Register request logging middleware (optional - can be enabled per route group)
         // $middleware->appendToGroup('web', \App\Http\Middleware\LogRequests::class);
     })
