@@ -11,6 +11,7 @@ $directories = [
     'storage/app',
     'storage/app/public',
     'storage/app/public/patients-photos',
+    'storage/app/livewire-tmp',
     'storage/framework',
     'storage/framework/cache',
     'storage/framework/sessions',
