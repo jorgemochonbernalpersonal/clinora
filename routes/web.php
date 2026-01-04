@@ -1,13 +1,13 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LogViewerController;
+use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // SEO - Sitemap (debe estar antes de otras rutas para evitar conflictos)
-Route::get('/sitemap.xml', function() {
+Route::get('/sitemap.xml', function () {
     // Cache inteligente: 1 hora (el sitemap cambia poco frecuentemente)
     // pero los motores de búsqueda pueden cachear más tiempo
     return response()
@@ -15,11 +15,11 @@ Route::get('/sitemap.xml', function() {
         ->header('Content-Type', 'application/xml; charset=utf-8')
         ->header('Cache-Control', 'public, max-age=3600, s-maxage=86400')
         ->header('X-Content-Type-Options', 'nosniff')
-        ->header('X-Robots-Tag', 'noindex'); // No indexar el sitemap mismo
+        ->header('X-Robots-Tag', 'noindex');  // No indexar el sitemap mismo
 })->name('sitemap');
 
 // SEO - Sitemap XSL Stylesheet (para mejor visualización en navegadores)
-Route::get('/sitemap.xsl', function() {
+Route::get('/sitemap.xsl', function () {
     return response()
         ->view('sitemap_style', [], 200)
         ->header('Content-Type', 'application/xml; charset=utf-8')
@@ -58,7 +58,7 @@ Route::get('/email/verify', fn() => view('auth.verify-email'))->name('verificati
 Route::get('/email/verify/{id}/{hash}', [\App\Core\Authentication\Controllers\EmailVerificationController::class, 'verifyWeb'])
     ->middleware(['signed'])
     ->name('verification.verify');
-Route::post('/logout', function() {
+Route::post('/logout', function () {
     session()->forget(['api_token', 'user']);
     auth()->logout();
     return redirect()->route('login');
@@ -67,11 +67,11 @@ Route::post('/logout', function() {
 // Dashboard routes (protected)
 Route::middleware(['auth', 'verified'])->prefix('dashboard')->group(function () {
     Route::get('/', \App\Livewire\DashboardHome::class)->name('dashboard');
-    
+
     // Feature blocked preview
-    Route::get('/features/blocked/{feature}', function($feature) {
+    Route::get('/features/blocked/{feature}', function ($feature) {
         $blockedData = session('blocked_feature', []);
-        
+
         // Feature-specific content
         $featureDetails = [
             'teleconsulta' => [
@@ -110,18 +110,18 @@ Route::middleware(['auth', 'verified'])->prefix('dashboard')->group(function () 
                 ]
             ],
         ];
-        
+
         $details = $featureDetails[$feature] ?? [
             'title' => ucfirst($feature),
             'description' => 'Esta función premium no está disponible en tu plan actual.',
             'benefits' => []
         ];
-        
+
         return view('features.blocked', array_merge([
             'feature' => $feature,
         ], $details));
     })->name('features.blocked');
-    
+
     // Patients
     Route::get('/patients', \App\Livewire\Patients\PatientList::class)->name('patients.index');
     Route::get('/patients/create', \App\Livewire\Dashboard\Patients\PatientForm::class)->name('patients.create');
@@ -136,14 +136,14 @@ Route::middleware(['auth', 'verified'])->prefix('dashboard')->group(function () 
     Route::get('/clinical-notes', fn() => view('dashboard.clinical-notes.index'))->name('clinical-notes.index');
     Route::get('/clinical-notes/create', \App\Livewire\Dashboard\ClinicalNotes\ClinicalNoteForm::class)->name('clinical-notes.create');
     Route::get('/clinical-notes/{id}/edit', \App\Livewire\Dashboard\ClinicalNotes\ClinicalNoteForm::class)->name('clinical-notes.edit');
-    
+
     // Subscription Management
     Route::get('/subscription', [App\Http\Controllers\SubscriptionController::class, 'index'])->name('subscription.index');
     Route::patch('/subscription/preferences', [App\Http\Controllers\SubscriptionController::class, 'updatePreferences'])->name('subscription.update-preferences');
-    
+
     // Onboarding
     Route::post('/onboarding/welcome-seen', [App\Http\Controllers\OnboardingController::class, 'welcomeSeen'])->name('onboarding.welcome-seen');
-    
+
     // Settings
     Route::get('/profile', fn() => view('dashboard.profile'))->name('profile.settings');
     Route::get('/security', fn() => view('dashboard.security'))->name('security.settings');
