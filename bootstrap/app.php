@@ -20,15 +20,7 @@ return Application::configure(basePath: dirname(__DIR__))
         
         // Proteger rutas de Livewire preview-file con autenticación
         $middleware->web(append: [
-            function ($request, $next) {
-                // Proteger rutas de preview de archivos de Livewire
-                if ($request->is('livewire/preview-file/*')) {
-                    if (!auth()->check()) {
-                        return response('Unauthorized', 401);
-                    }
-                }
-                return $next($request);
-            },
+            \App\Http\Middleware\ProtectLivewirePreview::class,
         ]);
         
         // Register request logging middleware (optional - can be enabled per route group)
