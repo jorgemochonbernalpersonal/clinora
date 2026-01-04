@@ -14,14 +14,15 @@
 </FilesMatch>
 
 # Proteger directorios sensibles
-RedirectMatch 403 /\.git
-RedirectMatch 403 /vendor
-RedirectMatch 403 /storage/logs
-RedirectMatch 403 /config
-RedirectMatch 403 /database
-RedirectMatch 403 /app
-RedirectMatch 403 /bootstrap
-RedirectMatch 403 /routes
+# Proteger directorios sensibles
+RedirectMatch 403 ^/\.git
+RedirectMatch 403 ^/vendor
+RedirectMatch 403 ^/storage/logs
+RedirectMatch 403 ^/config
+RedirectMatch 403 ^/database
+RedirectMatch 403 ^/app
+RedirectMatch 403 ^/bootstrap
+RedirectMatch 403 ^/routes
 
 ####################################
 # Security Headers - Máxima Seguridad para Datos Médicos
