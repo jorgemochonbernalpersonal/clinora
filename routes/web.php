@@ -21,7 +21,7 @@ Route::get('/sitemap.xml', function() {
 // SEO - Sitemap XSL Stylesheet (para mejor visualización en navegadores)
 Route::get('/sitemap.xsl', function() {
     return response()
-        ->view('sitemap.xsl', [], 200)
+        ->view('sitemap_style', [], 200)
         ->header('Content-Type', 'application/xml; charset=utf-8')
         ->header('Cache-Control', 'public, max-age=3600');
 })->name('sitemap.xsl');
