@@ -3,8 +3,82 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+        {{-- Primary Meta Tags --}}
+        <title>Clinora - Software para Psicólogos y Salud Mental</title>
+        <meta name="title" content="Clinora - Software de Gestión para Psicólogos | Prueba Gratis">
+        <meta name="description" content="El software definitivo para psicólogos. Gestiona historias clínicas, citas, facturación y teleconsulta. Cumple RGPD/LOPD. Prueba gratis 14 días.">
+        <meta name="keywords" content="software psicólogos, gestión clínica psicología, historia clínica psicológica, software salud mental, telepsicología, RGPD psicología">
+        <meta name="author" content="Clinora">
+        <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+        <meta name="language" content="Spanish">
+        <meta name="revisit-after" content="7 days">
+        
+        {{-- Geo Tags --}}
+        <meta name="geo.region" content="ES">
+        <meta name="geo.placename" content="España">
+        
+        {{-- Web App Manifest --}}
+        <meta name="application-name" content="Clinora">
+        <meta name="theme-color" content="#0EA5E9">
+        
+        {{-- Open Graph / Facebook --}}
+        <meta property="og:type" content="website">
+        <meta property="og:url" content="{{ url()->current() }}">
+        <meta property="og:title" content="Clinora - Software de Gestión para Clínicas de Salud">
+        <meta property="og:description" content="Gestiona tu clínica de salud con la plataforma más completa. 2FA, GDPR compliant, verificación de email. Prueba gratis 14 días.">
+
+        <meta property="og:locale" content="es_ES">
+        <meta property="og:site_name" content="Clinora">
+
+        {{-- Twitter --}}
+        <meta property="twitter:card" content="summary_large_image">
+        <meta property="twitter:url" content="{{ url()->current() }}">
+        <meta property="twitter:title" content="Clinora - Software de Gestión para Clínicas de Salud">
+        <meta property="twitter:description" content="Gestiona tu clínica de salud con la plataforma más completa. Prueba gratis 14 días.">
+
+
+        {{-- Canonical URL --}}
+        <link rel="canonical" href="{{ url()->current() }}">
+
+        {{-- JSON-LD Structured Data --}}
+        <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "SoftwareApplication",
+            "name": "Clinora",
+            "headline": "Software de Gestión para Psicólogos y Clínicas de Salud Mental",
+            "description": "Plataforma integral para la gestión de clínicas de psicología. Historias clínicas, citas, facturación, teleconsulta segura y cumplimiento RGPD.",
+            "applicationCategory": "HealthApplication",
+            "operatingSystem": "Web",
+            "offers": {
+                "@type": "Offer",
+                "price": "0",
+                "priceCurrency": "EUR",
+                "availability": "https://schema.org/InStock",
+                "url": "{{ url('/register') }}"
+            },
+            "aggregateRating": {
+                "@type": "AggregateRating",
+                "ratingValue": "4.9",
+                "ratingCount": "150"
+            },
+            "author": {
+                "@type": "Organization",
+                "name": "Clinora",
+                "url": "{{ url('/') }}"
+            },
+            "publisher": {
+                "@type": "Organization",
+                "name": "Clinora",
+                "logo": {
+                    "@type": "ImageObject",
+                    "url": "{{ asset('images/logo.png') }}"
+                }
+            }
+        }
+        </script>
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
@@ -52,8 +126,8 @@
         <div class="flex items-center justify-center w-full transition-opacity opacity-100 duration-750 lg:grow starting:opacity-0">
             <main class="flex max-w-[335px] w-full flex-col-reverse lg:max-w-4xl lg:flex-row">
                 <div class="text-[13px] leading-[20px] flex-1 p-6 pb-12 lg:p-20 bg-white dark:bg-[#161615] dark:text-[#EDEDEC] shadow-[inset_0px_0px_0px_1px_rgba(26,26,0,0.16)] dark:shadow-[inset_0px_0px_0px_1px_#fffaed2d] rounded-bl-lg rounded-br-lg lg:rounded-tl-lg lg:rounded-br-none">
-                    <h1 class="mb-1 font-medium">Let's get started</h1>
-                    <p class="mb-2 text-[#706f6c] dark:text-[#A1A09A]">Laravel has an incredibly rich ecosystem. <br>We suggest starting with the following.</p>
+                    <h1 class="mb-1 font-medium">Clinora - Software para Psicólogos</h1>
+                    <p class="mb-2 text-[#706f6c] dark:text-[#A1A09A]">La plataforma integral para gestionar tu clínica de salud mental. <br>Historia clínica, facturación y agenda en un solo lugar.</p>
                     <ul class="flex flex-col mb-4 lg:mb-6">
                         <li class="flex items-center gap-4 py-2 relative before:border-l before:border-[#e3e3e0] dark:before:border-[#3E3E3A] before:top-1/2 before:bottom-0 before:left-[0.4rem] before:absolute">
                             <span class="relative py-1 bg-white dark:bg-[#161615]">

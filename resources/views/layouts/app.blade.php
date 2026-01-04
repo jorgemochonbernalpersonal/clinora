@@ -32,9 +32,7 @@
     <meta property="og:url" content="{{ url()->current() }}">
     <meta property="og:title" content="@yield('og_title', 'Clinora - Software de Gestión para Clínicas de Salud')">
     <meta property="og:description" content="@yield('og_description', 'Gestiona tu clínica de salud con la plataforma más completa. 2FA, GDPR compliant, verificación de email. Prueba gratis 14 días.')">
-    <meta property="og:image" content="@yield('og_image', asset('images/og-image.jpg'))">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
+
     <meta property="og:locale" content="es_ES">
     <meta property="og:site_name" content="Clinora">
 
@@ -43,7 +41,7 @@
     <meta property="twitter:url" content="{{ url()->current() }}">
     <meta property="twitter:title" content="@yield('twitter_title', 'Clinora - Software de Gestión para Clínicas de Salud')">
     <meta property="twitter:description" content="@yield('twitter_description', 'Gestiona tu clínica de salud con la plataforma más completa. Prueba gratis 14 días.')">
-    <meta property="twitter:image" content="@yield('twitter_image', asset('images/twitter-image.jpg'))">
+
 
     {{-- Canonical URL --}}
     <link rel="canonical" href="{{ url()->current() }}">
@@ -51,6 +49,13 @@
     {{-- Alternate Languages (if you add more in the future) --}}
     <link rel="alternate" hreflang="es" href="{{ url()->current() }}">
     <link rel="alternate" hreflang="x-default" href="{{ url('/') }}">
+    
+    {{-- SEO: Sitemap reference --}}
+    <link rel="sitemap" type="application/xml" href="{{ url('/sitemap.xml') }}">
+    
+    {{-- SEO: DNS Prefetch for external resources --}}
+    <link rel="dns-prefetch" href="https://www.google-analytics.com">
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
 
     {{-- Favicon --}}
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">

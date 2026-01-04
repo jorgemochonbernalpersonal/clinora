@@ -6,11 +6,34 @@ use App\Http\Controllers\LogViewerController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
-// SEO
+// SEO - Sitemap (debe estar antes de otras rutas para evitar conflictos)
 Route::get('/sitemap.xml', function() {
-    return response()->view('sitemap')
-        ->header('Content-Type', 'application/xml');
+    // Cache inteligente: 1 hora (el sitemap cambia poco frecuentemente)
+    // pero los motores de búsqueda pueden cachear más tiempo
+    return response()
+        ->view('sitemap', [], 200)
+        ->header('Content-Type', 'application/xml; charset=utf-8')
+        ->header('Cache-Control', 'public, max-age=3600, s-maxage=86400')
+        ->header('X-Content-Type-Options', 'nosniff')
+        ->header('X-Robots-Tag', 'noindex'); // No indexar el sitemap mismo
 })->name('sitemap');
+
+// SEO - Sitemap XSL Stylesheet (para mejor visualización en navegadores)
+Route::get('/sitemap.xsl', function() {
+    return response()
+        ->view('sitemap.xsl', [], 200)
+        ->header('Content-Type', 'application/xml; charset=utf-8')
+        ->header('Cache-Control', 'public, max-age=3600');
+})->name('sitemap.xsl');
+
+// SEO - Robots.txt dinámico (opcional, si quieres generarlo dinámicamente)
+// Por ahora usamos el archivo estático en public/robots.txt
+// Route::get('/robots.txt', function() {
+//     return response()
+//         ->view('robots', [], 200)
+//         ->header('Content-Type', 'text/plain; charset=utf-8')
+//         ->header('Cache-Control', 'public, max-age=86400');
+// })->name('robots');
 
 // Legal pages
 Route::get('/legal/cookies', fn() => view('legal.cookies'))->name('legal.cookies');

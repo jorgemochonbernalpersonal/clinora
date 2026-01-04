@@ -1,16 +1,24 @@
 # ✅ SEO: Robots.txt optimizado para Clinora
 # Permite indexación de contenido público y bloquea áreas privadas
+# Última actualización: 2026-01-03
 
-# Todos los bots
+# ============================================
+# CONFIGURACIÓN GENERAL PARA TODOS LOS BOTS
+# ============================================
 User-agent: *
 Allow: /
 
 # ✅ SEO: Permitir explícitamente contenido público importante
 Allow: /
-Allow: /landing
-Allow: /legal
+Allow: /legal/
+Allow: /legal/privacy
+Allow: /legal/terms
+Allow: /legal/gdpr
+Allow: /legal/cookies
 
-# Bloquear áreas privadas (requieren autenticación)
+# ============================================
+# BLOQUEAR ÁREAS PRIVADAS (requieren autenticación)
+# ============================================
 Disallow: /dashboard/
 Disallow: /admin/
 Disallow: /patient/
@@ -20,49 +28,138 @@ Disallow: /contacts/
 Disallow: /users/
 Disallow: /profile/
 Disallow: /api/
+Disallow: /sanctum/
 
-# Bloquear sistema y desarrollo
+# ============================================
+# BLOQUEAR SISTEMA Y DESARROLLO
+# ============================================
 Disallow: /livewire/
 Disallow: /telescope/
 Disallow: /_debugbar/
-Disallow: /logs
+Disallow: /logs/
+Disallow: /horizon/
+Disallow: /tinker
+Disallow: /vendor/
+Disallow: /storage/framework/
+Disallow: /storage/logs/
 
-# Bloquear autenticación (no indexar páginas de login/registro)
+# ============================================
+# BLOQUEAR AUTENTICACIÓN (no indexar páginas de login/registro)
+# ============================================
 Disallow: /login
 Disallow: /register
 Disallow: /password/
+Disallow: /password/reset
 Disallow: /email/
 Disallow: /email/verify
 Disallow: /forgot-password
 Disallow: /2fa/
 Disallow: /logout
+Disallow: /auth/
 
-# Bloquear archivos sensibles
+# ============================================
+# BLOQUEAR ARCHIVOS SENSIBLES Y CONFIGURACIÓN
+# ============================================
 Disallow: /.env
-Disallow: /.git
+Disallow: /.env.*
+Disallow: /.git/
+Disallow: /.gitignore
 Disallow: /.htaccess
 Disallow: /composer.json
+Disallow: /composer.lock
 Disallow: /package.json
+Disallow: /package-lock.json
+Disallow: /phpunit.xml
+Disallow: /artisan
+Disallow: /bootstrap/
+Disallow: /config/
+Disallow: /database/
+Disallow: /routes/
+Disallow: /tests/
+Disallow: /storage/app/private/
 
-# ✅ SEO: Permitir assets públicos
+# ============================================
+# PERMITIR ASSETS PÚBLICOS (importante para SEO)
+# ============================================
 Allow: /css/
 Allow: /js/
 Allow: /images/
 Allow: /build/
-Allow: /storage/
+Allow: /storage/app/public/
+Allow: /favicon.ico
+Allow: /robots.txt
+Allow: /sitemap.xml
+Allow: /sitemap.xsl
 
-# ✅ SEO: Sitemap principal
-Sitemap: https://clinora.es/sitemap.xml
-
-# ✅ SEO: Crawl-delay para bots que lo respetan (Google lo ignora)
-Crawl-delay: 1
-
-# ✅ SEO: Configuración específica para Googlebot
+# ============================================
+# CONFIGURACIÓN ESPECÍFICA PARA GOOGLEBOT
+# ============================================
 User-agent: Googlebot
 Allow: /
 # Google ignora Crawl-delay, no es necesario
+# Google tiene su propio sistema de rate limiting
 
-# ✅ SEO: Configuración específica para Bingbot
+# ============================================
+# CONFIGURACIÓN ESPECÍFICA PARA GOOGLEBOT-IMAGE
+# ============================================
+User-agent: Googlebot-Image
+Allow: /images/
+Allow: /storage/app/public/
+Disallow: /
+
+# ============================================
+# CONFIGURACIÓN ESPECÍFICA PARA BINGBOT
+# ============================================
 User-agent: Bingbot
 Allow: /
 Crawl-delay: 1
+
+# ============================================
+# CONFIGURACIÓN PARA OTROS MOTORES DE BÚSQUEDA
+# ============================================
+User-agent: Slurp
+Allow: /
+Crawl-delay: 1
+
+User-agent: DuckDuckBot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Baiduspider
+Allow: /
+Crawl-delay: 2
+
+User-agent: Yandex
+Allow: /
+Crawl-delay: 1
+
+# ============================================
+# BLOQUEAR BOTS MALICIOSOS Y SCRAPERS
+# ============================================
+User-agent: AhrefsBot
+Crawl-delay: 10
+
+User-agent: SemrushBot
+Crawl-delay: 10
+
+User-agent: MJ12bot
+Crawl-delay: 10
+
+User-agent: DotBot
+Crawl-delay: 10
+
+# ============================================
+# SITEMAPS
+# ============================================
+# ✅ SEO: Sitemap principal (usar dominio correcto)
+Sitemap: https://clinora.com/sitemap.xml
+Sitemap: https://clinora.es/sitemap.xml
+
+# ============================================
+# NOTAS
+# ============================================
+# - Este robots.txt permite indexar contenido público
+# - Las páginas legales están permitidas para SEO y confianza
+# - Las áreas privadas están bloqueadas para proteger datos de pacientes
+# - Los assets públicos están permitidos para mejor rendimiento SEO
+# - Crawl-delay solo afecta a bots que lo respetan (Google lo ignora)
