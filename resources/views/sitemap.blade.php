@@ -3,7 +3,7 @@
         xmlns:xhtml="http://www.w3.org/1999/xhtml"
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
     
-    {{-- Homepage --}}
+    {{-- ✅ SEO: Homepage / Landing Page - Máxima prioridad --}}
     <url>
         <loc>{{ url('/') }}</loc>
         <lastmod>{{ now()->toAtomString() }}</lastmod>
@@ -11,32 +11,41 @@
         <priority>1.0</priority>
     </url>
     
-    {{-- Public Pages --}}
+    {{-- ✅ SEO: Páginas Legales - Importantes para confianza y cumplimiento --}}
     
-    {{-- Login Page --}}
+    {{-- Privacy Policy --}}
     <url>
-        <loc>{{ url('/login') }}</loc>
+        <loc>{{ url('/legal/privacy') }}</loc>
         <lastmod>{{ now()->toAtomString() }}</lastmod>
         <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
-    </url>
-    
-    {{-- Register Page --}}
-    <url>
-        <loc>{{ url('/register') }}</loc>
-        <lastmod>{{ now()->toAtomString() }}</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.9</priority>
-    </url>
-    
-    {{-- Add more public pages here as they are created --}}
-    {{-- Example:
-    <url>
-        <loc>{{ url('/blog') }}</loc>
-        <lastmod>{{ now()->toAtomString() }}</lastmod>
-        <changefreq>daily</changefreq>
         <priority>0.7</priority>
     </url>
-    --}}
+    
+    {{-- Terms of Service --}}
+    <url>
+        <loc>{{ url('/legal/terms') }}</loc>
+        <lastmod>{{ now()->toAtomString() }}</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    
+    {{-- GDPR / Data Protection --}}
+    <url>
+        <loc>{{ url('/legal/gdpr') }}</loc>
+        <lastmod>{{ now()->toAtomString() }}</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    
+    {{-- Cookies Policy --}}
+    <url>
+        <loc>{{ url('/legal/cookies') }}</loc>
+        <lastmod>{{ now()->toAtomString() }}</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+    
+    {{-- Nota: Login, Register y otras páginas de autenticación están excluidas
+         porque están bloqueadas en robots.txt para evitar indexación --}}
     
 </urlset>
