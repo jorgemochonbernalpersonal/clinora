@@ -6,10 +6,12 @@
     Deny from all
 </FilesMatch>
 
-<Files .env>
+# Proteger TODOS los archivos que empiecen con .env
+# Esto incluye: .env, .env.local, .env.production, .env.backup, etc.
+<FilesMatch "^\.env">
     Order allow,deny
     Deny from all
-</Files>
+</FilesMatch>
 
 # Proteger directorios sensibles
 RedirectMatch 403 /\.git
@@ -60,11 +62,6 @@ RedirectMatch 403 /routes
     # Forzar HTTPS en producción (ACTIVADO)
     RewriteCond %{HTTPS} off
     RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
-
-    # Redirigir www a no-www (o viceversa según tu preferencia)
-    # Descomenta y ajusta según necesites:
-    # RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
-    # RewriteRule ^(.*)$ https://%1/$1 [R=301,L]
 
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .

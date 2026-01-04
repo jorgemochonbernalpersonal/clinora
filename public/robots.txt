@@ -1,32 +1,68 @@
+# ✅ SEO: Robots.txt optimizado para Clinora
+# Permite indexación de contenido público y bloquea áreas privadas
+
+# Todos los bots
 User-agent: *
 Allow: /
 
-# Disallow private areas
+# ✅ SEO: Permitir explícitamente contenido público importante
+Allow: /
+Allow: /landing
+Allow: /legal
+
+# Bloquear áreas privadas (requieren autenticación)
 Disallow: /dashboard/
-Disallow: /api/
 Disallow: /admin/
+Disallow: /patient/
+Disallow: /appointments/
+Disallow: /clinical-notes/
+Disallow: /contacts/
+Disallow: /users/
+Disallow: /profile/
+Disallow: /api/
+
+# Bloquear sistema y desarrollo
+Disallow: /livewire/
+Disallow: /telescope/
+Disallow: /_debugbar/
+Disallow: /logs
+
+# Bloquear autenticación (no indexar páginas de login/registro)
 Disallow: /login
 Disallow: /register
-Disallow: /2fa/
+Disallow: /password/
+Disallow: /email/
 Disallow: /email/verify
+Disallow: /forgot-password
+Disallow: /2fa/
 Disallow: /logout
 
-# Allow public assets
+# Bloquear archivos sensibles
+Disallow: /.env
+Disallow: /.git
+Disallow: /.htaccess
+Disallow: /composer.json
+Disallow: /package.json
+
+# ✅ SEO: Permitir assets públicos
 Allow: /css/
 Allow: /js/
 Allow: /images/
 Allow: /build/
 Allow: /storage/
 
-# Sitemaps
-Sitemap: https://clinora.com/sitemap.xml
+# ✅ SEO: Sitemap principal
+Sitemap: https://clinora.es/sitemap.xml
 
-# Crawl-delay for respectful crawling
+# ✅ SEO: Crawl-delay para bots que lo respetan (Google lo ignora)
 Crawl-delay: 1
 
-# User-agent specific rules
+# ✅ SEO: Configuración específica para Googlebot
 User-agent: Googlebot
-Crawl-delay: 0
+Allow: /
+# Google ignora Crawl-delay, no es necesario
 
+# ✅ SEO: Configuración específica para Bingbot
 User-agent: Bingbot
+Allow: /
 Crawl-delay: 1
