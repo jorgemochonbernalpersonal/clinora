@@ -19,14 +19,10 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
         
         // Proteger rutas de Livewire preview-file con autenticación
-        $middleware->web(append: [
-            \App\Http\Middleware\ProtectLivewirePreview::class,
-        ]);
+        $middleware->appendToGroup('web', \App\Http\Middleware\ProtectLivewirePreview::class);
         
         // Register request logging middleware (optional - can be enabled per route group)
-        // $middleware->web(append: [
-        //     \App\Http\Middleware\LogRequests::class,
-        // ]);
+        // $middleware->appendToGroup('web', \App\Http\Middleware\LogRequests::class);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         // Log all exceptions
