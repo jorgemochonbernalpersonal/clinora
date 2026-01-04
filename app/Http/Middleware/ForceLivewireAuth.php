@@ -11,13 +11,12 @@ class ForceLivewireAuth
     public function handle(Request $request, Closure $next): Response
     {
         if ($request->is('livewire/preview-file/*')) {
-            \Log::info('Livewire preview FULL DEBUG', [
-                'full_url' => $request->fullUrl(),
-                'query_params' => $request->query->all(),
-                'has_expires' => $request->has('expires'),
-                'has_signature' => $request->has('signature'),
-                'expires_value' => $request->query('expires'),
-                'signature_value' => $request->query('signature'),
+            \Log::info('Livewire preview RAW DEBUG', [
+                'SERVER_REQUEST_URI' => $_SERVER['REQUEST_URI'] ?? 'EMPTY',
+                'SERVER_QUERY_STRING' => $_SERVER['QUERY_STRING'] ?? 'EMPTY',
+                'PHP_GET' => $_GET,
+                'request_fullUrl' => $request->fullUrl(),
+                'request_query' => $request->query->all(),
             ]);
         }
         
