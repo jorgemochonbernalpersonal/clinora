@@ -25,8 +25,8 @@ class ConsentFormService
         $professional = Professional::findOrFail($data['professional_id']);
         $contact = Contact::findOrFail($data['contact_id']);
         
-        // Get module from professional
-        $module = $professional->profession_type ?? 'psychology';
+        // Get module from professional (map profession_type to module name)
+        $module = $this->getModuleNameFromProfessionType($professional->profession_type ?? 'psychologist');
         $consentType = $data['consent_type'] ?? ConsentForm::TYPE_INITIAL_TREATMENT;
 
         // Get template from registry
@@ -104,7 +104,7 @@ class ConsentFormService
      */
     public function getAvailableTypes(Professional $professional): array
     {
-        $module = $professional->profession_type ?? 'psychology';
+        $module = $this->getModuleNameFromProfessionType($professional->profession_type ?? 'psychologist');
         $templates = ConsentFormTemplateRegistry::getModuleTemplates($module);
 
         $availableTypes = [];
@@ -113,6 +113,23 @@ class ConsentFormService
         }
 
         return $availableTypes;
+    }
+
+    /**
+     * Map profession_type to module name
+     * 
+     * @param string $professionType
+     * @return string
+     */
+    private function getModuleNameFromProfessionType(string $professionType): string
+    {
+        return match($professionType) {
+            'psychologist' => 'psychology',
+            'therapist' => 'therapy',
+            'nutritionist' => 'nutrition',
+            'psychiatrist' => 'psychiatry',
+            default => 'psychology', // Default fallback
+        };
     }
 }
 

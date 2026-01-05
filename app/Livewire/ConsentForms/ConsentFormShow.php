@@ -135,28 +135,59 @@ class ConsentFormShow extends Component
         session()->flash('info', 'La generación de PDF estará disponible próximamente');
     }
 
-    public function render()
+    /**
+     * Extract body content from full HTML document
+     * This is needed because some templates generate full HTML documents
+     * but we only want to display the body content in the view
+     */
+    public function getConsentBodyContent(): string
     {
-        // Get the template view based on consent type
-        $templateView = $this->getTemplateView();
+        $html = $this->consentForm->consent_text;
         
-        return view('livewire.consent-forms.consent-form-show', [
-            'templateView' => $templateView,
-        ]);
+        if (empty($html)) {
+            return '';
+        }
+        
+        // If the HTML contains a full document structure, extract only the body content
+        if (preg_match('/<body[^>]*>(.*?)<\/body>/is', $html, $matches)) {
+            $bodyContent = trim($matches[1]);
+            // Remove any remaining DOCTYPE, html, head tags that might be nested
+            $bodyContent = preg_replace('/<!DOCTYPE[^>]*>/i', '', $bodyContent);
+            $bodyContent = preg_replace('/<html[^>]*>/i', '', $bodyContent);
+            $bodyContent = preg_replace('/<\/html>/i', '', $bodyContent);
+            $bodyContent = preg_replace('/<head[^>]*>.*?<\/head>/is', '', $bodyContent);
+            return $bodyContent;
+        }
+        
+        // If it's already just body content, return as is (but clean up any stray tags)
+        $html = preg_replace('/<!DOCTYPE[^>]*>/i', '', $html);
+        $html = preg_replace('/<html[^>]*>/i', '', $html);
+        $html = preg_replace('/<\/html>/i', '', $html);
+        $html = preg_replace('/<head[^>]*>.*?<\/head>/is', '', $html);
+        $html = preg_replace('/<body[^>]*>/i', '', $html);
+        $html = preg_replace('/<\/body>/i', '', $html);
+        
+        return trim($html);
     }
 
-    private function getTemplateView(): string
+    /**
+     * Extract styles from HTML document head
+     */
+    public function getConsentStyles(): string
     {
-        $module = $this->consentForm->professional->profession_type ?? 'psychology';
+        $html = $this->consentForm->consent_text;
         
-        $templateMap = [
-            ConsentForm::TYPE_INITIAL_TREATMENT => 'modules.psychology.consent-forms.initial-treatment',
-            ConsentForm::TYPE_TELECONSULTATION => 'modules.psychology.consent-forms.teleconsultation',
-            // Add more templates as needed
-        ];
+        // Extract styles from <style> tags
+        if (preg_match('/<style[^>]*>(.*?)<\/style>/is', $html, $matches)) {
+            return trim($matches[1]);
+        }
+        
+        return '';
+    }
 
-        return $templateMap[$this->consentForm->consent_type] 
-            ?? 'modules.psychology.consent-forms.initial-treatment';
+    public function render()
+    {
+        return view('livewire.consent-forms.consent-form-show');
     }
 
     public function getTemplateData(): array

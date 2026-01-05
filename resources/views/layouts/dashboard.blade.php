@@ -82,7 +82,7 @@
                     </div>
                 </a>
                 
-                <a href="{{ profession_route('consent-forms.index') }}" 
+                <a href="{{ profession_route('consent-forms.index', request()->routeIs(profession_prefix() . '.consent-forms.*') && request()->get('status') !== 'pending' ? ['status' => 'pending'] : []) }}" 
                    class="flex items-center justify-between px-4 py-3 rounded-lg {{ request()->routeIs(profession_prefix() . '.consent-forms.*') ? 'bg-primary-50 text-primary-600' : 'text-text-primary hover:bg-gray-50' }} transition-colors">
                     <div class="flex items-center gap-3">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -90,6 +90,7 @@
                         </svg>
                         <span class="font-medium">Consentimientos</span>
                     </div>
+                    @livewire('shared.consent-forms-pending-count')
                 </a>
                 
                 <a href="{{ profession_route('under-construction', ['feature' => 'evaluations']) }}" 
@@ -249,7 +250,7 @@
         </aside>
         
         {{-- Main Content --}}
-        <main class="flex-1 overflow-y-auto">
+        <main class="flex-1 overflow-y-auto bg-gray-50">
             <div class="p-8">
                 @if(isset($slot))
                     {{ $slot }}

@@ -6,6 +6,11 @@ use App\Core\ConsentForms\Models\ConsentForm;
 use App\Core\ConsentForms\Services\ConsentFormTemplateRegistry;
 use App\Modules\Psychology\ConsentForms\Templates\InitialTreatmentTemplate;
 use App\Modules\Psychology\ConsentForms\Templates\TeleconsultationTemplate;
+use App\Modules\Psychology\ConsentForms\Templates\MedicationReferralTemplate;
+use App\Modules\Psychology\ConsentForms\Templates\ThirdPartyCommunicationTemplate;
+use App\Modules\Psychology\ConsentForms\Templates\ResearchTemplate;
+use App\Modules\Psychology\ConsentForms\Templates\RecordingTemplate;
+use App\Modules\Psychology\ConsentForms\Templates\MinorsTemplate;
 use Illuminate\Support\ServiceProvider;
 
 /**
@@ -55,7 +60,11 @@ class PsychologyModuleServiceProvider extends ServiceProvider
         ConsentFormTemplateRegistry::register('psychology', [
             ConsentForm::TYPE_INITIAL_TREATMENT => InitialTreatmentTemplate::class,
             ConsentForm::TYPE_TELECONSULTATION => TeleconsultationTemplate::class,
-            // Add more templates as needed
+            ConsentForm::TYPE_MEDICATION_REFERRAL => MedicationReferralTemplate::class,
+            ConsentForm::TYPE_THIRD_PARTY_COMMUNICATION => ThirdPartyCommunicationTemplate::class,
+            ConsentForm::TYPE_RESEARCH => ResearchTemplate::class,
+            ConsentForm::TYPE_RECORDING => RecordingTemplate::class,
+            ConsentForm::TYPE_MINORS => MinorsTemplate::class,
         ]);
 
         // Load routes

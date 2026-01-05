@@ -93,8 +93,10 @@ class ConsentFormCreate extends Component
 
         try {
             $service = app(ConsentFormService::class);
+            $professional = auth()->user()->professional;
             
             $data = [
+                'professional_id' => $professional->id,
                 'contact_id' => $this->contactId,
                 'consent_type' => $this->consentType,
                 'consent_title' => $this->consentTitle,

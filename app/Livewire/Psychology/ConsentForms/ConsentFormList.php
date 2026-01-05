@@ -79,6 +79,18 @@ class ConsentFormList extends Component
         return $query->orderBy('created_at', 'desc')->paginate(15);
     }
 
+    public function getCountsProperty()
+    {
+        $baseQuery = ConsentForm::where('professional_id', auth()->user()->professional->id);
+        
+        return [
+            'all' => (clone $baseQuery)->count(),
+            'pending' => (clone $baseQuery)->pending()->count(),
+            'signed' => (clone $baseQuery)->signed()->count(),
+            'revoked' => (clone $baseQuery)->revoked()->count(),
+        ];
+    }
+
     public function getAvailableTypesProperty()
     {
         $service = app(ConsentFormService::class);
@@ -104,6 +116,7 @@ class ConsentFormList extends Component
         return view('livewire.consent-forms.consent-form-list', [
             'consentForms' => $this->consentForms,
             'availableTypes' => $this->availableTypes,
+            'counts' => $this->counts,
         ]);
     }
 }

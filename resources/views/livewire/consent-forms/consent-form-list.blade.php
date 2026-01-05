@@ -1,4 +1,4 @@
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+<div>
     {{-- Header --}}
     <div class="mb-6 flex justify-between items-center">
         <div>
@@ -14,9 +14,37 @@
         </a>
     </div>
 
+    {{-- Status Tabs --}}
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 mb-6">
+        <div class="border-b border-gray-200">
+            <nav class="-mb-px flex space-x-8 px-6" aria-label="Tabs">
+                <button wire:click="filterByStatus('all')" 
+                        class="{{ $status === 'all' ? 'border-primary-500 text-primary-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }} whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors">
+                    Todos
+                    <span class="ml-2 text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">{{ $counts['all'] ?? 0 }}</span>
+                </button>
+                <button wire:click="filterByStatus('pending')" 
+                        class="{{ $status === 'pending' ? 'border-primary-500 text-primary-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }} whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors">
+                    Pendientes
+                    <span class="ml-2 text-xs bg-yellow-100 text-yellow-600 px-2 py-0.5 rounded-full font-semibold">{{ $counts['pending'] ?? 0 }}</span>
+                </button>
+                <button wire:click="filterByStatus('signed')" 
+                        class="{{ $status === 'signed' ? 'border-primary-500 text-primary-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }} whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors">
+                    Firmados
+                    <span class="ml-2 text-xs bg-green-100 text-green-600 px-2 py-0.5 rounded-full">{{ $counts['signed'] ?? 0 }}</span>
+                </button>
+                <button wire:click="filterByStatus('revoked')" 
+                        class="{{ $status === 'revoked' ? 'border-primary-500 text-primary-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }} whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors">
+                    Revocados
+                    <span class="ml-2 text-xs bg-red-100 text-red-600 px-2 py-0.5 rounded-full">{{ $counts['revoked'] ?? 0 }}</span>
+                </button>
+            </nav>
+        </div>
+    </div>
+
     {{-- Filters --}}
     <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             {{-- Search --}}
             <div>
                 <input type="text" 
@@ -42,16 +70,6 @@
                     @foreach($availableTypes as $type => $label)
                         <option value="{{ $type }}">{{ $label }}</option>
                     @endforeach
-                </select>
-            </div>
-
-            {{-- Status Filter --}}
-            <div>
-                <select wire:model.live="status" class="w-full rounded-lg border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500">
-                    <option value="all">Todos los estados</option>
-                    <option value="pending">Pendientes</option>
-                    <option value="signed">Firmados</option>
-                    <option value="revoked">Revocados</option>
                 </select>
             </div>
         </div>
