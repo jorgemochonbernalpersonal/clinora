@@ -70,7 +70,7 @@
 
     <div class="section">
         <h2>1. IDENTIFICACIÓN DEL PROFESIONAL</h2>
-        <p><strong>Nombre:</strong> {{ $professional->user->name ?? 'N/A' }}</p>
+        <p><strong>Nombre:</strong> {{ $professional->user->full_name ?? 'N/A' }}</p>
         <p><strong>Nº de Colegiado:</strong> {{ $professional->license_number ?? 'N/A' }}</p>
         <p><strong>Especialidad:</strong> Psicología Clínica</p>
     </div>

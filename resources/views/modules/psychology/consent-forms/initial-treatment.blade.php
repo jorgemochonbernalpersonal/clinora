@@ -63,7 +63,7 @@
 
     <div class="section">
         <h2>1. IDENTIFICACIÓN DEL PROFESIONAL</h2>
-        <p><strong>Nombre:</strong> {{ $professional->user->name ?? 'N/A' }}</p>
+        <p><strong>Nombre:</strong> {{ $professional->user->full_name ?? 'N/A' }}</p>
         <p><strong>Nº de Colegiado:</strong> {{ $professional->license_number ?? 'N/A' }}</p>
         <p><strong>Especialidad:</strong> Psicología Clínica</p>
         @if($professional->address_city)
@@ -218,7 +218,7 @@
             y la Ley Orgánica de Protección de Datos y Garantía de Derechos Digitales (LOPDGDD).
         </p>
         <ul>
-            <li><strong>Responsable:</strong> {{ $professional->user->name ?? 'N/A' }}</li>
+            <li><strong>Responsable:</strong> {{ $professional->user->full_name ?? 'N/A' }}</li>
             <li><strong>Finalidad:</strong> Prestación de servicios psicológicos</li>
             <li><strong>Conservación:</strong> Durante el tratamiento y 5 años posteriores (obligación legal)</li>
             <li><strong>Derechos:</strong> Acceso, rectificación, supresión, limitación, portabilidad, oposición</li>
