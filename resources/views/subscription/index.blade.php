@@ -150,7 +150,7 @@
             </div>
             <div class="bg-white rounded-lg p-6">
                 <p class="text-sm text-text-secondary mb-1">Costo Estimado (este mes)</p>
-                <p class="text-3xl font-bold text-success-600">€{{ number_format($estimatedCost, 2) }}</p>
+                <p class="text-3xl font-bold text-success-700">€{{ number_format($estimatedCost, 2) }}</p>
                 @if(!$professional->isOnFreePlan())
                     <p class="text-sm text-text-secondary mt-2">{{ $stats['active_patients'] }} × €{{ $professional->isOnProPlan() ? '1' : '2' }}</p>
                 @endif
@@ -193,7 +193,7 @@
                                 </span>
                             </td>
                             <td class="py-3 px-4 text-right">
-                                <span class="text-lg font-semibold text-success-600">
+                                <span class="text-lg font-semibold text-success-700">
                                     €{{ number_format($month['cost'], 2) }}
                                 </span>
                             </td>

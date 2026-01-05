@@ -5,19 +5,47 @@
 @section('meta_description', 'Artículos y guías sobre psicología, gestión clínica, RGPD, y mejores prácticas para profesionales de la salud.')
 
 @push('structured_data')
+{{-- Blog Schema --}}
 <script type="application/ld+json">
 {!! json_encode([
     '@context' => 'https://schema.org',
     '@type' => 'Blog',
     'name' => 'Blog de Clinora',
-    'description' => 'Artículos y recursos para profesionales de la salud',
+    'description' => 'Artículos y recursos para profesionales de la salud mental y psicólogos',
     'url' => route('blog.index'),
     'publisher' => [
         '@type' => 'Organization',
         'name' => 'Clinora',
+        'url' => url('/'),
         'logo' => [
             '@type' => 'ImageObject',
-            'url' => asset('images/logo.png')
+            'url' => asset('images/logo.png'),
+            'width' => 500,
+            'height' => 500
+        ]
+    ],
+    'inLanguage' => 'es-ES',
+    'keywords' => 'blog psicología, gestión clínica, software psicólogos, RGPD psicología'
+], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) !!}
+</script>
+
+{{-- BreadcrumbList Schema --}}
+<script type="application/ld+json">
+{!! json_encode([
+    '@context' => 'https://schema.org',
+    '@type' => 'BreadcrumbList',
+    'itemListElement' => [
+        [
+            '@type' => 'ListItem',
+            'position' => 1,
+            'name' => 'Inicio',
+            'item' => url('/')
+        ],
+        [
+            '@type' => 'ListItem',
+            'position' => 2,
+            'name' => 'Blog',
+            'item' => route('blog.index')
         ]
     ]
 ], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) !!}

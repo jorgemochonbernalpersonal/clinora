@@ -4,7 +4,7 @@
     <!-- Google Tag Manager -->
     <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
     new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.defer=true;j.src=
     'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
     })(window,document,'script','dataLayer','GTM-KQV6Q5MS');</script>
     <!-- End Google Tag Manager -->
@@ -36,25 +36,35 @@
     <meta property="og:url" content="{{ url()->current() }}">
     <meta property="og:title" content="@yield('og_title', 'Clinora - Software de Gestión para Clínicas de Salud')">
     <meta property="og:description" content="@yield('og_description', 'Gestiona tu clínica de salud con la plataforma más completa. 2FA, GDPR compliant, verificación de email. Prueba gratis 14 días.')">
-
+    <meta property="og:image" content="@yield('og_image', asset('images/og-image.jpg'))">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="@yield('og_image_alt', 'Clinora - Software para Psicólogos | Gestión de Consultas')">
     <meta property="og:locale" content="es_ES">
     <meta property="og:site_name" content="Clinora">
 
     {{-- Twitter --}}
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="{{ url()->current() }}">
-    <meta property="twitter:title" content="@yield('twitter_title', 'Clinora - Software de Gestión para Clínicas de Salud')">
-    <meta property="twitter:description" content="@yield('twitter_description', 'Gestiona tu clínica de salud con la plataforma más completa. Prueba gratis 14 días.')">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="{{ url()->current() }}">
+    <meta name="twitter:title" content="@yield('twitter_title', 'Clinora - Software de Gestión para Clínicas de Salud')">
+    <meta name="twitter:description" content="@yield('twitter_description', 'Gestiona tu clínica de salud con la plataforma más completa. Prueba gratis 14 días.')">
+    <meta name="twitter:image" content="@yield('twitter_image', asset('images/twitter-image.jpg'))">
+    <meta name="twitter:image:alt" content="@yield('twitter_image_alt', 'Clinora - Software para Psicólogos')">
 
 
     {{-- Canonical URL --}}
     <link rel="canonical" href="{{ url()->current() }}">
     
-    {{-- Fonts --}}
+    {{-- Fonts with preconnect for performance --}}
     <link rel="preconnect" href="https://fonts.bunny.net" crossorigin>
     <link rel="dns-prefetch" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600,700" rel="stylesheet" />
-
+    {{-- Preload critical font (400) to reduce chain latency --}}
+    <link rel="preload" href="https://fonts.bunny.net/files/instrument-sans-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+    {{-- Load fonts asynchronously - reduced to critical weights only (400, 600) --}}
+    <link href="https://fonts.bunny.net/css?family=instrument-sans:400,600&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript>
+        <link href="https://fonts.bunny.net/css?family=instrument-sans:400,600&display=swap" rel="stylesheet">
+    </noscript>
     {{-- Styles / Scripts --}}
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
@@ -73,6 +83,23 @@
     {{-- Scripts --}}
     @livewireScripts
     @stack('scripts')
+    
+    {{-- Load non-critical font weights (500, 700) asynchronously after page load --}}
+    <script>
+        (function() {
+            if (document.readyState === 'complete') {
+                loadNonCriticalFonts();
+            } else {
+                window.addEventListener('load', loadNonCriticalFonts);
+            }
+            function loadNonCriticalFonts() {
+                var link = document.createElement('link');
+                link.href = 'https://fonts.bunny.net/css?family=instrument-sans:500,700&display=optional';
+                link.rel = 'stylesheet';
+                document.head.appendChild(link);
+            }
+        })();
+    </script>
 </body>
 </html>
 

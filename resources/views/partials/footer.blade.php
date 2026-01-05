@@ -5,9 +5,9 @@
             <div>
                 <h3 class="text-white font-semibold mb-4">Producto</h3>
                 <ul class="space-y-2">
-                    <li><a href="{{ url('/') }}#caracteristicas" class="hover:text-white transition-colors">Características</a></li>
-                    <li><a href="{{ url('/') }}#precios" class="hover:text-white transition-colors">Precios</a></li>
-                    <li><a href="{{ url('/') }}#caracteristicas" class="hover:text-white transition-colors">Casos de Uso</a></li>
+                    <li><a href="{{ url('/') }}#caracteristicas" class="hover:text-white transition-colors" rel="nofollow">Características</a></li>
+                    <li><a href="{{ url('/') }}#precios" class="hover:text-white transition-colors" rel="nofollow">Precios</a></li>
+                    <li><a href="{{ url('/') }}#caracteristicas" class="hover:text-white transition-colors" rel="nofollow">Casos de Uso</a></li>
                     <li><a href="{{ route('faqs') }}" class="hover:text-white transition-colors">Preguntas Frecuentes</a></li>
                 </ul>
             </div>

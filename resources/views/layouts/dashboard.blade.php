@@ -4,7 +4,7 @@
     <!-- Google Tag Manager -->
     <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
     new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.defer=true;j.src=
     'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
     })(window,document,'script','dataLayer','GTM-KQV6Q5MS');</script>
     <!-- End Google Tag Manager -->
@@ -30,7 +30,18 @@
             {{-- Logo --}}
             <div class="p-6 border-b border-gray-200 flex justify-center items-center overflow-hidden">
                 <a href="{{ profession_route('dashboard') }}">
-                    <img src="{{ asset('images/logo.png') }}" alt="Clinora" class="h-20 w-auto mix-blend-multiply transform scale-125 hover:scale-135 transition-transform duration-200">
+                    <img 
+                        src="{{ asset('images/logo.png') }}"
+                        srcset="{{ asset('images/logo.png') }} 1x"
+                        sizes="100px"
+                        alt="Clinora" 
+                        width="100"
+                        height="100"
+                        class="h-20 w-auto mix-blend-multiply transform scale-125 hover:scale-135 transition-transform duration-200"
+                        loading="eager"
+                        decoding="async"
+                        fetchpriority="high"
+                    >
                 </a>
             </div>
             

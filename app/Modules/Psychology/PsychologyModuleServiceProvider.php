@@ -11,6 +11,10 @@ use App\Modules\Psychology\ConsentForms\Templates\ThirdPartyCommunicationTemplat
 use App\Modules\Psychology\ConsentForms\Templates\ResearchTemplate;
 use App\Modules\Psychology\ConsentForms\Templates\RecordingTemplate;
 use App\Modules\Psychology\ConsentForms\Templates\MinorsTemplate;
+use App\Modules\Psychology\ConsentForms\Templates\GroupTherapyTemplate;
+use App\Modules\Psychology\ConsentForms\Templates\EmdrTemplate;
+use App\Modules\Psychology\ConsentForms\Templates\HypnosisTemplate;
+use App\Modules\Psychology\ConsentForms\Templates\CoupleTherapyTemplate;
 use Illuminate\Support\ServiceProvider;
 
 /**
@@ -65,6 +69,10 @@ class PsychologyModuleServiceProvider extends ServiceProvider
             ConsentForm::TYPE_RESEARCH => ResearchTemplate::class,
             ConsentForm::TYPE_RECORDING => RecordingTemplate::class,
             ConsentForm::TYPE_MINORS => MinorsTemplate::class,
+            ConsentForm::TYPE_GROUP_THERAPY => GroupTherapyTemplate::class,
+            ConsentForm::TYPE_EMDR => EmdrTemplate::class,
+            ConsentForm::TYPE_HYPNOSIS => HypnosisTemplate::class,
+            ConsentForm::TYPE_COUPLE_THERAPY => CoupleTherapyTemplate::class,
         ]);
 
         // Load routes

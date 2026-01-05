@@ -107,6 +107,6 @@
     
     <p style="font-size: 13px; color: #94a3b8; margin-top: 25px; border-top: 1px solid #e2e8f0; padding-top: 20px;">
         Recibes este email porque estás suscrito a los resúmenes semanales de Clinora. 
-        Puedes <a href="{{ route('profile.settings') }}" style="color: #0EA5E9;">gestionar tus preferencias</a> en cualquier momento.
+        Puedes <a href="{{ profession_route('profile.settings') }}" style="color: #0EA5E9;">gestionar tus preferencias</a> en cualquier momento.
     </p>
 @endsection

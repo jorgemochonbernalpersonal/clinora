@@ -4,6 +4,9 @@ namespace App\Livewire\ConsentForms;
 
 use App\Core\ConsentForms\Models\ConsentForm;
 use App\Core\ConsentForms\Repositories\ConsentFormRepository;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Carbon;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
@@ -52,10 +55,23 @@ class ConsentFormShow extends Component
         }
 
         $this->validate([
-            'signatureData' => 'required|string',
+            'signatureData' => 'required|string|min:100',
         ], [
             'signatureData.required' => 'Debe proporcionar una firma',
+            'signatureData.min' => 'La firma no es válida. Por favor, firme en el recuadro.',
         ]);
+
+        // Verificar edad del paciente (menores de 16 años requieren tutor)
+        $contact = $this->consentForm->contact;
+        $age = $contact->birthdate ? Carbon::parse($contact->birthdate)->age : null;
+        
+        if ($age !== null && $age < 16) {
+            // Requiere firma del tutor legal
+            if (empty($this->consentForm->legal_guardian_name)) {
+                session()->flash('error', 'Este paciente es menor de 16 años y requiere consentimiento del tutor legal. Por favor, complete los datos del tutor en el formulario de consentimiento.');
+                return;
+            }
+        }
 
         try {
             // Use the model's sign method directly
@@ -64,6 +80,15 @@ class ConsentFormShow extends Component
                 request()->ip(),
                 request()->userAgent()
             );
+            
+            // Activity log (TODO: Install spatie/laravel-activitylog for better audit trail)
+            \Log::info('Consentimiento firmado digitalmente', [
+                'consent_form_id' => $this->consentForm->id,
+                'consent_type' => $this->consentForm->consent_type,
+                'contact_id' => $this->consentForm->contact_id,
+                'user_id' => auth()->id(),
+                'ip' => request()->ip(),
+            ]);
 
             session()->flash('success', 'Consentimiento firmado exitosamente');
             $this->closeSignModal();
@@ -115,7 +140,39 @@ class ConsentFormShow extends Component
 
         try {
             $this->consentForm->revoke($this->revocationReason);
-            session()->flash('success', 'Consentimiento revocado exitosamente');
+            
+            // Activity log
+            \Log::info('Consentimiento revocado', [
+                'consent_form_id' => $this->consentForm->id,
+                'reason' => $this->revocationReason,
+                'consent_type' => $this->consentForm->consent_type,
+                'user_id' => auth()->id(),
+            ]);
+            
+            // Enviar email al paciente si tiene email
+            if (!empty($this->consentForm->contact->email)) {
+                try {
+                    \Mail::to($this->consentForm->contact->email)
+                        ->send(new \App\Mail\ConsentFormRevoked($this->consentForm, $this->revocationReason));
+                    
+                    \Log::info('Email de revocación enviado', [
+                        'consent_form_id' => $this->consentForm->id,
+                        'email_sent_to' => $this->consentForm->contact->email,
+                    ]);
+                    
+                    session()->flash('success', 'Consentimiento revocado exitosamente. Se ha enviado un email de notificación al paciente.');
+                } catch (\Exception $emailError) {
+                    \Log::error('Error sending revocation email', [
+                        'consent_form_id' => $this->consentForm->id,
+                        'email' => $this->consentForm->contact->email,
+                        'error' => $emailError->getMessage(),
+                    ]);
+                    session()->flash('success', 'Consentimiento revocado exitosamente (el email de notificación no pudo enviarse).');
+                }
+            } else {
+                session()->flash('success', 'Consentimiento revocado exitosamente.');
+            }
+            
             $this->closeRevokeModal();
             
             // Refresh the consent form
@@ -131,8 +188,138 @@ class ConsentFormShow extends Component
 
     public function downloadPdf()
     {
-        // TODO: Implement PDF generation
-        session()->flash('info', 'La generación de PDF estará disponible próximamente');
+        try {
+            $consentBodyContent = $this->getConsentBodyContent();
+            
+            $pdf = Pdf::loadView('modules.psychology.consent-forms.consent-form-pdf', [
+                'consentForm' => $this->consentForm,
+                'consentBodyContent' => $consentBodyContent,
+            ])
+            ->setPaper('a4')
+            ->setOption('isHtml5ParserEnabled', true)
+            ->setOption('isRemoteEnabled', true);
+            
+            $filename = 'consentimiento_' . 
+                        $this->consentForm->id . '_' . 
+                        \Str::slug($this->consentForm->contact->full_name) . '_' .
+                        now()->format('Y-m-d') . 
+                        '.pdf';
+            
+            
+            // Activity log
+            \Log::info('PDF del consentimiento descargado', [
+                'consent_form_id' => $this->consentForm->id,
+                'user_id' => auth()->id(),
+            ]);
+            
+            return response()->streamDownload(function() use ($pdf) {
+                echo $pdf->output();
+            }, $filename, [
+                'Content-Type' => 'application/pdf',
+            ]);
+        } catch (\Exception $e) {
+            session()->flash('error', 'Error al generar el PDF: ' . $e->getMessage());
+            \Log::error('Error generating consent PDF', [
+                'consent_form_id' => $this->consentForm->id,
+                'error' => $e->getMessage(),
+            ]);
+        }
+    }
+    
+    /**
+     * Generate PDF for direct printing (opens in new window)
+     */
+    public function printPdf()
+    {
+        try {
+            $consentBodyContent = $this->getConsentBodyContent();
+            
+            $pdf = Pdf::loadView('modules.psychology.consent-forms.consent-form-pdf', [
+                'consentForm' => $this->consentForm,
+                'consentBodyContent' => $consentBodyContent,
+            ])
+            ->setPaper('a4')
+            ->setOption('isHtml5ParserEnabled', true)
+            ->setOption('isRemoteEnabled', true);
+            
+            $filename = 'consentimiento_' . 
+                        $this->consentForm->id . '_' . 
+                        \Str::slug($this->consentForm->contact->full_name) . '_' .
+                        now()->format('Y-m-d') . 
+                        '.pdf';
+            
+            // Activity log
+            \Log::info('PDF del consentimiento abierto para impresión', [
+                'consent_form_id' => $this->consentForm->id,
+                'user_id' => auth()->id(),
+            ]);
+            
+            // Return PDF inline for printing
+            return response()->stream(function() use ($pdf) {
+                echo $pdf->output();
+            }, 200, [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'inline; filename="' . $filename . '"',
+            ]);
+        } catch (\Exception $e) {
+            session()->flash('error', 'Error al generar el PDF para imprimir: ' . $e->getMessage());
+            \Log::error('Error generating consent PDF for print', [
+                'consent_form_id' => $this->consentForm->id,
+                'error' => $e->getMessage(),
+            ]);
+        }
+    }
+    
+    /**
+     * Send email with PDF to patient
+     */
+    public function sendEmail()
+    {
+        // Validar que el consentimiento esté firmado
+        if (!$this->consentForm->isSigned()) {
+            session()->flash('error', 'Solo se pueden enviar emails de consentimientos firmados');
+            return;
+        }
+
+        // Validar que el paciente tenga email
+        if (empty($this->consentForm->contact->email)) {
+            session()->flash('error', 'El paciente no tiene email registrado. Por favor, añade un email en el perfil del paciente.');
+            return;
+        }
+
+        try {
+            // Enviar email con el PDF adjunto
+            \Mail::to($this->consentForm->contact->email)
+                ->send(new \App\Mail\ConsentFormDelivered($this->consentForm));
+            
+            // Marcar como entregado automáticamente después de enviar
+            if (!$this->consentForm->isDelivered()) {
+                $this->consentForm->markAsDelivered();
+            }
+            
+            // Activity log
+            \Log::info('Email de consentimiento enviado', [
+                'consent_form_id' => $this->consentForm->id,
+                'user_id' => auth()->id(),
+                'email_sent_to' => $this->consentForm->contact->email,
+                'action' => $this->consentForm->wasRecentlyCreated ? 'sent' : 'resent',
+            ]);
+            
+            if ($this->consentForm->delivered_at && $this->consentForm->delivered_at < now()->subMinutes(5)) {
+                session()->flash('success', '✅ Email reenviado exitosamente a ' . $this->consentForm->contact->email);
+            } else {
+                session()->flash('success', '✅ Email enviado exitosamente a ' . $this->consentForm->contact->email);
+            }
+            
+            $this->consentForm->refresh();
+        } catch (\Exception $e) {
+            session()->flash('error', '❌ Error al enviar el email: ' . $e->getMessage());
+            \Log::error('Error sending consent email', [
+                'consent_form_id' => $this->consentForm->id,
+                'email' => $this->consentForm->contact->email,
+                'error' => $e->getMessage(),
+            ]);
+        }
     }
 
     /**

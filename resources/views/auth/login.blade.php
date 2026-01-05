@@ -8,7 +8,18 @@
         {{-- Logo --}}
         <div class="flex justify-center mb-6">
             <a href="{{ route('home') }}">
-                <img src="{{ asset('images/logo.png') }}" alt="Clinora" class="h-12 w-auto mix-blend-multiply">
+                <img 
+                    src="{{ asset('images/logo.png') }}"
+                    srcset="{{ asset('images/logo.png') }} 1x"
+                    sizes="48px"
+                    alt="Clinora" 
+                    width="48"
+                    height="48"
+                    class="h-12 w-auto mix-blend-multiply"
+                    loading="eager"
+                    decoding="async"
+                    fetchpriority="high"
+                >
             </a>
         </div>
 

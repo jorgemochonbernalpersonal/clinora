@@ -36,12 +36,64 @@
         'Cumplimiento RGPD y LOPD',
         'Autenticación de doble factor (2FA)',
         'Acceso multiplataforma (web, móvil, tablet)'
+    ],
+    'publisher' => [
+        '@type' => 'Organization',
+        'name' => 'Clinora',
+        'url' => 'https://clinora.es',
+        'logo' => [
+            '@type' => 'ImageObject',
+            'url' => 'https://clinora.es/images/logo.png'
+        ]
+    ]
+], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) !!}
+</script>
+
+{{-- Organization Schema --}}
+<script type="application/ld+json">
+{!! json_encode([
+    '@context' => 'https://schema.org',
+    '@type' => 'Organization',
+    'name' => 'Clinora',
+    'url' => 'https://clinora.es',
+    'logo' => 'https://clinora.es/images/logo.png',
+    'description' => 'Software de gestión para psicólogos. Agenda inteligente, expedientes digitales, notas SOAP y cumplimiento RGPD.',
+    'foundingDate' => '2024',
+    'contactPoint' => [
+        '@type' => 'ContactPoint',
+        'contactType' => 'customer service',
+        'email' => 'info@clinora.es',
+        'availableLanguage' => ['Spanish']
+    ],
+    'sameAs' => [
+        // Agregar redes sociales cuando estén disponibles
+        // 'https://twitter.com/clinora',
+        // 'https://linkedin.com/company/clinora',
+        // 'https://facebook.com/clinora'
     ]
 ], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) !!}
 </script>
 @endpush
 
 @section('content')
+@push('structured_data')
+{{-- BreadcrumbList Schema for Homepage --}}
+<script type="application/ld+json">
+{!! json_encode([
+    '@context' => 'https://schema.org',
+    '@type' => 'BreadcrumbList',
+    'itemListElement' => [
+        [
+            '@type' => 'ListItem',
+            'position' => 1,
+            'name' => 'Inicio',
+            'item' => url('/')
+        ]
+    ]
+], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) !!}
+</script>
+@endpush
+
     {{-- Hero Section --}}
     <section class="relative bg-gradient-to-b from-primary-50 to-background py-20 lg:py-32">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -267,7 +319,7 @@
             <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
                 {{-- Plan Free --}}
                 <div class="bg-gradient-to-br from-success-50 to-primary-50 rounded-lg p-8 border-2 border-success-300 relative">
-                    <div class="absolute top-0 right-0 bg-amber-500 text-white px-3 py-1 rounded-bl-lg rounded-tr-lg text-xs font-semibold">
+                    <div class="absolute top-0 right-0 bg-amber-600 text-white px-3 py-1 rounded-bl-lg rounded-tr-lg text-xs font-semibold">
                         🎁 Beta: 5 pacientes
                     </div>
                     <h3 class="text-2xl font-semibold text-text-primary mb-2">🆓 Gratis</h3>
@@ -309,14 +361,14 @@
                         <p class="text-xs mt-1">€0 siempre</p>
                     </div>
                     <a href="{{ route('register') }}" 
-                       class="block w-full bg-success-500 hover:bg-success-600 text-white text-center px-6 py-3 rounded-lg font-semibold transition-colors">
+                       class="block w-full bg-success-600 hover:bg-success-700 text-white text-center px-6 py-3 rounded-lg font-semibold transition-colors">
                         Empezar Gratis
                     </a>
                 </div>
 
                 {{-- Plan Pro --}}
                 <div class="bg-primary-50 rounded-lg p-8 border-2 border-primary-500 relative">
-                    <div class="absolute top-0 left-0 bg-amber-500 text-white px-3 py-1 rounded-br-lg rounded-tl-lg text-xs font-semibold">
+                    <div class="absolute top-0 left-0 bg-amber-600 text-white px-3 py-1 rounded-br-lg rounded-tl-lg text-xs font-semibold">
                         🎁 Beta: €0.75/pac.
                     </div>
                     <div class="absolute top-0 right-0 bg-primary-500 text-white px-4 py-1 rounded-bl-lg rounded-tr-lg text-sm font-semibold">
@@ -325,11 +377,11 @@
                     <h3 class="text-2xl font-semibold text-text-primary mb-2 mt-4">⭐ Pro</h3>
                     <div class="mb-6">
                         <div class="flex items-baseline gap-2">
-                            <span class="text-3xl font-bold text-gray-400 line-through">€1</span>
+                            <span class="text-3xl font-bold text-gray-600 line-through">€1</span>
                             <span class="text-4xl font-bold text-primary-600">€0.75</span>
                             <span class="text-text-secondary">/paciente</span>
                         </div>
-                        <p class="text-sm text-success-600 font-semibold mt-1">25% descuento de por vida (early adopters)</p>
+                        <p class="text-sm text-success-700 font-semibold mt-1">25% descuento de por vida (early adopters)</p>
                         <p class="text-xs text-text-secondary mt-1">Sin cuota fija · Pacientes ilimitados</p>
                     </div>
                     <ul class="space-y-3 mb-8">
@@ -387,17 +439,17 @@
 
                 {{-- Plan Equipo --}}
                 <div class="bg-background rounded-lg p-8 border-2 border-gray-200 relative">
-                    <div class="absolute top-0 right-0 bg-amber-500 text-white px-3 py-1 rounded-bl-lg rounded-tr-lg text-xs font-semibold">
+                    <div class="absolute top-0 right-0 bg-amber-600 text-white px-3 py-1 rounded-bl-lg rounded-tr-lg text-xs font-semibold">
                         🎁 Beta: €1.50/pac.
                     </div>
                     <h3 class="text-2xl font-semibold text-text-primary mb-2 mt-4">🏢 Equipo</h3>
                     <div class="mb-6">
                         <div class="flex items-baseline gap-2">
-                            <span class="text-3xl font-bold text-gray-400 line-through">€2</span>
+                            <span class="text-3xl font-bold text-gray-600 line-through">€2</span>
                             <span class="text-4xl font-bold text-text-primary">€1.50</span>
                             <span class="text-text-secondary">/paciente</span>
                         </div>
-                        <p class="text-sm text-success-600 font-semibold mt-1">25% descuento de por vida (early adopters)</p>
+                        <p class="text-sm text-success-700 font-semibold mt-1">25% descuento de por vida (early adopters)</p>
                         <p class="text-xs text-text-secondary mt-1">Sin cuota fija · Multi-profesional</p>
                     </div>
                     <ul class="space-y-3 mb-8">
@@ -465,7 +517,7 @@
                 <div class="space-y-2 text-sm">
                     <div class="flex justify-between items-center p-2 bg-gradient-to-r from-success-50 to-primary-50 rounded">
                         <span class="text-text-secondary">Gratis:</span>
-                        <strong class="text-success-600" id="freePrice">€0/mes ✅</strong>
+                        <strong class="text-success-700" id="freePrice">€0/mes ✅</strong>
                     </div>
                     <div class="flex justify-between items-center p-2 bg-primary-50 rounded">
                         <span class="text-text-secondary">Pro:</span>

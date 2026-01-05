@@ -170,6 +170,48 @@
     </div>
 
     <div class="section">
+        <h2>6.1. PROTOCOLO DE RIESGO VITAL</h2>
+        
+        <div class="warning-box">
+            <h3 style="margin-top: 0;">⚠️ Importante: Excepciones a la Confidencialidad por Riesgo Vital</h3>
+            <p>
+                Comprendo que si durante el tratamiento el/la psicólogo/a detecta un 
+                <strong>riesgo grave e inminente de suicidio, autolesión o daño a terceros</strong>, 
+                tiene la obligación deontológica y legal de:
+            </p>
+            <ul>
+                <li>Romper la confidencialidad si es necesario para proteger mi vida o la de terceros</li>
+                <li>Contactar con servicios de emergencia (112) si la situación lo requiere</li>
+                <li>Informar a familiares o personas de contacto designadas</li>
+                <li>Activar el protocolo de derivación urgente a psiquiatría o servicios de urgencias</li>
+                <li>Documentar todas las acciones tomadas para mi protección</li>
+            </ul>
+            
+            <p style="margin-top: 15px;">
+                <strong>Persona de contacto de emergencia:</strong>
+            </p>
+            @if(isset($data['emergency_contact_name']) && !empty($data['emergency_contact_name']))
+            <p style="margin-left: 20px;">
+                <strong>Nombre:</strong> {{ $data['emergency_contact_name'] }}<br>
+                <strong>Teléfono:</strong> {{ $data['emergency_contact_phone'] ?? 'No proporcionado' }}<br>
+                <strong>Relación:</strong> {{ $data['emergency_contact_relationship'] ?? 'No especificada' }}
+            </p>
+            @else
+            <p style="margin-left: 20px;">
+                <strong>Nombre:</strong> _______________________________________<br>
+                <strong>Teléfono:</strong> _______________________________________<br>
+                <strong>Relación:</strong> _______________________________________
+            </p>
+            @endif
+            
+            <p style="margin-top: 10px;">
+                <em>Autorizo expresamente al profesional a contactar con esta persona en caso de emergencia 
+                o riesgo vital detectado durante el tratamiento.</em>
+            </p>
+        </div>
+    </div>
+
+    <div class="section">
         <h2>7. PROTECCIÓN DE DATOS (RGPD)</h2>
         <p>
             Sus datos personales serán tratados conforme al Reglamento (UE) 2016/679 (RGPD) 
@@ -189,10 +231,17 @@
 
     <div class="section">
         <h2>8. COSTES Y CANCELACIONES</h2>
-        @if(isset($data['session_price']))
+        @if(isset($data['session_price']) && $data['session_price'] > 0)
         <p><strong>Coste por sesión:</strong> {{ number_format($data['session_price'], 2) }}€</p>
+        <p><strong>Método de pago:</strong> {{ $data['payment_method'] ?? 'Efectivo/Transferencia' }}</p>
         @else
-        <p><strong>Coste por sesión:</strong> A acordar con el profesional</p>
+        <div class="warning-box">
+            <strong>⚠ IMPORTANTE - Código Deontológico del COP (art. 48):</strong><br>
+            El coste por sesión debe acordarse con el profesional antes de iniciar el tratamiento.
+            Los honorarios profesionales se fijarán de mutuo acuerdo y serán comunicados claramente
+            al paciente antes de la primera sesión.
+        </div>
+        <p><strong>Coste por sesión:</strong> _______________ € (a acordar)</p>
         @endif
         
         <p>
@@ -228,8 +277,59 @@
         </ul>
     </div>
 
+    <div class="section">
+        <h2>11. LÍMITES DE LA INTERVENCIÓN PSICOLÓGICA</h2>
+        
+        <div class="info-box">
+            <h3 style="margin-top: 0;">Derivación a Psiquiatría</h3>
+            <p>
+                El/la psicólogo/a puede recomendar una derivación a <strong>psiquiatría</strong> 
+                si detecta que el caso requiere tratamiento farmacológico, está fuera del 
+                ámbito de competencia de la psicología clínica, o si el paciente presenta:
+            </p>
+            <ul>
+                <li>Síntomas psicóticos que requieren medicación</li>
+                <li>Trastornos del estado de ánimo graves que no responden a psicoterapia</li>
+                <li>Crisis agudas que requieren intervención farmacológica inmediata</li>
+                <li>Otras condiciones médicas que requieren evaluación psiquiátrica</li>
+            </ul>
+            <p>
+                Comprendo que <strong>la psicología NO incluye prescripción de medicamentos</strong> 
+                y que, en caso necesario, seré derivado/a a un profesional médico especializado.
+            </p>
+        </div>
+    </div>
+
     <div class="signature-section">
-        <h2>DECLARACIÓN DE CONSENTIMIENTO</h2>
+        <h2>DECLARACIÓN DE CAPACIDAD</h2>
+        
+        <p>
+            Yo, <strong>{{ $contactName ?? '_________________' }}</strong>
+            @if(isset($contact) && $contact->dni)
+            , con DNI <strong>{{ $contact->dni }}</strong>
+            @else
+            , con DNI <strong>_________________</strong>
+            @endif
+            , <strong>DECLARO QUE</strong>:
+        </p>
+
+        <div class="checkbox">
+            ☐ Me encuentro en pleno uso de mis facultades mentales para comprender este documento
+        </div>
+        <div class="checkbox">
+            ☐ Comprendo la naturaleza del tratamiento psicológico y sus implicaciones
+        </div>
+        <div class="checkbox">
+            ☐ No me encuentro bajo coacción, presión externa o influencia indebida
+        </div>
+        <div class="checkbox">
+            ☐ He tenido tiempo suficiente para reflexionar antes de firmar este documento
+        </div>
+        <div class="checkbox">
+            ☐ He sido informado/a de mi derecho a rechazar o retirar el consentimiento en cualquier momento
+        </div>
+
+        <h2 style="margin-top: 30px;">DECLARACIÓN DE CONSENTIMIENTO</h2>
         
         <p>
             Yo, <strong>{{ $contactName ?? '_________________' }}</strong>

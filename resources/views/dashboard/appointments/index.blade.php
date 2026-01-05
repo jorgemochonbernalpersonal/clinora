@@ -29,7 +29,6 @@
 @endsection
 
 @push('scripts')
-    {{-- FullCalendar JS + Plugins + Localization --}}
-    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js'></script>
-    <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.10/locales/es.global.min.js'></script>
+    {{-- FullCalendar bundle - loaded only on this page --}}
+    @vite('resources/js/calendar.js')
 @endpush

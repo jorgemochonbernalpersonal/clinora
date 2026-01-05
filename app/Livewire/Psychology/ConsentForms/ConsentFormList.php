@@ -110,6 +110,110 @@ class ConsentFormList extends Component
         $consentForm->delete();
         session()->flash('success', 'Consentimiento eliminado exitosamente');
     }
+    
+    /**
+     * Send email with PDF to patient directly from list
+     */
+    public function sendEmail(int $id)
+    {
+        $consentForm = ConsentForm::where('professional_id', auth()->user()->professional->id)
+            ->with('contact')
+            ->findOrFail($id);
+
+        // Validar que el consentimiento esté firmado
+        if (!$consentForm->isSigned()) {
+            session()->flash('error', 'Solo se pueden enviar emails de consentimientos firmados');
+            return;
+        }
+
+        // Validar que no esté revocado
+        if ($consentForm->isRevoked()) {
+            session()->flash('error', 'No se pueden enviar emails de consentimientos revocados');
+            return;
+        }
+
+        // Validar que el paciente tenga email
+        if (empty($consentForm->contact->email)) {
+            session()->flash('error', 'El paciente no tiene email registrado. Por favor, añade un email en el perfil del paciente.');
+            return;
+        }
+
+        try {
+            // Enviar email con el PDF adjunto
+            \Mail::to($consentForm->contact->email)
+                ->send(new \App\Mail\ConsentFormDelivered($consentForm));
+            
+            // Marcar como entregado automáticamente
+            if (!$consentForm->isDelivered()) {
+                $consentForm->markAsDelivered();
+            }
+            
+            // Activity log
+            \Log::info('Email de consentimiento enviado desde lista', [
+                'consent_form_id' => $consentForm->id,
+                'user_id' => auth()->id(),
+                'email_sent_to' => $consentForm->contact->email,
+            ]);
+            
+            session()->flash('success', '✅ Email enviado exitosamente a ' . $consentForm->contact->email);
+        } catch (\Exception $e) {
+            session()->flash('error', '❌ Error al enviar el email: ' . $e->getMessage());
+            \Log::error('Error sending consent email from list', [
+                'consent_form_id' => $consentForm->id,
+                'email' => $consentForm->contact->email,
+                'error' => $e->getMessage(),
+            ]);
+        }
+    }
+    
+    /**
+     * Download PDF from list
+     */
+    public function downloadPdf(int $id)
+    {
+        $consentForm = ConsentForm::where('professional_id', auth()->user()->professional->id)
+            ->with('contact')
+            ->findOrFail($id);
+
+        // Validar que el consentimiento esté firmado
+        if (!$consentForm->isSigned()) {
+            session()->flash('error', 'Solo se pueden descargar PDFs de consentimientos firmados');
+            return;
+        }
+
+        try {
+            // Get consent body
+            $consentBodyContent = $consentForm->consent_content ?? $consentForm->consent_text;
+            
+            // Generate PDF
+            $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('modules.psychology.consent-forms.consent-form-pdf', [
+                'consentForm' => $consentForm,
+                'consentBodyContent' => $consentBodyContent,
+            ]);
+
+            $filename = 'consentimiento-' . $consentForm->id . '-' . \Str::slug($consentForm->contact->full_name) . '.pdf';
+
+            return response()->streamDownload(function () use ($pdf) {
+                echo $pdf->output();
+            }, $filename);
+            
+        } catch (\Exception $e) {
+            session()->flash('error', 'Error al generar el PDF: ' . $e->getMessage());
+            \Log::error('Error generating PDF from list', [
+                'consent_form_id' => $consentForm->id,
+                'error' => $e->getMessage(),
+            ]);
+        }
+    }
+    
+    /**
+     * Print PDF from list (opens in new tab)
+     */
+    public function printPdf(int $id)
+    {
+        // This will be handled by redirecting to a print route
+        return redirect()->route(profession_route_name('consent-forms.show'), $id);
+    }
 
     public function render()
     {

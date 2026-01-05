@@ -47,13 +47,37 @@
                     </button>
                     @endif
 
+
+
                     <button wire:click="downloadPdf" 
                             class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                         </svg>
-                        PDF
+                        Descargar PDF
                     </button>
+
+                    <button wire:click="printPdf" 
+                            class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path>
+                        </svg>
+                        Imprimir
+                    </button>
+
+                    @if($consentForm->isSigned() && !$consentForm->isRevoked())
+                    <button wire:click="sendEmail" 
+                            class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                        </svg>
+                        @if($consentForm->isDelivered())
+                            Reenviar Email
+                        @else
+                            Enviar Email
+                        @endif
+                    </button>
+                    @endif
 
                     <a href="{{ profession_route('consent-forms.index') }}" 
                        class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
@@ -109,6 +133,135 @@
                         [&_body]:contents">
                 {!! $this->getConsentBodyContent() !!}
             </div>
+
+            {{-- Sección de Firma Visible (solo si está firmado) --}}
+            @if($consentForm->isSigned())
+            <div class="p-8 border-t-4 border-green-500 bg-green-50">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="flex items-center justify-center w-12 h-12 bg-green-600 text-white rounded-full">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-900">Documento Firmado Digitalmente</h3>
+                        <p class="text-sm text-gray-600">Este consentimiento ha sido firmado electrónicamente</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white p-6 rounded-lg border border-green-200">
+                    {{-- Información del Paciente y Firma --}}
+                    <div>
+                        <h4 class="font-semibold text-gray-900 mb-3">Paciente</h4>
+                        <p class="text-gray-700 font-medium">{{ $consentForm->contact->full_name }}</p>
+                        @if($consentForm->contact->dni)
+                        <p class="text-sm text-gray-600">DNI: {{ $consentForm->contact->dni }}</p>
+                        @endif
+
+                        <div class="mt-4">
+                            <p class="text-sm font-medium text-gray-700 mb-2">Firma digital:</p>
+                            @if($consentForm->patient_signature_data)
+                            <div class="border-2 border-gray-300 bg-white p-2 rounded inline-block">
+                                <img src="{{ $consentForm->patient_signature_data }}" 
+                                     alt="Firma del paciente" 
+                                     class="max-w-xs max-h-24 object-contain">
+                            </div>
+                            @else
+                            <p class="text-sm text-gray-500 italic">Sin imagen de firma</p>
+                            @endif
+                        </div>
+                    </div>
+
+                    {{-- Metadatos de la Firma --}}
+                    <div>
+                        <h4 class="font-semibold text-gray-900 mb-3">Información de Firma</h4>
+                        
+                        <div class="space-y-3">
+                            <div class="flex items-start gap-3">
+                                <svg class="w-5 h-5 text-gray-400 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                </svg>
+                                <div>
+                                    <p class="text-sm text-gray-600">Fecha y hora</p>
+                                    <p class="font-medium text-gray-900">{{ $consentForm->signed_at->format('d/m/Y H:i:s') }}</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start gap-3">
+                                <svg class="w-5 h-5 text-gray-400 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path>
+                                </svg>
+                                <div>
+                                    <p class="text-sm text-gray-600">Dirección IP</p>
+                                    <p class="font-mono text-sm text-gray-900">{{ $consentForm->patient_ip_address ?? 'No disponible' }}</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start gap-3">
+                                <svg class="w-5 h-5 text-gray-400 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                                </svg>
+                                <div>
+                                    <p class="text-sm text-gray-600">Dispositivo</p>
+                                    <p class="text-xs text-gray-900 break-all">{{ Str::limit($consentForm->patient_device_info ?? 'No disponible', 80) }}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- Estado de Entrega --}}
+                        <div class="mt-4 pt-4 border-t border-gray-200">
+                            @if($consentForm->isDelivered())
+                            <div class="flex items-center gap-2 text-green-700">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                <div>
+                                    <p class="text-sm font-medium">Documento entregado</p>
+                                    <p class="text-xs">{{ $consentForm->delivered_at->format('d/m/Y H:i') }}</p>
+                                </div>
+                            </div>
+                            @else
+                            <div class="flex items-center gap-2 text-amber-700">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                <p class="text-sm font-medium">Pendiente de entrega al paciente</p>
+                            </div>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Firma del Tutor (si aplica) --}}
+                @if($consentForm->isForMinor() && $consentForm->legal_guardian_name)
+                <div class="mt-6 p-6 bg-amber-50 border border-amber-200 rounded-lg">
+                    <h4 class="font-semibold text-gray-900 mb-3">Tutor Legal</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <p class="text-sm text-gray-600">Nombre</p>
+                            <p class="font-medium text-gray-900">{{ $consentForm->legal_guardian_name }}</p>
+                            @if($consentForm->legal_guardian_relationship)
+                            <p class="text-sm text-gray-600 mt-1">Relación: {{ $consentForm->legal_guardian_relationship }}</p>
+                            @endif
+                            @if($consentForm->legal_guardian_id_document)
+                            <p class="text-sm text-gray-600">DNI: {{ $consentForm->legal_guardian_id_document }}</p>
+                            @endif
+                        </div>
+                        @if($consentForm->guardian_signature_data)
+                        <div>
+                            <p class="text-sm text-gray-600 mb-2">Firma del tutor:</p>
+                            <div class="border-2 border-gray-300 bg-white p-2 rounded inline-block">
+                                <img src="{{ $consentForm->guardian_signature_data }}" 
+                                     alt="Firma del tutor" 
+                                     class="max-w-xs max-h-24 object-contain">
+                            </div>
+                        </div>
+                        @endif
+                    </div>
+                </div>
+                @endif
+            </div>
+            @endif
         </div>
     </div>
 
@@ -170,6 +323,7 @@
                                          canvas: null,
                                          ctx: null,
                                          drawing: false,
+                                         hasDrawn: false,
                                          init() {
                                              this.canvas = this.$refs.signatureCanvas;
                                              this.ctx = this.canvas.getContext('2d');
@@ -186,16 +340,38 @@
                                          },
                                          draw(e) {
                                              if (!this.drawing) return;
+                                             this.hasDrawn = true;
                                              const rect = this.canvas.getBoundingClientRect();
                                              this.ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
                                              this.ctx.stroke();
                                          },
                                          stopDrawing() {
                                              this.drawing = false;
-                                             this.$wire.signatureData = this.canvas.toDataURL();
+                                             
+                                             // Validar que no esté vacía
+                                             if (!this.hasDrawn) {
+                                                 return;
+                                             }
+                                             
+                                             const signatureData = this.canvas.toDataURL();
+                                             
+                                             // Crear un canvas en blanco para comparar
+                                             const blankCanvas = document.createElement('canvas');
+                                             blankCanvas.width = this.canvas.width;
+                                             blankCanvas.height = this.canvas.height;
+                                             const blankData = blankCanvas.toDataURL();
+                                             
+                                             // Si es igual al canvas en blanco, no guardar
+                                             if (signatureData === blankData) {
+                                                 alert('Por favor, firme en el recuadro antes de continuar');
+                                                 return;
+                                             }
+                                             
+                                             this.$wire.signatureData = signatureData;
                                          },
                                          clear() {
                                              this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                                             this.hasDrawn = false;
                                              this.$wire.signatureData = null;
                                          }
                                      }">

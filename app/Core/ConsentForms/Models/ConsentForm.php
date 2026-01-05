@@ -32,6 +32,10 @@ class ConsentForm extends Model
     public const TYPE_RESEARCH = 'research';
     public const TYPE_THIRD_PARTY_COMMUNICATION = 'third_party_communication';
     public const TYPE_MEDICATION_REFERRAL = 'medication_referral';
+    public const TYPE_GROUP_THERAPY = 'group_therapy';
+    public const TYPE_EMDR = 'emdr';
+    public const TYPE_HYPNOSIS = 'hypnosis';
+    public const TYPE_COUPLE_THERAPY = 'couple_therapy';
 
     /**
      * The table associated with the model.
@@ -52,6 +56,9 @@ class ConsentForm extends Model
         'consent_title',
         'consent_text',
         'additional_data',
+        'emergency_contact_name',
+        'emergency_contact_phone',
+        'emergency_contact_relationship',
         'legal_guardian_name',
         'legal_guardian_relationship',
         'legal_guardian_id_document',
@@ -64,6 +71,8 @@ class ConsentForm extends Model
         'witness_name',
         'witness_signature_data',
         'signed_at',
+        'delivered_at',
+        'delivered_by',
         'is_valid',
         'revoked_at',
         'revocation_reason',
@@ -82,6 +91,7 @@ class ConsentForm extends Model
         'minor_assent' => 'boolean',
         'is_valid' => 'boolean',
         'signed_at' => 'datetime',
+        'delivered_at' => 'datetime',
         'revoked_at' => 'datetime',
     ];
 
@@ -100,6 +110,10 @@ class ConsentForm extends Model
             self::TYPE_RESEARCH => 'Participación en Investigación',
             self::TYPE_THIRD_PARTY_COMMUNICATION => 'Comunicación con Terceros',
             self::TYPE_MEDICATION_REFERRAL => 'Derivación a Psiquiatría',
+            self::TYPE_GROUP_THERAPY => 'Terapia de Grupo',
+            self::TYPE_EMDR => 'EMDR (Desensibilización y Reprocesamiento)',
+            self::TYPE_HYPNOSIS => 'Hipnosis Clínica',
+            self::TYPE_COUPLE_THERAPY => 'Terapia de Pareja',
         ];
     }
 
@@ -322,5 +336,52 @@ class ConsentForm extends Model
             ->valid()
             ->orderBy('signed_at', 'desc')
             ->first();
+    }
+
+    /**
+     * Mark the consent form as delivered to the patient
+     *
+     * @return void
+     */
+    public function markAsDelivered(): void
+    {
+        $this->update([
+            'delivered_at' => now(),
+            'delivered_by' => auth()->id(),
+        ]);
+    }
+
+    /**
+     * Check if the consent form has been delivered to the patient
+     *
+     * @return bool
+     */
+    public function isDelivered(): bool
+    {
+        return !is_null($this->delivered_at);
+    }
+
+    /**
+     * Scope to get delivered consent forms
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeDelivered($query)
+    {
+        return $query->whereNotNull('delivered_at');
+    }
+
+    /**
+     * Scope to get pending delivery consent forms
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopePendingDelivery($query)
+    {
+        return $query
+            ->signed()
+            ->whereNull('delivered_at');
     }
 }

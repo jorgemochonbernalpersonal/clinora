@@ -8,6 +8,7 @@
 @endif
 
 @push('structured_data')
+{{-- Article Schema --}}
 <script type="application/ld+json">
 {!! json_encode(array_filter([
     '@context' => 'https://schema.org',
@@ -19,18 +20,63 @@
     'dateModified' => $post->updated_at->toIso8601String(),
     'author' => [
         '@type' => 'Organization',
-        'name' => 'Clinora'
+        'name' => 'Clinora',
+        'url' => url('/')
     ],
     'publisher' => [
         '@type' => 'Organization',
         'name' => 'Clinora',
+        'url' => url('/'),
         'logo' => [
             '@type' => 'ImageObject',
-            'url' => asset('images/logo.png')
+            'url' => asset('images/logo.png'),
+            'width' => 500,
+            'height' => 500
         ]
     ],
-    'image' => $post->featured_image ?: null,
+    'image' => $post->featured_image ? [
+        '@type' => 'ImageObject',
+        'url' => $post->featured_image,
+        'width' => 1200,
+        'height' => 630
+    ] : null,
+    'mainEntityOfPage' => [
+        '@type' => 'WebPage',
+        '@id' => route('blog.show', $post)
+    ],
+    'articleSection' => 'Software para Psicólogos',
+    'keywords' => $post->meta_keywords ?? 'software psicólogos, gestión clínica, psicología',
+    'wordCount' => str_word_count(strip_tags($post->content ?? '')),
+    'inLanguage' => 'es-ES'
 ]), JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) !!}
+</script>
+
+{{-- BreadcrumbList Schema --}}
+<script type="application/ld+json">
+{!! json_encode([
+    '@context' => 'https://schema.org',
+    '@type' => 'BreadcrumbList',
+    'itemListElement' => [
+        [
+            '@type' => 'ListItem',
+            'position' => 1,
+            'name' => 'Inicio',
+            'item' => url('/')
+        ],
+        [
+            '@type' => 'ListItem',
+            'position' => 2,
+            'name' => 'Blog',
+            'item' => route('blog.index')
+        ],
+        [
+            '@type' => 'ListItem',
+            'position' => 3,
+            'name' => $post->title,
+            'item' => route('blog.show', $post)
+        ]
+    ]
+], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) !!}
 </script>
 @endpush
 
@@ -42,12 +88,25 @@
                 <div class="max-w-4xl mx-auto">
                     {{-- Breadcrumbs --}}
                     <nav class="text-sm text-text-secondary mb-6" aria-label="Breadcrumb">
-                        <ol class="flex items-center gap-2">
-                            <li><a href="{{ url('/') }}" class="hover:text-primary-600">Inicio</a></li>
+                        <ol class="flex items-center gap-2" itemscope itemtype="https://schema.org/BreadcrumbList">
+                            <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+                                <a href="{{ url('/') }}" class="hover:text-primary-600" itemprop="item">
+                                    <span itemprop="name">Inicio</span>
+                                </a>
+                                <meta itemprop="position" content="1" />
+                            </li>
                             <li><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></li>
-                            <li><a href="{{ route('blog.index') }}" class="hover:text-primary-600">Blog</a></li>
+                            <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+                                <a href="{{ route('blog.index') }}" class="hover:text-primary-600" itemprop="item">
+                                    <span itemprop="name">Blog</span>
+                                </a>
+                                <meta itemprop="position" content="2" />
+                            </li>
                             <li><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></li>
-                            <li class="text-text-primary">{{ Str::limit($post->title, 40) }}</li>
+                            <li class="text-text-primary" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+                                <span itemprop="name">{{ Str::limit($post->title, 40) }}</span>
+                                <meta itemprop="position" content="3" />
+                            </li>
                         </ol>
                     </nav>
 

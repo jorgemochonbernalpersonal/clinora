@@ -4,7 +4,18 @@
             {{-- Logo --}}
             <div class="flex-shrink-0 overflow-hidden">
                 <a href="{{ route('home') }}" class="flex items-center">
-                    <img src="{{ asset('images/logo.png') }}" alt="Clinora" class="h-16 w-auto mix-blend-multiply transform scale-150 origin-center">
+                    <img 
+                        src="{{ asset('images/logo.png') }}"
+                        srcset="{{ asset('images/logo.png') }} 1x"
+                        sizes="96px"
+                        alt="Clinora" 
+                        width="96"
+                        height="96"
+                        class="h-16 w-auto mix-blend-multiply transform scale-150 origin-center"
+                        loading="eager"
+                        decoding="async"
+                        fetchpriority="high"
+                    >
                 </a>
             </div>
 

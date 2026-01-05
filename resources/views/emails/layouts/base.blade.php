@@ -169,11 +169,13 @@
                             📧 <a href="mailto:info@clinora.es" style="color: #0EA5E9; text-decoration: none;">info@clinora.es</a>
                         </p>
                         
+                        @auth
                         <p class="footer-text">
-                            <a href="{{ route('profile.settings') }}" style="color: #64748b; text-decoration: underline;">
+                            <a href="{{ profession_route('profile.settings') }}" style="color: #64748b; text-decoration: underline;">
                                 Gestionar preferencias de email
                             </a>
                         </p>
+                        @endauth
                         
                         <p class="footer-text">
                             © {{ date('Y') }} Clinora. Todos los derechos reservados.

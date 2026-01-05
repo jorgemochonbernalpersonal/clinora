@@ -64,7 +64,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
                     </svg>
                 </div>
-                <div class="text-xs font-bold text-success-600 bg-success-50 px-2 py-0.5 rounded-full">
+                <div class="text-xs font-bold text-success-700 bg-success-50 px-2 py-0.5 rounded-full">
                     +{{ $stats['total'] > 0 ? round(($stats['completed'] / $stats['total']) * 100) : 0 }}%
                 </div>
             </div>
