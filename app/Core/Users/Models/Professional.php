@@ -16,6 +16,12 @@ class Professional extends \Illuminate\Database\Eloquent\Model
 {
     use HasFactory;
 
+    // Profession type constants
+    public const PROFESSION_PSYCHOLOGIST = 'psychologist';
+    public const PROFESSION_THERAPIST = 'therapist';
+    public const PROFESSION_NUTRITIONIST = 'nutritionist';
+    public const PROFESSION_PSYCHIATRIST = 'psychiatrist';
+
     /**
      * Create a new factory instance for the model.
      */
@@ -29,6 +35,7 @@ class Professional extends \Illuminate\Database\Eloquent\Model
      */
     protected $fillable = [
         'user_id',
+        'profession_type',
 
         'license_number',
         'profession',
@@ -144,5 +151,51 @@ class Professional extends \Illuminate\Database\Eloquent\Model
     public function getLanguageAttribute(): string
     {
         return $this->user->language ?? 'es';
+    }
+
+    /**
+     * Get the profession route prefix based on profession type
+     */
+    public function getProfessionRoute(): string
+    {
+        return match($this->profession_type) {
+            self::PROFESSION_PSYCHOLOGIST => 'psychologist',
+            self::PROFESSION_THERAPIST => 'therapist',
+            self::PROFESSION_NUTRITIONIST => 'nutritionist',
+            self::PROFESSION_PSYCHIATRIST => 'psychiatrist',
+            default => 'psychologist',
+        };
+    }
+
+    /**
+     * Check if professional is a psychologist
+     */
+    public function isPsychologist(): bool
+    {
+        return $this->profession_type === self::PROFESSION_PSYCHOLOGIST;
+    }
+
+    /**
+     * Check if professional is a therapist
+     */
+    public function isTherapist(): bool
+    {
+        return $this->profession_type === self::PROFESSION_THERAPIST;
+    }
+
+    /**
+     * Check if professional is a nutritionist
+     */
+    public function isNutritionist(): bool
+    {
+        return $this->profession_type === self::PROFESSION_NUTRITIONIST;
+    }
+
+    /**
+     * Check if professional is a psychiatrist
+     */
+    public function isPsychiatrist(): bool
+    {
+        return $this->profession_type === self::PROFESSION_PSYCHIATRIST;
     }
 }
