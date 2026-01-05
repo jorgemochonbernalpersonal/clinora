@@ -38,9 +38,29 @@ class ConsentFormService
 
         $template = ConsentFormTemplateRegistry::get($module, $consentType);
 
+
         // Validate data
         if (!$template->validate($data)) {
-            throw new InvalidArgumentException('Invalid data for consent form');
+            // Log which fields are missing for debugging
+            $requiredFields = $template->getRequiredFields();
+            $missingFields = [];
+            foreach ($requiredFields as $field) {
+                if (!isset($data[$field]) || empty($data[$field])) {
+                    $missingFields[] = $field;
+                }
+            }
+            
+            \Log::error('Consent form validation failed', [
+                'module' => $module,
+                'consent_type' => $consentType,
+                'required_fields' => $requiredFields,
+                'missing_fields' => $missingFields,
+                'provided_data_keys' => array_keys($data),
+            ]);
+            
+            throw new InvalidArgumentException(
+                'Invalid data for consent form. Missing fields: ' . implode(', ', $missingFields)
+            );
         }
 
         // Add contact to data for template generation

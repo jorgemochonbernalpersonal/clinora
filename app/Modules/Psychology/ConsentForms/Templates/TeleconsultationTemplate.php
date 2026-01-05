@@ -37,7 +37,7 @@ class TeleconsultationTemplate implements ConsentFormTemplateInterface
             'professional_id',
             'contact_id',
             'consent_type',
-            'platform',
+            // platform is optional, defaults to 'Clinora'
         ];
     }
 
