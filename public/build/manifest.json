@@ -1,6 +1,17 @@
 {
+  "_fullcalendar-B0qbWZ2C.js": {
+    "file": "assets/fullcalendar-B0qbWZ2C.js",
+    "name": "fullcalendar",
+    "imports": [
+      "_vendor-BzfSgtgF.js"
+    ]
+  },
+  "_vendor-BzfSgtgF.js": {
+    "file": "assets/vendor-BzfSgtgF.js",
+    "name": "vendor"
+  },
   "resources/css/app.css": {
-    "file": "assets/app-Bh1IajFU.css",
+    "file": "assets/app-BL_QwGJx.css",
     "src": "resources/css/app.css",
     "isEntry": true,
     "name": "app",
@@ -9,9 +20,22 @@
     ]
   },
   "resources/js/app.js": {
-    "file": "assets/app-VxDPj9mW.js",
+    "file": "assets/app-nWVhh7iD.js",
     "name": "app",
     "src": "resources/js/app.js",
-    "isEntry": true
+    "isEntry": true,
+    "imports": [
+      "_vendor-BzfSgtgF.js"
+    ]
+  },
+  "resources/js/calendar.js": {
+    "file": "assets/calendar-C-3Q1EP0.js",
+    "name": "calendar",
+    "src": "resources/js/calendar.js",
+    "isEntry": true,
+    "imports": [
+      "_fullcalendar-B0qbWZ2C.js",
+      "_vendor-BzfSgtgF.js"
+    ]
   }
 }
