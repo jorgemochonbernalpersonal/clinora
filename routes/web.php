@@ -2,17 +2,55 @@
 
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LogViewerController;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // SEO - Sitemap
 Route::get('/sitemap.xml', function () {
-    return response()
-        ->view('sitemap', [], 200)
-        ->header('Content-Type', 'application/xml; charset=utf-8')
-        ->header('Cache-Control', 'public, max-age=3600, s-maxage=86400')
-        ->header('X-Content-Type-Options', 'nosniff');
+    try {
+        $entries = \App\Shared\Helpers\SitemapHelper::getSitemapEntries();
+
+        // Ensure we always have at least the homepage
+        if (empty($entries)) {
+            $entries = [
+                [
+                    'url' => \App\Shared\Helpers\SitemapHelper::getSecureUrl('/'),
+                    'lastmod' => \App\Shared\Helpers\SitemapHelper::getHomepageLastMod(),
+                    'changefreq' => 'weekly',
+                    'priority' => '1.0',
+                ],
+            ];
+        }
+
+        return response()
+            ->view('sitemap', ['entries' => $entries], 200)
+            ->header('Content-Type', 'application/xml; charset=utf-8')
+            ->header('Cache-Control', 'public, max-age=3600, s-maxage=86400')
+            ->header('X-Content-Type-Options', 'nosniff');
+    } catch (\Exception $e) {
+        // Log the error for debugging
+        Log::error('Sitemap generation failed: ' . $e->getMessage(), [
+            'exception' => $e,
+            'trace' => $e->getTraceAsString(),
+        ]);
+
+        // Return a minimal valid sitemap with just the homepage
+        $entries = [
+            [
+                'url' => url('/'),
+                'lastmod' => now()->toAtomString(),
+                'changefreq' => 'weekly',
+                'priority' => '1.0',
+            ],
+        ];
+
+        return response()
+            ->view('sitemap', ['entries' => $entries], 200)
+            ->header('Content-Type', 'application/xml; charset=utf-8')
+            ->header('Cache-Control', 'public, max-age=300, s-maxage=300');
+    }
 })->name('sitemap');
 
 Route::get('/sitemap.xsl', function () {
