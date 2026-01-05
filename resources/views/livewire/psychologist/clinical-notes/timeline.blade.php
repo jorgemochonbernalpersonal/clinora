@@ -155,7 +155,7 @@
 
                                      <div class="flex justify-end mt-4 pt-3 border-t border-gray-50">
                                         <a 
-                                            href="{{ route('psychologist.clinical-notes.edit', $note) }}"
+                                            href="{{ profession_route('clinical-notes.edit', $note) }}"
                                             class="inline-flex items-center px-3 py-1.5 bg-gray-50 hover:bg-white border border-gray-200 rounded text-xs font-medium text-gray-700 shadow-sm transition-colors"
                                         >
                                             <svg class="w-3 h-3 mr-1.5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -179,7 +179,7 @@
                     @if($selectedPatientId)
                          <h3 class="text-lg font-medium text-gray-900">Sin historial</h3>
                          <p class="text-gray-500 mt-1 max-w-sm">Este paciente aún no tiene notas clínicas registradas.</p>
-                         <a href="{{ route('psychologist.clinical-notes.create', ['patient' => $selectedPatientId]) }}" class="mt-4 text-primary-600 hover:text-primary-700 font-medium text-sm">Crear primera nota &rarr;</a>
+                         <a href="{{ profession_route('clinical-notes.create', ['patient' => $selectedPatientId]) }}" class="mt-4 text-primary-600 hover:text-primary-700 font-medium text-sm">Crear primera nota &rarr;</a>
                     @else
                         <h3 class="text-lg font-medium text-gray-900">No hay notas recientes</h3>
                         <p class="text-gray-500 mt-1">Comienza seleccionando un paciente o creando una nueva nota.</p>

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Providers;
+namespace App\Modules\Psychology;
 
 use App\Core\ConsentForms\Models\ConsentForm;
 use App\Core\ConsentForms\Services\ConsentFormTemplateRegistry;
@@ -21,11 +21,24 @@ class PsychologyModuleServiceProvider extends ServiceProvider
     public function register(): void
     {
         // Only register if module is enabled
-        if (!config('modules.psychology.enabled', false)) {
+        if (!config('modules.psychology.enabled', true)) {
             return;
         }
 
-        // Register Psychology module repositories and services
+        // Register repositories
+        $this->app->singleton(
+            \App\Modules\Psychology\ClinicalNotes\Repositories\ClinicalNoteRepository::class
+        );
+
+        // Register services
+        $this->app->singleton(
+            \App\Modules\Psychology\ClinicalNotes\Services\ClinicalNoteService::class,
+            function ($app) {
+                return new \App\Modules\Psychology\ClinicalNotes\Services\ClinicalNoteService(
+                    $app->make(\App\Modules\Psychology\ClinicalNotes\Repositories\ClinicalNoteRepository::class)
+                );
+            }
+        );
     }
 
     /**
@@ -34,7 +47,7 @@ class PsychologyModuleServiceProvider extends ServiceProvider
     public function boot(): void
     {
         // Only boot if module is enabled
-        if (!config('modules.psychology.enabled', false)) {
+        if (!config('modules.psychology.enabled', true)) {
             return;
         }
 
@@ -48,7 +61,17 @@ class PsychologyModuleServiceProvider extends ServiceProvider
         // Load routes
         $this->loadRoutesFrom(base_path('routes/api/psychology.php'));
 
-        // Load migrations
-        $this->loadMigrationsFrom(database_path('migrations/modules/psychology'));
+        // Load migrations if directory exists
+        $migrationsPath = database_path('migrations/modules/psychology');
+        if (is_dir($migrationsPath)) {
+            $this->loadMigrationsFrom($migrationsPath);
+        }
+
+        // Load views if they exist
+        $viewsPath = __DIR__ . '/Resources/Views';
+        if (is_dir($viewsPath)) {
+            $this->loadViewsFrom($viewsPath, 'psychology');
+        }
     }
 }
+

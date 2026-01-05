@@ -62,7 +62,7 @@
         </table>
         
         <div style="text-align: center; margin: 25px 0;">
-            <a href="{{ route('appointments.index') }}" class="button">
+            <a href="{{ profession_route('appointments.index') }}" class="button">
                 Ver todas las citas
             </a>
         </div>

@@ -51,7 +51,11 @@ class LoginForm extends Component
             // Simple auth simulation for middleware
             auth()->loginUsingId($result['user']->id, $this->remember);
             
-            return redirect()->route('psychologist.dashboard');
+            // Dynamic redirect based on profession
+            $professional = $result['user']->professional;
+            $routePrefix = $professional ? $professional->getProfessionRoute() : 'psychologist';
+            
+            return redirect()->route($routePrefix . '.dashboard');
             
         } catch (\Illuminate\Validation\ValidationException $e) {
             $this->errorMessage = $e->getMessage() ?? 'Credenciales incorrectas';

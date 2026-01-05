@@ -2,24 +2,32 @@
 
 namespace App\Modules\Psychology\ClinicalNotes\Controllers;
 
-use App\Modules\Psychology\ClinicalNotes\Models\ClinicalNote;
+use App\Modules\Psychology\ClinicalNotes\Services\ClinicalNoteService;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class ClinicalNoteController extends Controller
 {
+    public function __construct(
+        private ClinicalNoteService $service
+    ) {}
+
     /**
      * List clinical notes
      */
     public function index(Request $request): JsonResponse
     {
-        $notes = ClinicalNote::where('professional_id', $request->user()->professional->id)
-            ->with(['contact', 'appointment'])
-            ->when($request->contact_id, fn($q, $contactId) => $q->byContact($contactId))
-            ->when($request->high_risk, fn($q) => $q->highRisk())
-            ->orderBy('session_date', 'desc')
-            ->paginate(20);
+        $filters = [
+            'contact_id' => $request->contact_id,
+            'high_risk' => $request->boolean('high_risk'),
+            'per_page' => $request->get('per_page', 20),
+        ];
+
+        $notes = $this->service->getNotesForProfessional(
+            $request->user()->professional->id,
+            $filters
+        );
 
         return response()->json([
             'success' => true,
@@ -48,20 +56,17 @@ class ClinicalNoteController extends Controller
             'progress_rating' => 'nullable|integer|min:1|max:10',
         ]);
 
-        // Auto-increment session number
-        $sessionNumber = ClinicalNote::getNextSessionNumber($validated['contact_id']);
-
         try {
-            $note = ClinicalNote::create(array_merge($validated, [
-                'professional_id' => $request->user()->professional->id,
-                'session_number' => $sessionNumber,
-                'created_by' => $request->user()->id,
-            ]));
+            $note = $this->service->createNote(
+                $validated,
+                $request->user()->professional->id,
+                $request->user()->id
+            );
 
             $this->logUserAction('Nota clínica creada', [
                 'note_id' => $note->id,
                 'contact_id' => $note->contact_id,
-                'session_number' => $sessionNumber,
+                'session_number' => $note->session_number,
                 'risk_assessment' => $note->risk_assessment,
             ]);
 
@@ -97,14 +102,24 @@ class ClinicalNoteController extends Controller
      */
     public function show(Request $request, int $id): JsonResponse
     {
-        $note = ClinicalNote::where('professional_id', $request->user()->professional->id)
-            ->with(['contact', 'appointment'])
-            ->findOrFail($id);
+        $repository = app(\App\Modules\Psychology\ClinicalNotes\Repositories\ClinicalNoteRepository::class);
+        
+        try {
+            $note = $repository->findForProfessional(
+                $id,
+                $request->user()->professional->id
+            )->load(['contact', 'appointment']);
 
-        return response()->json([
-            'success' => true,
-            'data' => $note,
-        ]);
+            return response()->json([
+                'success' => true,
+                'data' => $note,
+            ]);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Nota clínica no encontrada',
+            ], 404);
+        }
     }
 
     /**
@@ -112,20 +127,6 @@ class ClinicalNoteController extends Controller
      */
     public function update(Request $request, int $id): JsonResponse
     {
-        $note = ClinicalNote::where('professional_id', $request->user()->professional->id)
-            ->findOrFail($id);
-
-        if ($note->isSigned()) {
-            $this->logWarning('Intento de editar nota clínica firmada', [
-                'note_id' => $note->id,
-            ]);
-
-            return response()->json([
-                'success' => false,
-                'message' => 'No se puede editar una nota firmada',
-            ], 422);
-        }
-
         $validated = $request->validate([
             'subjective' => 'nullable|string',
             'objective' => 'nullable|string',
@@ -135,9 +136,12 @@ class ClinicalNoteController extends Controller
         ]);
 
         try {
-            $note->update(array_merge($validated, [
-                'updated_by' => $request->user()->id,
-            ]));
+            $note = $this->service->updateNote(
+                $id,
+                $validated,
+                $request->user()->professional->id,
+                $request->user()->id
+            );
 
             $this->logUserAction('Nota clínica actualizada', [
                 'note_id' => $note->id,
@@ -146,18 +150,18 @@ class ClinicalNoteController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Nota clínica actualizada exitosamente',
-                'data' => $note->fresh(),
+                'data' => $note,
             ]);
         } catch (\Exception $e) {
             $this->logError('Error al actualizar nota clínica', $e, [
-                'note_id' => $note->id,
+                'note_id' => $id,
             ]);
 
             return response()->json([
                 'success' => false,
-                'message' => 'Error al actualizar la nota clínica',
+                'message' => $e->getMessage(),
                 'error' => config('app.debug') ? $e->getMessage() : 'Error del servidor',
-            ], 500);
+            ], $e->getMessage() === 'No se puede editar una nota clínica firmada' ? 422 : 500);
         }
     }
 
@@ -166,11 +170,11 @@ class ClinicalNoteController extends Controller
      */
     public function sign(Request $request, int $id): JsonResponse
     {
-        $note = ClinicalNote::where('professional_id', $request->user()->professional->id)
-            ->findOrFail($id);
-
         try {
-            $note->sign();
+            $note = $this->service->signNote(
+                $id,
+                $request->user()->professional->id
+            );
 
             $this->logUserAction('Nota clínica firmada', [
                 'note_id' => $note->id,
@@ -180,11 +184,11 @@ class ClinicalNoteController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Nota clínica firmada exitosamente',
-                'data' => $note->fresh(),
+                'data' => $note,
             ]);
         } catch (\Exception $e) {
             $this->logError('Error al firmar nota clínica', $e, [
-                'note_id' => $note->id,
+                'note_id' => $id,
             ]);
 
             return response()->json([

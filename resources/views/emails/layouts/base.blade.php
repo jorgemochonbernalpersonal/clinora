@@ -158,10 +158,10 @@
                     <!-- Footer -->
                     <div class="email-footer">
                         <div class="footer-links">
-                            <a href="{{ url('/') }}">Inicio</a>
-                            <a href="{{ url('/faqs') }}">Ayuda</a>
-                            <a href="{{ url('/legal/terms') }}">Términos</a>
-                            <a href="{{ url('/legal/privacy') }}">Privacidad</a>
+                            <a href="{{ route('home') }}">Inicio</a>
+                            <a href="{{ route('faqs') }}">Ayuda</a>
+                            <a href="{{ route('legal.terms') }}">Términos</a>
+                            <a href="{{ route('legal.privacy') }}">Privacidad</a>
                         </div>
                         
                         <p class="footer-text">

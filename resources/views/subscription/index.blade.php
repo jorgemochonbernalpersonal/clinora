@@ -208,7 +208,7 @@
     <div class="bg-white rounded-xl shadow-md p-8">
         <h2 class="text-2xl font-bold text-text-primary mb-6">Preferencias de Notificaciones</h2>
         
-        <form action="{{ route('psychologist.subscription.update-preferences') }}" method="POST">
+        <form action="{{ profession_route('subscription.update-preferences') }}" method="POST">
             @csrf
             @method('PATCH')
             

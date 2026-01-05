@@ -36,7 +36,7 @@ class ClinicalNoteList extends Component
     {
         try {
             $response = Http::withToken(session('api_token'))
-                ->get(url('/api/v1/contacts'), ['active' => 1]);
+                ->get(route('api.contacts.index'), ['active' => 1]);
 
             if ($response->successful()) {
                 $this->patients = $response->json('data') ?? [];
@@ -50,7 +50,7 @@ class ClinicalNoteList extends Component
     {
         try {
             $response = Http::withToken(session('api_token'))
-                ->get(url('/api/v1/clinical-notes'), [
+                ->get(route('api.psychology.clinical-notes.index'), [
                     'recent' => 1,
                 ]);
 
@@ -82,7 +82,7 @@ class ClinicalNoteList extends Component
 
         try {
             $response = Http::withToken(session('api_token'))
-                ->post(url('/api/v1/clinical-notes'), [
+                ->post(route('api.psychology.clinical-notes.store'), [
                     'contact_id' => $this->contact_id,
                     'subjective' => $this->subjective,
                     'objective' => $this->objective,

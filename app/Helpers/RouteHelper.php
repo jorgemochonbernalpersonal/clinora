@@ -26,7 +26,11 @@ if (!function_exists('current_profession')) {
      */
     function current_profession(): string
     {
-        return auth()->user()?->professional?->profession_type ?? 'psychologist';
+        $module = \App\Shared\Helpers\ModuleHelper::getCurrentModule();
+        
+        return $module 
+            ? $module->getProfessionType() 
+            : (auth()->user()?->professional?->profession_type ?? 'psychologist');
     }
 }
 
@@ -39,5 +43,19 @@ if (!function_exists('profession_prefix')) {
     function profession_prefix(): string
     {
         return auth()->user()?->professional?->getProfessionRoute() ?? 'psychologist';
+    }
+}
+
+if (!function_exists('profession_route_name')) {
+    /**
+     * Generate a route name with profession prefix
+     * 
+     * @param string $name Route name without profession prefix (e.g. 'dashboard', 'patients.index')
+     * @return string Full route name with profession prefix
+     */
+    function profession_route_name(string $name): string
+    {
+        $prefix = profession_prefix();
+        return $prefix . '.' . $name;
     }
 }

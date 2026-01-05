@@ -77,7 +77,11 @@ class RegisterForm extends Component
                 return redirect()->route('verification.notice');
             }
             
-            return redirect()->route('psychologist.dashboard');
+            // Dynamic redirect based on profession
+            $professional = $result['user']->professional;
+            $routePrefix = $professional ? $professional->getProfessionRoute() : 'psychologist';
+            
+            return redirect()->route($routePrefix . '.dashboard');
             
         } catch (\Illuminate\Validation\ValidationException $e) {
             $this->errorMessage = 'Por favor, corrige los errores en el formulario.';

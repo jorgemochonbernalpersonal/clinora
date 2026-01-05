@@ -36,7 +36,7 @@ class AppointmentList extends Component
     {
         try {
             $response = Http::withToken(session('api_token'))
-                ->get(url('/api/v1/contacts'), ['active' => 1]);
+                ->get(route('api.contacts.index'), ['active' => 1]);
 
             if ($response->successful()) {
                 $this->patients = $response->json('data') ?? [];
@@ -50,7 +50,7 @@ class AppointmentList extends Component
     {
         try {
             $response = Http::withToken(session('api_token'))
-                ->get(url('/api/v1/appointments'), [
+                ->get(route('api.appointments.index'), [
                     'upcoming' => 1,
                 ]);
 
@@ -84,7 +84,7 @@ class AppointmentList extends Component
             $datetime = $this->appointment_date . ' ' . $this->appointment_time;
             
             $response = Http::withToken(session('api_token'))
-                ->post(url('/api/v1/appointments'), [
+                ->post(route('api.appointments.store'), [
                     'contact_id' => $this->contact_id,
                     'appointment_datetime' => $datetime,
                     'duration_minutes' => (int) $this->duration,

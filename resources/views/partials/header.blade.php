@@ -43,16 +43,16 @@
         {{-- Mobile Menu --}}
         <div class="hidden md:hidden" id="mobile-menu">
             <div class="px-2 pt-2 pb-3 space-y-1 border-t border-gray-200 mt-4">
-                <a href="{{ url('/') }}#caracteristicas" class="mobile-nav-link block px-3 py-2 text-text-secondary hover:text-primary-600">
+                <a href="{{ route('home') }}#caracteristicas" class="mobile-nav-link block px-3 py-2 text-text-secondary hover:text-primary-600">
                     Características
                 </a>
-                <a href="{{ url('/') }}#caracteristicas" class="mobile-nav-link block px-3 py-2 text-text-secondary hover:text-primary-600">
+                <a href="{{ route('home') }}#caracteristicas" class="mobile-nav-link block px-3 py-2 text-text-secondary hover:text-primary-600">
                     Para tu Profesión
                 </a>
-                <a href="{{ url('/') }}#precios" class="mobile-nav-link block px-3 py-2 text-text-secondary hover:text-primary-600">
+                <a href="{{ route('home') }}#precios" class="mobile-nav-link block px-3 py-2 text-text-secondary hover:text-primary-600">
                     Precios
                 </a>
-                <a href="{{ url('/') }}#faq" class="mobile-nav-link block px-3 py-2 text-text-secondary hover:text-primary-600">
+                <a href="{{ route('home') }}#faq" class="mobile-nav-link block px-3 py-2 text-text-secondary hover:text-primary-600">
                     FAQ
                 </a>
             </div>

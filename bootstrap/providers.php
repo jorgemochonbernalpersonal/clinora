@@ -5,7 +5,8 @@ $providers = [
     
     // Clinora Modular Service Providers
     App\Providers\CoreServiceProvider::class,
-    App\Providers\PsychologyModuleServiceProvider::class,
+    App\Shared\Services\ModuleServiceProvider::class, // Register modules first
+    App\Modules\Psychology\PsychologyModuleServiceProvider::class,
     App\Providers\PatientPortalServiceProvider::class,
 ];
 

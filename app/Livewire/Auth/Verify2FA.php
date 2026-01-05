@@ -61,7 +61,11 @@ class Verify2FA extends Component
                 session(['user' => $user]);
                 auth()->loginUsingId($user->id, $remember);
 
-                return redirect()->route('psychologist.dashboard');
+                // Dynamic redirect based on profession
+                $professional = $user->professional;
+                $routePrefix = $professional ? $professional->getProfessionRoute() : 'psychologist';
+                
+                return redirect()->route($routePrefix . '.dashboard');
             } else {
                 $this->errorMessage = $this->useRecoveryCode 
                     ? 'Código de recuperación inválido'

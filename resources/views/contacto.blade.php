@@ -11,7 +11,7 @@
     '@type' => 'ContactPage',
     'name' => 'Contacto - Clinora',
     'description' => 'Formulario de contacto de Clinora',
-    'url' => url('/contacto'),
+    'url' => route('contact'),
     'mainEntity' => [
         '@type' => 'Organization',
         'name' => 'Clinora',
@@ -202,7 +202,7 @@
                 <p class="text-text-secondary mb-8">
                     Quizás encuentres la respuesta en nuestras preguntas frecuentes
                 </p>
-                <a href="{{ url('/#faq') }}" 
+                <a href="{{ route('home') }}#faq" 
                    class="inline-block bg-surface hover:bg-gray-100 text-text-primary border-2 border-gray-300 px-6 py-3 rounded-lg font-semibold transition-colors">
                     Ver Preguntas Frecuentes
                 </a>

@@ -412,7 +412,7 @@
                     },
                     
                     select: (info) => {
-                        const url = new URL('{{ route('psychologist.appointments.create') }}');
+                        const url = new URL('{{ profession_route('appointments.create') }}');
                         url.searchParams.set('start', info.startStr);
                         url.searchParams.set('end', info.endStr);
                         window.location.href = url.toString();

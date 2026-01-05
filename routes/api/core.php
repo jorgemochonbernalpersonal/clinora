@@ -66,14 +66,7 @@ Route::prefix('api/v1')->middleware(['api'])->group(function () {
             Route::delete('/{id}', [\App\Core\Appointments\Controllers\AppointmentController::class, 'destroy'])->name('api.appointments.destroy');
         });
 
-        // Clinical Notes
-        Route::prefix('clinical-notes')->group(function () {
-            Route::get('/', [\App\Core\ClinicalNotes\Controllers\ClinicalNoteController::class, 'index'])->name('api.clinical-notes.index');
-            Route::post('/', [\App\Core\ClinicalNotes\Controllers\ClinicalNoteController::class, 'store'])->name('api.clinical-notes.store');
-            Route::get('/{id}', [\App\Core\ClinicalNotes\Controllers\ClinicalNoteController::class, 'show'])->name('api.clinical-notes.show');
-            Route::put('/{id}', [\App\Core\ClinicalNotes\Controllers\ClinicalNoteController::class, 'update'])->name('api.clinical-notes.update');
-            Route::post('/{id}/sign', [\App\Core\ClinicalNotes\Controllers\ClinicalNoteController::class, 'sign'])->name('api.clinical-notes.sign');
-        });
+        // Clinical Notes moved to profession-specific modules (e.g., /api/v1/psychology/clinical-notes)
         
         // Dashboard
         Route::prefix('dashboard')->group(function () {

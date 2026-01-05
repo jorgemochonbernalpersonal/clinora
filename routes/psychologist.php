@@ -87,9 +87,9 @@ Route::prefix('clinical-notes')->name('clinical-notes.')->group(function () {
     Route::get('/{id}/edit', \App\Livewire\Psychologist\ClinicalNotes\ClinicalNoteForm::class)->name('edit');
 });
 
-// Consent Forms
+// Consent Forms (Psychology-specific)
 Route::prefix('consent-forms')->name('consent-forms.')->group(function () {
-    Route::get('/', \App\Livewire\ConsentForms\ConsentFormList::class)->name('index');
+    Route::get('/', \App\Livewire\Psychology\ConsentForms\ConsentFormList::class)->name('index');
     Route::get('/create', \App\Livewire\ConsentForms\ConsentFormCreate::class)->name('create');
     Route::get('/{id}', \App\Livewire\ConsentForms\ConsentFormShow::class)->name('show');
 });

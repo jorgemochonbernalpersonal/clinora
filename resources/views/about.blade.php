@@ -11,7 +11,7 @@
     '@type' => 'AboutPage',
     'name' => 'Sobre Nosotros - Clinora',
     'description' => 'Información sobre Clinora y nuestra misión',
-    'url' => url('/sobre-nosotros'),
+    'url' => route('about'),
     'mainEntity' => [
         '@type' => 'Organization',
         'name' => 'Clinora',
