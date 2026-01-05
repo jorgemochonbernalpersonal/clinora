@@ -170,11 +170,16 @@
                         </p>
                         
                         @auth
+                        @php
+                            $prefRoute = function_exists('profession_route_name') ? profession_route_name('profile.settings') : null;
+                        @endphp
+                        @if($prefRoute && Route::has($prefRoute))
                         <p class="footer-text">
-                            <a href="{{ profession_route('profile.settings') }}" style="color: #64748b; text-decoration: underline;">
+                            <a href="{{ route($prefRoute) }}" style="color: #64748b; text-decoration: underline;">
                                 Gestionar preferencias de email
                             </a>
                         </p>
+                        @endif
                         @endauth
                         
                         <p class="footer-text">

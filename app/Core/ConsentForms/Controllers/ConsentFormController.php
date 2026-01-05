@@ -369,34 +369,21 @@ class ConsentFormController extends Controller
     }
 
     /**
-     * Log error
-     */
-    private function logError(string $message, \Exception $e, array $context = []): void
-    {
-        $this->log('error', $message, array_merge([
-            'error' => $e->getMessage(),
-            'trace' => $e->getTraceAsString(),
-        ], $context));
-    }
-
-    /**
-     * Log user action
-     */
-    private function logUserAction(string $action, array $context = []): void
-    {
-        $this->log('info', "User Action: {$action}", array_merge([
-            'user_id' => auth()->id(),
-        ], $context));
-    }
-
-    /**
      * Log warning
      */
-    private function logWarning(string $message, array $context = []): void
+    protected function logWarning(string $message, array $context = []): void
     {
         $this->log('warning', $message, array_merge([
             'user_id' => auth()->id(),
         ], $context));
+    }
+
+    /**
+     * Internal logging helper to ensure consistency
+     */
+    private function log(string $level, string $message, array $context = []): void
+    {
+        Log::log($level, $message, $context);
     }
 }
 
