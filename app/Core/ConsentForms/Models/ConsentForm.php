@@ -212,7 +212,7 @@ class ConsentForm extends Model
      */
     public function isSigned(): bool
     {
-        return !is_null($this->signed_at) && $this->is_valid === true;
+        return !is_null($this->signed_at);
     }
 
     /**
