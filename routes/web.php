@@ -83,6 +83,13 @@ Route::get('/email/verify', fn() => view('auth.verify-email'))->name('verificati
 Route::get('/email/verify/{id}/{hash}', [\App\Core\Authentication\Controllers\EmailVerificationController::class, 'verifyWeb'])
     ->middleware(['signed'])
     ->name('verification.verify');
+
+// Global profile settings redirect (robust fallback)
+Route::get('/profile/settings', function () {
+    $prefix = function_exists('profession_prefix') ? profession_prefix() : 'psychologist';
+    return redirect()->route($prefix . '.profile.settings');
+})->name('profile.settings')->middleware('auth');
+
 Route::post('/logout', function () {
     session()->forget(['api_token', 'user']);
     auth()->logout();
