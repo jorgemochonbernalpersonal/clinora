@@ -103,6 +103,8 @@ class AuthService implements ServiceInterface
                     'specialties' => $data['specialties'] ?? null,
                     'subscription_plan' => \App\Shared\Enums\SubscriptionPlan::default()->value, // Plan gratis por defecto
                     'subscription_status' => 'active',
+                    // Mark as early adopter if registering before beta end date (April 30, 2026)
+                    'is_early_adopter' => now()->lte('2026-04-30 23:59:59'),
                 ];
 
                 Log::debug('[AUTH_SERVICE] Datos del profesional a crear', [

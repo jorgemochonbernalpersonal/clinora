@@ -75,14 +75,11 @@ class SubscriptionController extends Controller
     
     /**
      * Calculate estimated cost
+     * Applies 25% discount for early adopters automatically
      */
     private function calculateEstimatedCost($professional, int $activePatients): float
     {
-        if ($professional->isOnFreePlan()) {
-            return 0;
-        }
-        
-        $pricePerPatient = $professional->isOnProPlan() ? 1 : 2;
+        $pricePerPatient = $professional->getPricePerPatient();
         return $activePatients * $pricePerPatient;
     }
     

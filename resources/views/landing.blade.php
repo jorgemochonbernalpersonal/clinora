@@ -1,9 +1,9 @@
 @extends('layouts.app')
 
-@section('title', $meta['title'] ?? 'Clinora - Software de Gestión para Clínicas de Salud')
-@section('meta_title', $meta['title'] ?? 'Clinora - Software de Gestión para Clínicas de Salud | Prueba Gratis')
-@section('meta_description', $meta['description'] ?? 'Gestiona tu clínica de salud con Clinora. Software SaaS para psicólogos, fisioterapeutas y nutricionistas.')
-@section('meta_keywords', $meta['keywords'] ?? 'software gestión clínica, software psicólogos, telemedicina')
+@section('title', $meta['title'] ?? 'Clinora - Software para Psicólogos | Gestión de Consultas')
+@section('meta_title', $meta['title'] ?? 'Clinora - Software para Psicólogos | Agenda, Pacientes y Notas Clínicas')
+@section('meta_description', $meta['description'] ?? 'Software de gestión para psicólogos. Agenda inteligente, expedientes digitales, notas SOAP y cumplimiento RGPD. Prueba gratis hasta abril 2026.')
+@section('meta_keywords', $meta['keywords'] ?? 'software psicólogos, gestión clínica psicología, agenda psicólogos, notas clínicas SOAP, expediente digital psicología, RGPD psicólogos')
 
 @push('structured_data')
 <script type="application/ld+json">
@@ -15,26 +15,27 @@
     'operatingSystem' => 'Web',
     'offers' => [
         '@type' => 'Offer',
-        'price' => '1',
+        'price' => '0.75',
         'priceCurrency' => 'EUR',
-        'priceValidUntil' => '2025-12-31',
+        'priceValidUntil' => '2026-04-30',
         'availability' => 'https://schema.org/InStock',
-        'url' => 'https://clinora.com/precios',
-        'description' => 'Desde €1 por paciente activo al mes'
+        'url' => 'https://clinora.es',
+        'description' => 'Desde €0.75 por paciente activo al mes (Beta: 25% descuento)'
     ],
     'aggregateRating' => [
         '@type' => 'AggregateRating',
         'ratingValue' => '4.8',
         'reviewCount' => '127'
     ],
-    'description' => 'Plataforma SaaS para gestión de clínicas de salud y bienestar',
-    'screenshot' => 'https://clinora.com/images/dashboard.jpg',
+    'description' => 'Software de gestión para psicólogos. Agenda, pacientes, notas clínicas SOAP y más.',
+    'screenshot' => 'https://clinora.es/images/dashboard.jpg',
     'featureList' => [
-        'Gestión de citas',
-        'Teleconsulta',
-        'Facturación',
-        'Portal del paciente',
-        'Notas clínicas'
+        'Agenda de citas con calendario visual',
+        'Gestión de pacientes y expedientes digitales',
+        'Notas clínicas con método SOAP',
+        'Cumplimiento RGPD y LOPD',
+        'Autenticación de doble factor (2FA)',
+        'Acceso multiplataforma (web, móvil, tablet)'
     ]
 ], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) !!}
 </script>
@@ -53,10 +54,7 @@
                     Dedica más tiempo a tus pacientes y menos al papeleo.
                 </p>
                 <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                    <a href="{{ route('register') }}" 
-                       class="bg-primary-500 hover:bg-primary-600 text-white px-8 py-4 rounded-lg font-semibold text-lg transition-colors shadow-lg hover:shadow-xl">
-                        Empieza Gratis
-                    </a>
+                
                 </div>
                 <div class="mt-8 flex items-center justify-center gap-6 text-sm text-text-secondary">
                     <div class="flex items-center gap-2">
@@ -71,6 +69,106 @@
                         </svg>
                         <span>Cumplimiento RGPD</span>
                     </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {{-- Beta Phase Announcement --}}
+    <section class="py-16 bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50 border-y-4 border-amber-300">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="max-w-5xl mx-auto">
+                <!-- Header -->
+                <div class="text-center mb-10">
+                    <h2 class="text-3xl sm:text-4xl font-bold text-gray-800 mb-3 flex items-center justify-center gap-3">
+                        🎉 ¡Únete a la Fase Beta de Clinora!
+                    </h2>
+                    <p class="text-xl text-gray-700">
+                        Como early adopter, disfrutarás de beneficios exclusivos
+                    </p>
+                </div>
+
+                <!-- Benefits Grid -->
+                <div class="grid md:grid-cols-2 gap-6 mb-8">
+                    <!-- Benefit 1 -->
+                    <div class="bg-white rounded-xl p-6 shadow-lg border-2 border-success-300">
+                        <div class="flex items-start gap-4">
+                            <div class="text-4xl">✅</div>
+                            <div>
+                                <h3 class="text-xl font-bold text-gray-800 mb-2">Gratis hasta 30/04/2026</h3>
+                                <p class="text-gray-600">
+                                    Acceso completo a <strong>todos los planes</strong> sin coste durante toda la fase beta
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Benefit 2 -->
+                    <div class="bg-white rounded-xl p-6 shadow-lg border-2 border-primary-300">
+                        <div class="flex items-start gap-4">
+                            <div class="text-4xl">🎁</div>
+                            <div>
+                                <h3 class="text-xl font-bold text-gray-800 mb-2">25% Descuento de Por Vida</h3>
+                                <p class="text-gray-600">
+                                    Los primeros <strong class="text-primary-600">200 profesionales</strong> disfrutarán de descuento permanente
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Benefits Detail -->
+                <div class="bg-gradient-to-r from-primary-500 to-primary-600 rounded-xl p-6 sm:p-8 text-white shadow-xl">
+                    <h3 class="text-2xl font-bold mb-5 text-center">Tus Beneficios como Early Adopter</h3>
+                    
+                    <div class="grid sm:grid-cols-3 gap-4 mb-6">
+                        <!-- Benefit 1 -->
+                        <div class="bg-white/10 backdrop-blur rounded-lg p-4">
+                            <div class="text-3xl mb-2">🎯</div>
+                            <p class="font-semibold mb-1">Uso Gratuito Total</p>
+                            <p class="text-sm opacity-90">Hasta 30/04/2026</p>
+                        </div>
+
+                        <!-- Benefit 2 -->
+                        <div class="bg-white/10 backdrop-blur rounded-lg p-4">
+                            <div class="text-3xl mb-2">⭐</div>
+                            <p class="font-semibold mb-1">Plan Gratis Mejorado</p>
+                            <p class="text-sm opacity-90">5 pacientes (vs. 3)</p>
+                        </div>
+
+                        <!-- Benefit 3 -->
+                        <div class="bg-white/10 backdrop-blur rounded-lg p-4">
+                            <div class="text-3xl mb-2">💰</div>
+                            <p class="font-semibold mb-1">25% Descuento</p>
+                            <p class="text-sm opacity-90">De por vida</p>
+                        </div>
+                    </div>
+
+                    <div class="border-t border-white/20 pt-5">
+                        <p class="text-center mb-3 text-lg font-semibold">Después de la beta:</p>
+                        <div class="grid sm:grid-cols-2 gap-3 text-sm">
+                            <div class="bg-white/10 rounded-lg p-3">
+                                <span class="font-semibold">Plan Pro:</span> €1/pac. → <span class="text-yellow-300 font-bold text-lg">€0.75/pac.</span>
+                            </div>
+                            <div class="bg-white/10 rounded-lg p-3">
+                                <span class="font-semibold">Plan Equipo:</span> €2/pac. → <span class="text-yellow-300 font-bold text-lg">€1.50/pac.</span>
+                            </div>
+                        </div>
+                        <p class="text-center mt-4 text-sm opacity-90">
+                            <strong>Ejemplo:</strong> 20 pacientes = <span class="line-through">€20/mes</span> <span class="text-yellow-300 font-bold text-xl">€15/mes</span>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- CTA -->
+                <div class="mt-8 text-center">
+                    <a href="{{ route('register') }}" 
+                       class="inline-block bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 text-white px-10 py-4 rounded-lg font-bold text-lg transition-all shadow-xl hover:shadow-2xl transform hover:-translate-y-0.5">
+                        🚀 Únete Ahora Gratis
+                    </a>
+                    <p class="mt-4 text-sm text-gray-600">
+                        ⚡ Quedan <strong class="text-primary-600">plazas limitadas</strong> para el descuento de por vida
+                    </p>
                 </div>
             </div>
         </div>
@@ -94,19 +192,19 @@
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
                 {{-- Feature 1 --}}
                 <div class="bg-surface rounded-lg p-6 border border-gray-200">
-                    <div class="text-3xl mb-4">🧠</div>
-                    <h3 class="text-xl font-semibold text-text-primary mb-2">Evaluaciones Psicológicas</h3>
+                    <div class="text-3xl mb-4">📅</div>
+                    <h3 class="text-xl font-semibold text-text-primary mb-2">Agenda Inteligente</h3>
                     <p class="text-text-secondary">
-                        Registra resultados de tests, escalas y cuestionarios (BDI-II, ansiedad, etc.) directamente en la ficha del paciente.
+                        Calendario visual con vista semanal y mensual. Gestiona citas, arrastra para reprogramar y controla el estado de cada sesión fácilmente.
                     </p>
                 </div>
 
                 {{-- Feature 2 --}}
                 <div class="bg-surface rounded-lg p-6 border border-gray-200">
                     <div class="text-3xl mb-4">👥</div>
-                    <h3 class="text-xl font-semibold text-text-primary mb-2">Portal del Paciente</h3>
+                    <h3 class="text-xl font-semibold text-text-primary mb-2">Gestión de Pacientes</h3>
                     <p class="text-text-secondary">
-                        Tus pacientes pueden reservar citas online, firmar consentimientos y descargar facturas de forma autónoma.
+                        Expediente digital completo con datos personales, historial médico, contacto de emergencia y cumplimiento RGPD.
                     </p>
                 </div>
 
@@ -122,18 +220,18 @@
                 {{-- Feature 4 --}}
                 <div class="bg-surface rounded-lg p-6 border border-gray-200">
                     <div class="text-3xl mb-4">📝</div>
-                    <h3 class="text-xl font-semibold text-text-primary mb-2">Notas de Sesión</h3>
+                    <h3 class="text-xl font-semibold text-text-primary mb-2">Notas Clínicas SOAP</h3>
                     <p class="text-text-secondary">
-                        Plantillas personalizables para diferentes tipos de terapia (CBT, Psicoanálisis, Sistemica) y notas estructuradas.
+                        Registra cada sesión con el método SOAP (Subjetivo, Objetivo, Análisis, Plan). Evaluación de riesgo integrada y timeline visual.
                     </p>
                 </div>
 
                 {{-- Feature 5 --}}
                 <div class="bg-surface rounded-lg p-6 border border-gray-200">
-                    <div class="text-3xl mb-4">💶</div>
-                    <h3 class="text-xl font-semibold text-text-primary mb-2">Facturación Automatizada</h3>
+                    <div class="text-3xl mb-4">💎</div>
+                    <h3 class="text-xl font-semibold text-text-primary mb-2">Planes Flexibles</h3>
                     <p class="text-text-secondary">
-                        Genera facturas automáticamente tras cada sesión. Envío por email con un solo clic y control de pagos pendientes.
+                        Desde un plan gratuito para comenzar hasta planes Pro y Equipo. Paga solo por pacientes activos, sin permanencia.
                     </p>
                 </div>
 
@@ -168,21 +266,24 @@
 
             <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
                 {{-- Plan Free --}}
-                <div class="bg-gradient-to-br from-success-50 to-primary-50 rounded-lg p-8 border-2 border-success-300">
+                <div class="bg-gradient-to-br from-success-50 to-primary-50 rounded-lg p-8 border-2 border-success-300 relative">
+                    <div class="absolute top-0 right-0 bg-amber-500 text-white px-3 py-1 rounded-bl-lg rounded-tr-lg text-xs font-semibold">
+                        🎁 Beta: 5 pacientes
+                    </div>
                     <h3 class="text-2xl font-semibold text-text-primary mb-2">🆓 Gratis</h3>
                     <div class="mb-6">
                         <div class="flex items-baseline gap-1">
                             <span class="text-4xl font-bold text-text-primary">€0</span>
                             <span class="text-text-secondary">/mes</span>
                         </div>
-                        <p class="text-sm text-text-secondary mt-2">Hasta 3 pacientes activos</p>
+                        <p class="text-sm text-text-secondary mt-2">Hasta <strong class="text-primary-600">5 pacientes</strong> (early adopters)</p>
                     </div>
                     <ul class="space-y-3 mb-8">
                         <li class="flex items-start gap-2">
                             <svg class="w-5 h-5 text-success-500 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
                             </svg>
-                            <span class="text-text-secondary">Hasta 3 pacientes</span>
+                            <span class="text-text-secondary">Hasta <strong>5 pacientes</strong> 🎉</span>
                         </li>
                         <li class="flex items-start gap-2">
                             <svg class="w-5 h-5 text-success-500 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
@@ -215,16 +316,21 @@
 
                 {{-- Plan Pro --}}
                 <div class="bg-primary-50 rounded-lg p-8 border-2 border-primary-500 relative">
+                    <div class="absolute top-0 left-0 bg-amber-500 text-white px-3 py-1 rounded-br-lg rounded-tl-lg text-xs font-semibold">
+                        🎁 Beta: €0.75/pac.
+                    </div>
                     <div class="absolute top-0 right-0 bg-primary-500 text-white px-4 py-1 rounded-bl-lg rounded-tr-lg text-sm font-semibold">
                         Más Popular
                     </div>
-                    <h3 class="text-2xl font-semibold text-text-primary mb-2">⭐ Pro</h3>
+                    <h3 class="text-2xl font-semibold text-text-primary mb-2 mt-4">⭐ Pro</h3>
                     <div class="mb-6">
-                        <div class="flex items-baseline gap-1">
-                            <span class="text-4xl font-bold text-text-primary">€1</span>
-                            <span class="text-text-secondary">/paciente activo</span>
+                        <div class="flex items-baseline gap-2">
+                            <span class="text-3xl font-bold text-gray-400 line-through">€1</span>
+                            <span class="text-4xl font-bold text-primary-600">€0.75</span>
+                            <span class="text-text-secondary">/paciente</span>
                         </div>
-                        <p class="text-sm text-text-secondary mt-2">Sin cuota fija · Pacientes ilimitados</p>
+                        <p class="text-sm text-success-600 font-semibold mt-1">25% descuento de por vida (early adopters)</p>
+                        <p class="text-xs text-text-secondary mt-1">Sin cuota fija · Pacientes ilimitados</p>
                     </div>
                     <ul class="space-y-3 mb-8">
                         <li class="flex items-start gap-2">
@@ -270,8 +376,8 @@
                             <span class="text-text-secondary">Soporte prioritario</span>
                         </li>
                     </ul>
-                    <div class="bg-primary-100 rounded-lg p-3 mb-4 text-sm text-text-secondary">
-                        <p><strong>Ejemplo:</strong> 20 pacientes = <strong class="text-text-primary">€20/mes</strong></p>
+                    <div class="bg-amber-50 border border-amber-300 rounded-lg p-3 mb-4 text-sm text-text-secondary">
+                        <p><strong>Ejemplo:</strong> 20 pacientes = <span class="line-through">€20/mes</span> → <strong class="text-primary-600 text-lg">€15/mes</strong></p>
                     </div>
                     <a href="{{ route('register') }}" 
                        class="block w-full bg-primary-500 hover:bg-primary-600 text-white text-center px-6 py-3 rounded-lg font-semibold transition-colors">
@@ -280,14 +386,19 @@
                 </div>
 
                 {{-- Plan Equipo --}}
-                <div class="bg-background rounded-lg p-8 border-2 border-gray-200">
-                    <h3 class="text-2xl font-semibold text-text-primary mb-2">🏢 Equipo</h3>
+                <div class="bg-background rounded-lg p-8 border-2 border-gray-200 relative">
+                    <div class="absolute top-0 right-0 bg-amber-500 text-white px-3 py-1 rounded-bl-lg rounded-tr-lg text-xs font-semibold">
+                        🎁 Beta: €1.50/pac.
+                    </div>
+                    <h3 class="text-2xl font-semibold text-text-primary mb-2 mt-4">🏢 Equipo</h3>
                     <div class="mb-6">
-                        <div class="flex items-baseline gap-1">
-                            <span class="text-4xl font-bold text-text-primary">€2</span>
-                            <span class="text-text-secondary">/paciente activo</span>
+                        <div class="flex items-baseline gap-2">
+                            <span class="text-3xl font-bold text-gray-400 line-through">€2</span>
+                            <span class="text-4xl font-bold text-text-primary">€1.50</span>
+                            <span class="text-text-secondary">/paciente</span>
                         </div>
-                        <p class="text-sm text-text-secondary mt-2">Sin cuota fija · Multi-profesional</p>
+                        <p class="text-sm text-success-600 font-semibold mt-1">25% descuento de por vida (early adopters)</p>
+                        <p class="text-xs text-text-secondary mt-1">Sin cuota fija · Multi-profesional</p>
                     </div>
                     <ul class="space-y-3 mb-8">
                         <li class="flex items-start gap-2">
@@ -333,8 +444,8 @@
                             <span class="text-text-secondary">Soporte dedicado</span>
                         </li>
                     </ul>
-                    <div class="bg-gray-50 rounded-lg p-3 mb-4 text-sm text-text-secondary">
-                        <p><strong>Ejemplo:</strong> 50 pacientes = <strong class="text-text-primary">€100/mes</strong></p>
+                    <div class="bg-amber-50 border border-amber-300 rounded-lg p-3 mb-4 text-sm text-text-secondary">
+                        <p><strong>Ejemplo:</strong> 50 pacientes = <span class="line-through">€100/mes</span> → <strong class="text-text-primary text-lg">€75/mes</strong></p>
                     </div>
                     <a href="{{ route('register') }}" 
                        class="block w-full bg-gray-200 hover:bg-gray-300 text-text-primary text-center px-6 py-3 rounded-lg font-semibold transition-colors">
@@ -389,20 +500,20 @@
             function calculatePrices() {
                 const patients = parseInt(input.value) || 0;
                 
-                // Free: €0 hasta 3 pacientes
-                if (patients <= 3) {
+                // Free: €0 hasta 5 pacientes (early adopters)
+                if (patients <= 5) {
                     freePrice.textContent = `€0/mes ✅`;
                 } else {
-                    freePrice.textContent = `Solo hasta 3 pac.`;
+                    freePrice.textContent = `Solo hasta 5 pac.`;
                 }
                 
-                // Pro: €1 por paciente
-                const pro = patients * 1;
-                proPrice.textContent = `€${pro}/mes`;
+                // Pro: €0.75 por paciente (25% descuento)
+                const pro = patients * 0.75;
+                proPrice.textContent = `€${pro.toFixed(2)}/mes`;
                 
-                // Equipo: €2 por paciente  
-                const team = patients * 2;
-                teamPrice.textContent = `€${team}/mes`;
+                // Equipo: €1.50 por paciente (25% descuento)
+                const team = patients * 1.50;
+                teamPrice.textContent = `€${team.toFixed(2)}/mes`;
             }
 
             input.addEventListener('input', calculatePrices);

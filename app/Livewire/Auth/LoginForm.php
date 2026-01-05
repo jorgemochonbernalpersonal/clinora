@@ -26,10 +26,6 @@ class LoginForm extends Component
         $this->errorMessage = null;
 
         try {
-            Log::info('[LOGIN_FORM] Iniciando login desde Livewire', [
-                'email' => $this->email,
-            ]);
-
             // Preparar datos validados (Livewire ya validó con $this->validate())
             $credentials = [
                 'email' => $this->email,
@@ -45,17 +41,9 @@ class LoginForm extends Component
                 session(['2fa_user_id' => $result['user']->id]);
                 session(['2fa_remember' => $this->remember]);
                 
-                Log::info('[LOGIN_FORM] Usuario con 2FA, redirigiendo a verificación', [
-                    'user_id' => $result['user']->id,
-                ]);
-                
                 return redirect()->route('2fa.verify');
             }
 
-            Log::info('[LOGIN_FORM] Login exitoso', [
-                'user_id' => $result['user']->id,
-            ]);
-            
             // Store token in session
             session(['api_token' => $result['token']]);
             session(['user' => $result['user']]);
@@ -63,12 +51,9 @@ class LoginForm extends Component
             // Simple auth simulation for middleware
             auth()->loginUsingId($result['user']->id, $this->remember);
             
-            return redirect()->route('dashboard');
+            return redirect()->route('psychologist.dashboard');
             
         } catch (\Illuminate\Validation\ValidationException $e) {
-            Log::warning('[LOGIN_FORM] Error de validación', [
-                'errors' => $e->errors(),
-            ]);
             $this->errorMessage = $e->getMessage() ?? 'Credenciales incorrectas';
         } catch (\Exception $e) {
             Log::error('[LOGIN_FORM] Error inesperado', [

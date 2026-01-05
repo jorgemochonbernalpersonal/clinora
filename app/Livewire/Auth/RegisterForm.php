@@ -49,10 +49,6 @@ class RegisterForm extends Component
         $this->errorMessage = null;
 
         try {
-            Log::info('[REGISTER_FORM] Iniciando registro desde Livewire', [
-                'email' => $this->email,
-            ]);
-
             // Preparar datos para el servicio
             $registerData = [
                 'first_name' => $this->first_name,
@@ -66,15 +62,8 @@ class RegisterForm extends Component
                 'terms_accepted' => $this->terms_accepted,
             ];
 
-            Log::info('[REGISTER_FORM] Datos validados, llamando a AuthService');
-
             // Llamar directamente al servicio
             $result = app(AuthService::class)->register($registerData);
-
-            Log::info('[REGISTER_FORM] Registro exitoso, guardando sesión', [
-                'user_id' => $result['user']->id,
-                'email_verified' => $result['user']->hasVerifiedEmail(),
-            ]);
             
             // Store token in session
             session(['api_token' => $result['token']]);
@@ -85,18 +74,12 @@ class RegisterForm extends Component
             
             // Si el email no está verificado, redirigir a la página de verificación
             if (!$result['user']->hasVerifiedEmail()) {
-                Log::info('[REGISTER_FORM] Email no verificado, redirigiendo a verificación');
                 return redirect()->route('verification.notice');
             }
             
-            Log::info('[REGISTER_FORM] Redirigiendo al dashboard');
-            return redirect()->route('dashboard');
+            return redirect()->route('psychologist.dashboard');
             
         } catch (\Illuminate\Validation\ValidationException $e) {
-            Log::warning('[REGISTER_FORM] Error de validación', [
-                'errors' => $e->errors(),
-            ]);
-            
             $this->errorMessage = 'Por favor, corrige los errores en el formulario.';
             
             // Set field errors

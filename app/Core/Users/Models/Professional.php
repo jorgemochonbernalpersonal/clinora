@@ -49,6 +49,7 @@ class Professional extends \Illuminate\Database\Eloquent\Model
         'invoice_series',
         'subscription_plan',
         'subscription_status',
+        'is_early_adopter',
     ];
 
     /**
@@ -57,6 +58,7 @@ class Professional extends \Illuminate\Database\Eloquent\Model
     protected $casts = [
         'specialties' => 'array',
         'subscription_plan' => SubscriptionPlan::class,
+        'is_early_adopter' => 'boolean',
     ];
 
     /**
@@ -197,5 +199,45 @@ class Professional extends \Illuminate\Database\Eloquent\Model
     public function isPsychiatrist(): bool
     {
         return $this->profession_type === self::PROFESSION_PSYCHIATRIST;
+    }
+
+    /**
+     * Check if professional is an early adopter (registered during beta)
+     */
+    public function isEarlyAdopter(): bool
+    {
+        return $this->is_early_adopter === true;
+    }
+
+    /**
+     * Get the patient limit for this professional
+     * Early adopters on free plan get 5 patients instead of 3
+     */
+    public function getPatientLimit(): ?int
+    {
+        if ($this->isOnFreePlan()) {
+            return $this->isEarlyAdopter() ? 5 : 3;
+        }
+        return null; // Unlimited for Pro and Equipo
+    }
+
+    /**
+     * Get the price per patient for this professional's plan
+     * Early adopters get 25% discount on Pro and Equipo plans
+     */
+    public function getPricePerPatient(): float
+    {
+        if ($this->isOnFreePlan()) {
+            return 0.0;
+        }
+
+        $basePrice = $this->isOnProPlan() ? 1.0 : 2.0;
+        
+        // Apply 25% discount for early adopters
+        if ($this->isEarlyAdopter()) {
+            $basePrice *= 0.75;
+        }
+
+        return $basePrice;
     }
 }

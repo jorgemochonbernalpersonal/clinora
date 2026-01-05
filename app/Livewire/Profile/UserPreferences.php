@@ -37,11 +37,6 @@ class UserPreferences extends Component
 
             $this->successMessage = 'Preferencias actualizadas correctamente';
 
-            \Log::info('[USER_PREFERENCES] Preferencias actualizadas', [
-                'user_id' => auth()->id(),
-                'theme' => $this->theme,
-            ]);
-
         } catch (\Exception $e) {
             \Log::error('[USER_PREFERENCES] Error al actualizar preferencias', [
                 'error' => $e->getMessage(),

@@ -64,11 +64,6 @@ class EmailVerificationModal extends Component
 
             $this->successMessage = 'Email de verificación enviado. Revisa tu bandeja de entrada.';
 
-            Log::info('[EMAIL_VERIFICATION_MODAL] Email de verificación reenviado', [
-                'user_id' => $user->id,
-                'email' => $user->email,
-            ]);
-
         } catch (\Exception $e) {
             Log::error('[EMAIL_VERIFICATION_MODAL] Error al reenviar email', [
                 'error' => $e->getMessage(),

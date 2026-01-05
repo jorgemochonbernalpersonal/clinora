@@ -5,7 +5,7 @@
             <h2 class="text-2xl font-bold text-text-primary">Pacientes</h2>
             <p class="text-text-secondary">Gestiona tus pacientes</p>
         </div>
-        <a href="{{ route('patients.create') }}" class="bg-primary-500 hover:bg-primary-600 text-white px-6 py-3 rounded-lg font-semibold transition-colors flex items-center gap-2">
+        <a href="{{ profession_route('patients.create') }}" class="bg-primary-500 hover:bg-primary-600 text-white px-6 py-3 rounded-lg font-semibold transition-colors flex items-center gap-2">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
             </svg>
@@ -152,10 +152,10 @@
 
                 {{-- Actions --}}
                 <div class="border-t border-gray-200 flex ml-auto w-full">
-                    <a href="{{ route('patients.edit', $patient) }}" class="flex-1 py-3 text-sm font-medium text-center text-primary-600 hover:bg-primary-50 transition-colors border-r border-gray-200">
+                    <a href="{{ profession_route('patients.edit', $patient) }}" class="flex-1 py-3 text-sm font-medium text-center text-primary-600 hover:bg-primary-50 transition-colors border-r border-gray-200">
                         Editar
                     </a>
-                    <a href="{{ route('clinical-notes.index', ['patient' => $patient->id]) }}" class="flex-1 py-3 text-sm font-medium text-center text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-colors">
+                    <a href="{{ profession_route('clinical-notes.index', ['patient' => $patient->id]) }}" class="flex-1 py-3 text-sm font-medium text-center text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-colors">
                         Historial
                     </a>
                 </div>
@@ -167,7 +167,7 @@
                 </svg>
                 <p class="text-lg font-medium text-gray-900">No hay pacientes</p>
                 <p class="text-sm text-gray-500 mt-1">Añade tu primer paciente para empezar</p>
-                <a href="{{ route('patients.create') }}" class="mt-4 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700">
+                <a href="{{ profession_route('patients.create') }}" class="mt-4 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700">
                     <svg class="-ml-1 mr-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
                     Añadir Paciente
                 </a>

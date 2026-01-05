@@ -52,10 +52,6 @@ class ChangePassword extends Component
                 'password_changed_at' => now(),
             ]);
 
-            Log::info('[CHANGE_PASSWORD] Contraseña cambiada exitosamente', [
-                'user_id' => $user->id,
-            ]);
-
             $this->successMessage = 'Contraseña cambiada exitosamente';
             
             // Reset form

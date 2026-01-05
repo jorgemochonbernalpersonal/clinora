@@ -53,7 +53,7 @@
             <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
                 <div class="p-6 border-b border-gray-100 flex justify-between items-center">
                     <h2 class="text-lg font-bold text-gray-900">Agenda para Hoy</h2>
-                    <a href="{{ route('appointments.index') }}" class="text-sm font-medium text-primary-600 hover:text-primary-700">Ver Calendario &rarr;</a>
+                    <a href="{{ profession_route('appointments.index') }}" class="text-sm font-medium text-primary-600 hover:text-primary-700">Ver Calendario &rarr;</a>
                 </div>
                 <div class="divide-y divide-gray-100">
                      @forelse($todaysAppointments as $appt)
@@ -72,7 +72,7 @@
                                 </span>
                             </div>
                             <div class="ml-4">
-                                <a href="{{ route('clinical-notes.create', ['contact_id' => $appt->contact_id]) }}" class="text-gray-400 hover:text-primary-600">
+                                <a href="{{ profession_route('clinical-notes.create', ['contact_id' => $appt->contact_id]) }}" class="text-gray-400 hover:text-primary-600">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                                 </a>
                             </div>
@@ -80,7 +80,7 @@
                     @empty
                         <div class="p-8 text-center text-gray-500">
                             <p>No hay más citas programadas para hoy.</p>
-                            <a href="{{ route('appointments.create') }}" class="text-primary-600 font-medium text-sm mt-2 block">Agendar Cita</a>
+                            <a href="{{ profession_route('appointments.create') }}" class="text-primary-600 font-medium text-sm mt-2 block">Agendar Cita</a>
                         </div>
                     @endforelse
                 </div>
@@ -92,7 +92,7 @@
                 </div>
                  <div class="divide-y divide-gray-100">
                     @foreach($recentPatients as $patient)
-                         <a href="{{ route('patients.edit', $patient) }}" class="block p-4 hover:bg-gray-50 transition-colors flex items-center">
+                         <a href="{{ profession_route('patients.edit', $patient) }}" class="block p-4 hover:bg-gray-50 transition-colors flex items-center">
                             <div class="flex-shrink-0 h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 font-bold text-xs ring-2 ring-white">
                                 {{ $patient->initials }}
                             </div>
@@ -112,13 +112,13 @@
             <div class="bg-gradient-to-br from-primary-600 to-primary-700 rounded-xl shadow-sm border border-primary-800 p-6 text-white">
                 <h2 class="text-lg font-bold mb-4">Acciones Rápidas</h2>
                 <div class="space-y-3">
-                    <a href="{{ route('patients.create') }}" class="block w-full text-center py-2 bg-white/10 hover:bg-white/20 border border-white/20 rounded-lg backdrop-blur-sm transition-colors text-sm font-medium">
+                    <a href="{{ profession_route('patients.create') }}" class="block w-full text-center py-2 bg-white/10 hover:bg-white/20 border border-white/20 rounded-lg backdrop-blur-sm transition-colors text-sm font-medium">
                         + Nuevo Paciente
                     </a>
-                    <a href="{{ route('appointments.create') }}" class="block w-full text-center py-2 bg-white/10 hover:bg-white/20 border border-white/20 rounded-lg backdrop-blur-sm transition-colors text-sm font-medium">
+                    <a href="{{ profession_route('appointments.create') }}" class="block w-full text-center py-2 bg-white/10 hover:bg-white/20 border border-white/20 rounded-lg backdrop-blur-sm transition-colors text-sm font-medium">
                         + Agendar Cita
                     </a>
-                    <a href="{{ route('clinical-notes.create') }}" class="block w-full text-center py-2 bg-white text-primary-700 hover:bg-gray-50 rounded-lg shadow-sm transition-colors text-sm font-bold">
+                    <a href="{{ profession_route('clinical-notes.create') }}" class="block w-full text-center py-2 bg-white text-primary-700 hover:bg-gray-50 rounded-lg shadow-sm transition-colors text-sm font-bold">
                         ✍️ Nueva Nota
                     </a>
                 </div>

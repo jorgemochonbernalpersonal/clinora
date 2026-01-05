@@ -125,21 +125,21 @@
     <div class="bg-surface rounded-lg p-6 border border-gray-200 mb-8">
         <h2 class="text-xl font-semibold text-text-primary mb-4">Acciones Rápidas</h2>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <a href="{{ route('patients.index') }}" class="flex items-center gap-3 px-4 py-3 bg-primary-50 hover:bg-primary-100 rounded-lg transition-colors">
+            <a href="{{ profession_route('patients.index') }}" class="flex items-center gap-3 px-4 py-3 bg-primary-50 hover:bg-primary-100 rounded-lg transition-colors">
                 <svg class="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                 </svg>
                 <span class="font-medium text-primary-700">Nuevo Paciente</span>
             </a>
             
-            <a href="{{ route('appointments.index') }}" class="flex items-center gap-3 px-4 py-3 bg-secondary-50 hover:bg-secondary-100 rounded-lg transition-colors">
+            <a href="{{ profession_route('appointments.index') }}" class="flex items-center gap-3 px-4 py-3 bg-secondary-50 hover:bg-secondary-100 rounded-lg transition-colors">
                 <svg class="w-5 h-5 text-secondary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                 </svg>
                 <span class="font-medium text-secondary-700">Nueva Cita</span>
             </a>
             
-            <a href="{{ route('clinical-notes.index') }}" class="flex items-center gap-3 px-4 py-3 bg-accent-50 hover:bg-accent-100 rounded-lg transition-colors">
+            <a href="{{ profession_route('clinical-notes.index') }}" class="flex items-center gap-3 px-4 py-3 bg-accent-50 hover:bg-accent-100 rounded-lg transition-colors">
                 <svg class="w-5 h-5 text-accent-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                 </svg>

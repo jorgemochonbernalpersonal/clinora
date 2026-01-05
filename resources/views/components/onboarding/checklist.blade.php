@@ -50,9 +50,9 @@
                 @php
                     $isCompleted = in_array($stepKey, $progress['completed']);
                     $links = [
-                        'first_patient' => route('patients.create'),
-                        'first_appointment' => route('appointments.create'),
-                        'first_note' => route('clinical-notes.create'),
+                        'first_patient' => profession_route('patients.create'),
+                        'first_appointment' => profession_route('appointments.create'),
+                        'first_note' => profession_route('clinical-notes.create'),
                     ];
                 @endphp
                 

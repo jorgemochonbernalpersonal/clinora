@@ -7,7 +7,7 @@ use App\Core\Contacts\Models\Contact;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
-#[Layout('layouts.app')]
+#[Layout('layouts.dashboard')]
 class DashboardHome extends Component
 {
     public function render()

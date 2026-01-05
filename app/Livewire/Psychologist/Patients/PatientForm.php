@@ -139,7 +139,7 @@ class PatientForm extends Component
         $patient = Contact::find($id);
         
         if (!$patient || $patient->professional_id !== auth()->user()->professional->id) {
-            return redirect()->route('patients.index');
+            return redirect()->route(profession_prefix() . '.patients.index');
         }
         
         $this->patient = $patient;
@@ -195,7 +195,7 @@ class PatientForm extends Component
                     'required_plan' => 'Pro',
                 ]);
                 
-                return redirect()->route('patients.index');
+                return redirect()->route(profession_prefix() . '.patients.index');
             }
         }
         
@@ -231,7 +231,7 @@ class PatientForm extends Component
             session()->flash('success', '¡Paciente creado correctamente!');
         }
         
-        return redirect()->route('patients.index');
+        return redirect()->route(profession_prefix() . '.patients.index');
     }
 
     /**

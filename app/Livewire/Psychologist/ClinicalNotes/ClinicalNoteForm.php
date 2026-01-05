@@ -71,7 +71,7 @@ class ClinicalNoteForm extends Component
         $note = ClinicalNote::find($id);
         
         if (!$note || $note->professional_id !== auth()->user()->professional->id) {
-            return redirect()->route('clinical-notes.index');
+            return redirect()->route(profession_prefix() . '.clinical-notes.index');
         }
         
         $this->note = $note;
@@ -121,7 +121,7 @@ class ClinicalNoteForm extends Component
             session()->flash('success', 'Nota creada correctamente.');
         }
         
-        return redirect()->route('clinical-notes.index');
+        return redirect()->route(profession_prefix() . '.clinical-notes.index');
     }
 
     public function render()

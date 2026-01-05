@@ -25,18 +25,15 @@ class PlanLimitsService
     public const FEATURE_API_ACCESS = 'api_access';
 
     /**
-     * Get the maximum number of patients allowed for a plan
+     * Get the maximum number of patients allowed for a professional
+     * Early adopters on free plan get 5 patients, others get 3
      * 
-     * @param SubscriptionPlan $plan
+     * @param Professional $professional
      * @return int|null null means unlimited
      */
-    public function getPatientLimit(SubscriptionPlan $plan): ?int
+    public function getPatientLimit(Professional $professional): ?int
     {
-        return match($plan) {
-            SubscriptionPlan::GRATIS => 3,
-            SubscriptionPlan::PRO => null, // Unlimited
-            SubscriptionPlan::EQUIPO => null, // Unlimited
-        };
+        return $professional->getPatientLimit();
     }
 
     /**
@@ -113,7 +110,7 @@ class PlanLimitsService
             return true;
         }
 
-        $limit = $this->getPatientLimit($professional->subscription_plan);
+        $limit = $this->getPatientLimit($professional);
         
         if ($limit === null) {
             return true; // Unlimited
@@ -145,7 +142,7 @@ class PlanLimitsService
         $totalPatients = \App\Core\Contacts\Models\Contact::where('professional_id', $professional->id)
             ->where('is_active', true)
             ->count();
-        $limit = $this->getPatientLimit($professional->subscription_plan);
+        $limit = $this->getPatientLimit($professional);
 
         return [
             'active_patients' => $activePatients,

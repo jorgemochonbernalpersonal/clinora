@@ -84,11 +84,11 @@ class AppointmentForm extends Component
         
         // Ensure we got a single model, not a collection
         if ($appointment instanceof \Illuminate\Database\Eloquent\Collection) {
-            return redirect()->route('appointments.index');
+            return redirect()->route(profession_prefix() . '.appointments.index');
         }
 
         if (!$appointment || $appointment->professional_id !== auth()->user()->professional->id) {
-            return redirect()->route('appointments.index');
+            return redirect()->route(profession_prefix() . '.appointments.index');
         }
 
         $this->appointment = $appointment;
@@ -124,7 +124,7 @@ class AppointmentForm extends Component
             session()->flash('success', 'Cita creada correctamente.');
         }
         
-        return redirect()->route('appointments.index');
+        return redirect()->route(profession_prefix() . '.appointments.index');
     }
 
     public function render()

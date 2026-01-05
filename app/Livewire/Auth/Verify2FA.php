@@ -44,9 +44,7 @@ class Verify2FA extends Component
                 $valid = $twoFactorService->verifyRecoveryCode($user, $this->code);
                 
                 if ($valid) {
-                    Log::info('[2FA_LOGIN] Código de recuperación usado', [
-                        'user_id' => $user->id,
-                    ]);
+                    // Valid
                 }
             } else {
                 // Verify TOTP code
@@ -63,20 +61,11 @@ class Verify2FA extends Component
                 session(['user' => $user]);
                 auth()->loginUsingId($user->id, $remember);
 
-                Log::info('[2FA_LOGIN] Login completado con 2FA', [
-                    'user_id' => $user->id,
-                ]);
-
-                return redirect()->route('dashboard');
+                return redirect()->route('psychologist.dashboard');
             } else {
                 $this->errorMessage = $this->useRecoveryCode 
                     ? 'Código de recuperación inválido'
                     : 'Código de verificación incorrecto';
-                
-                Log::warning('[2FA_LOGIN] Código 2FA incorrecto', [
-                    'user_id' => $user->id,
-                    'use_recovery' => $this->useRecoveryCode,
-                ]);
             }
 
         } catch (\Exception $e) {

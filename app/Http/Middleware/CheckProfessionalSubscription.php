@@ -31,7 +31,7 @@ class CheckProfessionalSubscription
 
         // Check if professional has an active subscription
         if (!$user->professional?->hasActiveSubscription()) {
-            return redirect()->route('dashboard')
+            return redirect()->route(profession_prefix() . '.dashboard')
                 ->with('error', 'Tu suscripción no está activa. Por favor, contacta con soporte.');
         }
 

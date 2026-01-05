@@ -3,10 +3,12 @@
 namespace App\Livewire\Psychologist\Appointments;
 
 use App\Core\Appointments\Models\Appointment;
+use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Illuminate\Support\Collection;
 use Carbon\Carbon;
 
+#[Layout('layouts.dashboard')]
 class Calendar extends Component
 {
     public $searchTerm = '';

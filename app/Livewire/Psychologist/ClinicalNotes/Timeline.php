@@ -5,9 +5,11 @@ namespace App\Livewire\Psychologist\ClinicalNotes;
 use App\Core\ClinicalNotes\Models\ClinicalNote;
 use Illuminate\Support\Collection;
 use Carbon\Carbon;
+use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithPagination;
 
+#[Layout('layouts.dashboard')]
 class Timeline extends Component
 {
     use WithPagination;
@@ -63,7 +65,7 @@ class Timeline extends Component
 
     public function render()
     {
-        return view('livewire.dashboard.clinical-notes.timeline', [
+        return view('livewire.psychologist.clinical-notes.timeline', [
             'groupedNotes' => $this->notes
         ]);
     }

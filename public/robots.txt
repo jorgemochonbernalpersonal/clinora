@@ -1,6 +1,6 @@
 # ✅ SEO: Robots.txt optimizado para Clinora
 # Permite indexación de contenido público y bloquea áreas privadas
-# Última actualización: 2026-01-03
+# Última actualización: 2026-01-05
 
 # ============================================
 # CONFIGURACIÓN GENERAL PARA TODOS LOS BOTS
@@ -25,6 +25,7 @@ Allow: /sobre-nosotros
 # BLOQUEAR ÁREAS PRIVADAS (requieren autenticación)
 # ============================================
 Disallow: /dashboard/
+Disallow: /psychologist/
 Disallow: /admin/
 Disallow: /patient/
 Disallow: /appointments/

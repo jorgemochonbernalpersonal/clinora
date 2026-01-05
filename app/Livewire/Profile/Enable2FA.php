@@ -54,11 +54,6 @@ class Enable2FA extends Component
             ]);
             
         } catch (\Exception $e) {
-            Log::error('[2FA] Error al generar código 2FA', [
-                'error' => $e->getMessage(),
-                'user_id' => auth()->id(),
-            ]);
-            
             $this->errorMessage = 'Error al iniciar la configuración de 2FA';
         }
     }
@@ -84,10 +79,6 @@ class Enable2FA extends Component
                 $this->secret = null;
                 $this->qrCodeUrl = null;
                 $this->verificationCode = '';
-                
-                Log::info('[2FA] 2FA activado', [
-                    'user_id' => $user->id,
-                ]);
             } else {
                 $this->errorMessage = 'Código de verificación incorrecto';
             }
@@ -115,10 +106,6 @@ class Enable2FA extends Component
             $this->recoveryCodes = [];
             $this->showRecoveryCodes = false;
             $this->successMessage = 'Autenticación de dos factores desactivada';
-            
-            Log::info('[2FA] 2FA desactivado', [
-                'user_id' => $user->id,
-            ]);
             
         } catch (\Exception $e) {
             Log::error('[2FA] Error al desactivar 2FA', [
