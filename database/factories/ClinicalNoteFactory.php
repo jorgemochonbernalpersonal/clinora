@@ -2,14 +2,14 @@
 
 namespace Database\Factories;
 
-use App\Core\ClinicalNotes\Models\ClinicalNote;
+use App\Modules\Psychology\ClinicalNotes\Models\ClinicalNote;
 use App\Core\Contacts\Models\Contact;
 use App\Core\Users\Models\Professional;
 use App\Core\Appointments\Models\Appointment;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Core\ClinicalNotes\Models\ClinicalNote>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Modules\Psychology\ClinicalNotes\Models\ClinicalNote>
  */
 class ClinicalNoteFactory extends Factory
 {

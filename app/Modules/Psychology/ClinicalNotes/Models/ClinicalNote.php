@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Core\ClinicalNotes\Models;
+namespace App\Modules\Psychology\ClinicalNotes\Models;
 
 use App\Core\Contacts\Models\Contact;
 use App\Core\Users\Models\Professional;
@@ -137,3 +137,4 @@ class ClinicalNote extends Model
         return $query->whereIn('risk_assessment', ['riesgo_alto', 'riesgo_inminente']);
     }
 }
+

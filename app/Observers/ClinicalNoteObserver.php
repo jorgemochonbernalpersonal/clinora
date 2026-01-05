@@ -2,7 +2,7 @@
 
 namespace App\Observers;
 
-use App\Core\ClinicalNotes\Models\ClinicalNote;
+use App\Modules\Psychology\ClinicalNotes\Models\ClinicalNote;
 
 class ClinicalNoteObserver
 {

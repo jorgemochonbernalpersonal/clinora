@@ -4,7 +4,8 @@ namespace App\Core\Contacts\Models;
 
 use App\Core\Users\Models\Professional;
 use App\Core\Appointments\Models\Appointment;
-use App\Core\ClinicalNotes\Models\ClinicalNote;
+use App\Modules\Psychology\ClinicalNotes\Models\ClinicalNote;
+use App\Core\ConsentForms\Models\ConsentForm;
 use App\Shared\Traits\HasProfessional;
 use App\Shared\Traits\HasAuditLog;
 use Database\Factories\ContactFactory;
@@ -106,6 +107,47 @@ class Contact extends Model
     public function clinicalNotes(): HasMany
     {
         return $this->hasMany(ClinicalNote::class);
+    }
+
+    /**
+     * Get all consent forms for this contact
+     */
+    public function consentForms(): HasMany
+    {
+        return $this->hasMany(ConsentForm::class);
+    }
+
+    /**
+     * Check if contact has a valid consent form of a specific type
+     *
+     * @param string $consentType
+     * @return bool
+     */
+    public function hasValidConsent(string $consentType): bool
+    {
+        return $this->consentForms()
+            ->where('consent_type', $consentType)
+            ->where('is_valid', true)
+            ->whereNotNull('signed_at')
+            ->whereNull('revoked_at')
+            ->exists();
+    }
+
+    /**
+     * Get the most recent valid consent form of a specific type
+     *
+     * @param string $consentType
+     * @return ConsentForm|null
+     */
+    public function getValidConsent(string $consentType): ?ConsentForm
+    {
+        return $this->consentForms()
+            ->where('consent_type', $consentType)
+            ->where('is_valid', true)
+            ->whereNotNull('signed_at')
+            ->whereNull('revoked_at')
+            ->orderBy('signed_at', 'desc')
+            ->first();
     }
 
     /**

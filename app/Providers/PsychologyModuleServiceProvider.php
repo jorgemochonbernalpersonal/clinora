@@ -2,6 +2,10 @@
 
 namespace App\Providers;
 
+use App\Core\ConsentForms\Models\ConsentForm;
+use App\Core\ConsentForms\Services\ConsentFormTemplateRegistry;
+use App\Modules\Psychology\ConsentForms\Templates\InitialTreatmentTemplate;
+use App\Modules\Psychology\ConsentForms\Templates\TeleconsultationTemplate;
 use Illuminate\Support\ServiceProvider;
 
 /**
@@ -33,6 +37,13 @@ class PsychologyModuleServiceProvider extends ServiceProvider
         if (!config('modules.psychology.enabled', false)) {
             return;
         }
+
+        // Register consent form templates for Psychology module
+        ConsentFormTemplateRegistry::register('psychology', [
+            ConsentForm::TYPE_INITIAL_TREATMENT => InitialTreatmentTemplate::class,
+            ConsentForm::TYPE_TELECONSULTATION => TeleconsultationTemplate::class,
+            // Add more templates as needed
+        ]);
 
         // Load routes
         $this->loadRoutesFrom(base_path('routes/api/psychology.php'));

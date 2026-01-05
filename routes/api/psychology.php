@@ -15,7 +15,11 @@ Route::prefix('api/v1/psychology')->middleware(['api', 'auth:sanctum', 'module:p
     
     // Clinical Notes
     Route::prefix('clinical-notes')->group(function () {
-        // TODO: Clinical notes routes
+        Route::get('/', [\App\Modules\Psychology\ClinicalNotes\Controllers\ClinicalNoteController::class, 'index']);
+        Route::post('/', [\App\Modules\Psychology\ClinicalNotes\Controllers\ClinicalNoteController::class, 'store']);
+        Route::get('/{id}', [\App\Modules\Psychology\ClinicalNotes\Controllers\ClinicalNoteController::class, 'show']);
+        Route::put('/{id}', [\App\Modules\Psychology\ClinicalNotes\Controllers\ClinicalNoteController::class, 'update']);
+        Route::post('/{id}/sign', [\App\Modules\Psychology\ClinicalNotes\Controllers\ClinicalNoteController::class, 'sign']);
     });
 
     // Assessments
@@ -25,7 +29,14 @@ Route::prefix('api/v1/psychology')->middleware(['api', 'auth:sanctum', 'module:p
 
     // Consent Forms
     Route::prefix('consent-forms')->group(function () {
-        // TODO: Consent form routes
+        Route::get('/', [\App\Core\ConsentForms\Controllers\ConsentFormController::class, 'index']);
+        Route::post('/', [\App\Core\ConsentForms\Controllers\ConsentFormController::class, 'store']);
+        Route::get('/available-types', [\App\Core\ConsentForms\Controllers\ConsentFormController::class, 'availableTypes']);
+        Route::get('/check-valid/{contactId}', [\App\Core\ConsentForms\Controllers\ConsentFormController::class, 'checkValidConsent']);
+        Route::get('/{id}', [\App\Core\ConsentForms\Controllers\ConsentFormController::class, 'show']);
+        Route::put('/{id}', [\App\Core\ConsentForms\Controllers\ConsentFormController::class, 'update']);
+        Route::post('/{id}/sign', [\App\Core\ConsentForms\Controllers\ConsentFormController::class, 'sign']);
+        Route::post('/{id}/revoke', [\App\Core\ConsentForms\Controllers\ConsentFormController::class, 'revoke']);
     });
 
     // Teleconsultation (psychology-specific)

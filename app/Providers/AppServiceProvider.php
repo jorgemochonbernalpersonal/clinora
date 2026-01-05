@@ -22,7 +22,7 @@ class AppServiceProvider extends ServiceProvider
         // Register observers for email notifications and onboarding tracking
         \App\Core\Contacts\Models\Contact::observe(\App\Observers\ContactObserver::class);
         \App\Core\Appointments\Models\Appointment::observe(\App\Observers\AppointmentObserver::class);
-        \App\Core\ClinicalNotes\Models\ClinicalNote::observe(\App\Observers\ClinicalNoteObserver::class);
+        \App\Modules\Psychology\ClinicalNotes\Models\ClinicalNote::observe(\App\Observers\ClinicalNoteObserver::class);
         
         // Proteger rutas de Livewire preview-file
         // Esto se hace agregando el middleware al grupo web en bootstrap/app.php

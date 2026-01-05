@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Core\ClinicalNotes\Controllers;
+namespace App\Modules\Psychology\ClinicalNotes\Controllers;
 
-use App\Core\ClinicalNotes\Models\ClinicalNote;
+use App\Modules\Psychology\ClinicalNotes\Models\ClinicalNote;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -194,3 +194,4 @@ class ClinicalNoteController extends Controller
         }
     }
 }
+

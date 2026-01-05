@@ -2,7 +2,7 @@
 
 namespace App\Livewire\Dashboard\ClinicalNotes;
 
-use App\Core\ClinicalNotes\Models\ClinicalNote;
+use App\Modules\Psychology\ClinicalNotes\Models\ClinicalNote;
 use Illuminate\Support\Collection;
 use Carbon\Carbon;
 use Livewire\Component;

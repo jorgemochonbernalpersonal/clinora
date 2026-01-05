@@ -124,7 +124,7 @@ class SendWeeklySummaryCommand extends Command
             ->where('status', 'completed')
             ->count();
         
-        $clinicalNotesCreated = \App\Core\ClinicalNotes\Models\ClinicalNote::where('professional_id', $professional->id)
+        $clinicalNotesCreated = \App\Modules\Psychology\ClinicalNotes\Models\ClinicalNote::where('professional_id', $professional->id)
             ->whereBetween('created_at', [$start, $end])
             ->count();
         

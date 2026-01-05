@@ -4,7 +4,7 @@ namespace App\Core\Appointments\Models;
 
 use App\Core\Contacts\Models\Contact;
 use App\Core\Users\Models\Professional;
-use App\Core\ClinicalNotes\Models\ClinicalNote;
+use App\Modules\Psychology\ClinicalNotes\Models\ClinicalNote;
 use App\Shared\Enums\AppointmentStatus;
 use App\Shared\Enums\AppointmentType;
 use App\Shared\Traits\HasProfessional;

@@ -6,7 +6,7 @@ use Illuminate\Support\ServiceProvider;
 
 /**
  * Core Service Provider
- * 
+ *
  * Registers all core module services, repositories, and bindings
  */
 class CoreServiceProvider extends ServiceProvider
@@ -23,6 +23,10 @@ class CoreServiceProvider extends ServiceProvider
 
         $this->app->singleton(
             \App\Core\Appointments\Repositories\AppointmentRepository::class
+        );
+
+        $this->app->singleton(
+            \App\Core\ConsentForms\Repositories\ConsentFormRepository::class
         );
 
         // Register Services
@@ -42,6 +46,10 @@ class CoreServiceProvider extends ServiceProvider
                     $app->make(\App\Core\Appointments\Repositories\AppointmentRepository::class)
                 );
             }
+        );
+
+        $this->app->singleton(
+            \App\Core\ConsentForms\Services\ConsentFormService::class
         );
     }
 

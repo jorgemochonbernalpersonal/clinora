@@ -87,6 +87,13 @@ Route::prefix('clinical-notes')->name('clinical-notes.')->group(function () {
     Route::get('/{id}/edit', \App\Livewire\Psychologist\ClinicalNotes\ClinicalNoteForm::class)->name('edit');
 });
 
+// Consent Forms
+Route::prefix('consent-forms')->name('consent-forms.')->group(function () {
+    Route::get('/', \App\Livewire\ConsentForms\ConsentFormList::class)->name('index');
+    Route::get('/create', \App\Livewire\ConsentForms\ConsentFormCreate::class)->name('create');
+    Route::get('/{id}', \App\Livewire\ConsentForms\ConsentFormShow::class)->name('show');
+});
+
 // Subscription Management
 Route::get('/subscription', [SubscriptionController::class, 'index'])->name('subscription.index');
 Route::patch('/subscription/preferences', [SubscriptionController::class, 'updatePreferences'])->name('subscription.update-preferences');
