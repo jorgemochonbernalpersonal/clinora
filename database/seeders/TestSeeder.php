@@ -34,7 +34,7 @@ class TestSeeder extends Seeder
 
         $professional = Professional::factory()->create([
             'user_id' => $professionalUser->id,
-            'profession' => 'Psicólogo',
+            'profession' => 'psychology',
             'subscription_plan' => \App\Shared\Enums\SubscriptionPlan::PRO,
         ]);
 
