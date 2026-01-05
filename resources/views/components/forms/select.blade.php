@@ -32,7 +32,9 @@
 @endphp
 
 <select 
-    @if($name) wire:model{{ $attributes->has('wire:model.live') ? '.live' : '' }}="{{ $name }}" @endif
+    @if($name && !$attributes->has('wire:model') && !$attributes->has('wire:model.live')) 
+        wire:model="{{ $name }}" 
+    @endif
     @if($value) value="{{ $value }}" @endif
     @if($required) required @endif
     {{ $attributes->merge(['class' => $classes])->except('class') }}
