@@ -1,5 +1,7 @@
 <?php
 
+use App\Shared\Enums\ProfessionType;
+
 if (!function_exists('profession_route')) {
     /**
      * Generate a route URL for the authenticated professional's profession type
@@ -12,7 +14,7 @@ if (!function_exists('profession_route')) {
     function profession_route(string $name, $parameters = [], bool $absolute = true): string
     {
         $user = auth()->user();
-        $professionPrefix = $user?->professional?->getProfessionRoute() ?? 'psychologist';
+        $professionPrefix = $user?->professional?->getProfessionRoute() ?? ProfessionType::PSYCHOLOGIST->routePrefix();
         
         return route($professionPrefix . '.' . $name, $parameters, $absolute);
     }
@@ -22,15 +24,13 @@ if (!function_exists('current_profession')) {
     /**
      * Get the current authenticated professional's profession type
      *
-     * @return string
+     * @return string|ProfessionType
      */
-    function current_profession(): string
+    function current_profession(): string|ProfessionType
     {
-        $module = \App\Shared\Helpers\ModuleHelper::getCurrentModule();
+        $user = auth()->user();
         
-        return $module 
-            ? $module->getProfessionType() 
-            : (auth()->user()?->professional?->profession_type ?? 'psychologist');
+        return $user?->professional?->profession_type ?? ProfessionType::PSYCHOLOGIST;
     }
 }
 
@@ -42,7 +42,7 @@ if (!function_exists('profession_prefix')) {
      */
     function profession_prefix(): string
     {
-        return auth()->user()?->professional?->getProfessionRoute() ?? 'psychologist';
+        return auth()->user()?->professional?->getProfessionRoute() ?? ProfessionType::PSYCHOLOGIST->routePrefix();
     }
 }
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Shared\Enums\ProfessionType;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,7 +22,14 @@ class EnsureProfessionAccess
             abort(403, 'Solo profesionales pueden acceder a esta sección');
         }
 
-        if ($user->professional->profession_type !== $profession) {
+        // Convert string to ProfessionType Enum for type-safe comparison
+        try {
+            $requiredProfession = ProfessionType::from($profession);
+        } catch (\ValueError $e) {
+            abort(404, 'Tipo de profesión no válido');
+        }
+
+        if ($user->professional->profession_type !== $requiredProfession) {
             // Redirigir al dashboard correcto según su profesión
             $correctRoute = $user->professional->getProfessionRoute() . '.dashboard';
             return redirect()->route($correctRoute);

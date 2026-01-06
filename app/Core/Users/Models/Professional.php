@@ -2,6 +2,7 @@
 
 namespace App\Core\Users\Models;
 
+use App\Shared\Enums\ProfessionType;
 use App\Shared\Enums\SubscriptionPlan;
 use Database\Factories\ProfessionalFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -16,7 +17,10 @@ class Professional extends \Illuminate\Database\Eloquent\Model
 {
     use HasFactory;
 
-    // Profession type constants
+    /**
+     * @deprecated Use ProfessionType Enum instead
+     * These constants are kept for backwards compatibility only
+     */
     public const PROFESSION_PSYCHOLOGIST = 'psychologist';
     public const PROFESSION_THERAPIST = 'therapist';
     public const PROFESSION_NUTRITIONIST = 'nutritionist';
@@ -57,6 +61,7 @@ class Professional extends \Illuminate\Database\Eloquent\Model
      */
     protected $casts = [
         'specialties' => 'array',
+        'profession_type' => ProfessionType::class,
         'subscription_plan' => SubscriptionPlan::class,
         'is_early_adopter' => 'boolean',
     ];
@@ -160,45 +165,60 @@ class Professional extends \Illuminate\Database\Eloquent\Model
      */
     public function getProfessionRoute(): string
     {
-        return match($this->profession_type) {
-            self::PROFESSION_PSYCHOLOGIST => 'psychologist',
-            self::PROFESSION_THERAPIST => 'therapist',
-            self::PROFESSION_NUTRITIONIST => 'nutritionist',
-            self::PROFESSION_PSYCHIATRIST => 'psychiatrist',
-            default => 'psychologist',
-        };
+        return $this->profession_type->routePrefix();
+    }
+    
+    /**
+     * Get the profession label
+     */
+    public function getProfessionLabel(): string
+    {
+        return $this->profession_type->label();
     }
 
     /**
-     * Check if professional is a psychologist
+     * Check if professional is of a specific profession type
+     * 
+     * @param ProfessionType $type
+     * @return bool
+     * 
+     * Example: $professional->isProfession(ProfessionType::PSYCHOLOGIST)
+     */
+    public function isProfession(ProfessionType $type): bool
+    {
+        return $this->profession_type === $type;
+    }
+    
+    /**
+     * @deprecated Use isProfession(ProfessionType::PSYCHOLOGIST) instead
      */
     public function isPsychologist(): bool
     {
-        return $this->profession_type === self::PROFESSION_PSYCHOLOGIST;
+        return $this->isProfession(ProfessionType::PSYCHOLOGIST);
     }
 
     /**
-     * Check if professional is a therapist
+     * @deprecated Use isProfession(ProfessionType::THERAPIST) instead
      */
     public function isTherapist(): bool
     {
-        return $this->profession_type === self::PROFESSION_THERAPIST;
+        return $this->isProfession(ProfessionType::THERAPIST);
     }
 
     /**
-     * Check if professional is a nutritionist
+     * @deprecated Use isProfession(ProfessionType::NUTRITIONIST) instead
      */
     public function isNutritionist(): bool
     {
-        return $this->profession_type === self::PROFESSION_NUTRITIONIST;
+        return $this->isProfession(ProfessionType::NUTRITIONIST);
     }
 
     /**
-     * Check if professional is a psychiatrist
+     * @deprecated Use isProfession(ProfessionType::PSYCHIATRIST) instead
      */
     public function isPsychiatrist(): bool
     {
-        return $this->profession_type === self::PROFESSION_PSYCHIATRIST;
+        return $this->isProfession(ProfessionType::PSYCHIATRIST);
     }
 
     /**

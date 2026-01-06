@@ -209,6 +209,14 @@
                 <p class="text-[10px] text-gray-400 mt-1">Separadas por comas</p>
             </div>
 
+            @if($isEditing)
+            <div class="w-full border-t border-gray-100 pt-4 mt-6">
+                <a href="{{ profession_route('clinical-notes.create', ['contact_id' => $patient->id]) }}" class="flex items-center justify-center gap-2 w-full py-2 bg-primary-50 text-primary-700 hover:bg-primary-100 rounded-lg text-sm font-bold transition-colors">
+                    ✍️ Crear Nota Clínica
+                </a>
+            </div>
+            @endif
+
             {{-- Contacto de Emergencia --}}
             <div class="w-full border-t border-gray-100 pt-4 mt-4" x-data="{ open: false }">
                 <button 

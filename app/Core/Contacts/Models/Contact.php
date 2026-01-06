@@ -229,4 +229,88 @@ class Contact extends Model
               ->orWhere('last_name', 'like', "%{$search}%");
         });
     }
+    
+    /**
+     * Scope to filter by professional
+     */
+    public function scopeForProfessional($query, $professionalId)
+    {
+        return $query->where('professional_id', $professionalId);
+    }
+    
+    /**
+     * Scope to get archived contacts
+     */
+    public function scopeArchived($query)
+    {
+        return $query->where('is_active', false)
+                     ->whereNotNull('archived_at');
+    }
+    
+    /**
+     * Scope to get recent contacts
+     */
+    public function scopeRecent($query, int $limit = 10)
+    {
+        return $query->orderBy('created_at', 'desc')->limit($limit);
+    }
+    
+    /**
+     * Scope to get contacts with upcoming appointments
+     */
+    public function scopeWithUpcomingAppointments($query)
+    {
+        return $query->whereHas('appointments', function($q) {
+            $q->where('start_time', '>', now())
+              ->whereIn('status', ['scheduled', 'confirmed']);
+        });
+    }
+    
+    /**
+     * Scope to search by email or phone
+     */
+    public function scopeSearchByContact($query, string $search)
+    {
+        return $query->where(function ($q) use ($search) {
+            $q->where('email', 'like', "%{$search}%")
+              ->orWhere('phone', 'like', "%{$search}%");
+        });
+    }
+    
+    /**
+     * Scope to filter by gender
+     */
+    public function scopeByGender($query, string $gender)
+    {
+        return $query->where('gender', $gender);
+    }
+    
+    /**
+     * Scope to get contacts with data protection consent
+     */
+    public function scopeWithConsent($query)
+    {
+        return $query->where('data_protection_consent', true)
+                     ->whereNotNull('data_protection_consent_at');
+    }
+    
+    /**
+     * Scope to get contacts without consent
+     */
+    public function scopeWithoutConsent($query)
+    {
+        return $query->where(function($q) {
+            $q->where('data_protection_consent', false)
+              ->orWhereNull('data_protection_consent_at');
+        });
+    }
+    
+    /**
+     * Scope to order by name
+     */
+    public function scopeOrderByName($query, string $direction = 'asc')
+    {
+        return $query->orderBy('first_name', $direction)
+                     ->orderBy('last_name', $direction);
+    }
 }

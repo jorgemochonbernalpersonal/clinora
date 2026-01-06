@@ -4,6 +4,7 @@ namespace App\Livewire\Psychologist;
 
 use App\Core\Appointments\Models\Appointment;
 use App\Core\Contacts\Models\Contact;
+use Illuminate\Support\Facades\Cache;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
@@ -14,34 +15,36 @@ class DashboardHome extends Component
     {
         $professionalId = auth()->user()->professional->id;
 
-        // Stats
-        $stats = [
-            'patients' => Contact::where('professional_id', $professionalId)->count(),
-            'appointments_today' => Appointment::where('professional_id', $professionalId)
-                ->whereDate('start_time', now())
-                ->count(),
-            'appointments_week' => Appointment::where('professional_id', $professionalId)
-                ->whereBetween('start_time', [now()->startOfWeek(), now()->endOfWeek()])
-                ->count(),
-        ];
+        // Cache stats for 5 minutes (they don't change frequently)
+        $stats = Cache::remember(
+            "dashboard.stats.{$professionalId}",
+            now()->addMinutes(5),
+            fn() => [
+                'patients' => Contact::forProfessional($professionalId)->count(),
+                'appointments_today' => Appointment::forProfessional($professionalId)
+                    ->today()
+                    ->count(),
+                'appointments_week' => Appointment::forProfessional($professionalId)
+                    ->thisWeek()
+                    ->count(),
+            ]
+        );
 
-        // Widgets
-        $todaysAppointments = Appointment::where('professional_id', $professionalId)
-            ->whereDate('start_time', now())
-            ->with('contact')
-            ->orderBy('start_time')
+        // Use scopes for cleaner queries
+        $todaysAppointments = Appointment::forProfessional($professionalId)
+            ->today()
+            ->withContactBasic()
             ->get();
 
-        $upcomingAppointments = Appointment::where('professional_id', $professionalId)
-            ->where('start_time', '>', now())
-            ->with('contact')
-            ->orderBy('start_time')
+        $upcomingAppointments = Appointment::forProfessional($professionalId)
+            ->upcoming()
+            ->withContactBasic()
             ->limit(5)
             ->get();
 
-        $recentPatients = Contact::where('professional_id', $professionalId)
-            ->orderBy('created_at', 'desc')
-            ->limit(5)
+        $recentPatients = Contact::forProfessional($professionalId)
+            ->recent(5)
+            ->withCount('appointments')
             ->get();
 
         return view('livewire.psychologist.dashboard-home', compact(

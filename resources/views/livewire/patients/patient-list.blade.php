@@ -152,7 +152,10 @@
 
                 {{-- Actions --}}
                 <div class="border-t border-gray-200 flex ml-auto w-full">
-                    <a href="{{ profession_route('patients.edit', $patient) }}" class="flex-1 py-3 text-sm font-medium text-center text-primary-600 hover:bg-primary-50 transition-colors border-r border-gray-200">
+                    <a href="{{ profession_route('clinical-notes.create', ['contact_id' => $patient->id]) }}" class="flex-1 py-3 text-sm font-medium text-center text-primary-600 hover:bg-primary-50 transition-colors border-r border-gray-200" title="Nueva Nota">
+                        Nota
+                    </a>
+                    <a href="{{ profession_route('patients.edit', $patient) }}" class="flex-1 py-3 text-sm font-medium text-center text-gray-600 hover:bg-gray-50 transition-colors border-r border-gray-200">
                         Editar
                     </a>
                     <a href="{{ profession_route('clinical-notes.index', ['patient' => $patient->id]) }}" class="flex-1 py-3 text-sm font-medium text-center text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-colors">

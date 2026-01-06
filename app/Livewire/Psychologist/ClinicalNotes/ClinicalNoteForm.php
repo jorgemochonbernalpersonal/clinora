@@ -6,6 +6,7 @@ use App\Modules\Psychology\ClinicalNotes\Models\ClinicalNote;
 use App\Core\Contacts\Models\Contact;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\On;
+use Livewire\Attributes\Url;
 use Livewire\Component;
 
 #[Layout('layouts.dashboard')]
@@ -13,6 +14,7 @@ class ClinicalNoteForm extends Component
 {
     public ?ClinicalNote $note = null;
     
+    #[Url]
     public $contact_id;
     public $session_date;
     public $session_number;
@@ -55,12 +57,17 @@ class ClinicalNoteForm extends Component
             $this->loadNote($id);
         } else {
             $this->prepareForCreate();
+            
+            // Handle auto-selection if contact_id is provided via URL
+            if ($this->contact_id) {
+                $this->updatedContactId($this->contact_id);
+            }
         }
     }
 
     public function prepareForCreate()
     {
-        $this->reset(['note', 'isEditing', 'contact_id', 'subjective', 'objective', 'assessment', 'plan']);
+        $this->reset(['note', 'isEditing', 'subjective', 'objective', 'assessment', 'plan']);
         $this->risk_assessment = 'sin_riesgo';
         $this->session_date = now()->format('Y-m-d');
         $this->isEditing = false;

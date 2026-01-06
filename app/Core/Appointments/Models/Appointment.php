@@ -160,4 +160,76 @@ class Appointment extends Model
     {
         return $query->where('status', $status);
     }
+    
+    /**
+     * Scope to filter by professional
+     */
+    public function scopeForProfessional($query, $professionalId)
+    {
+        return $query->where('professional_id', $professionalId);
+    }
+    
+    /**
+     * Scope to filter by contact/patient
+     */
+    public function scopeForContact($query, $contactId)
+    {
+        return $query->where('contact_id', $contactId);
+    }
+    
+    /**
+     * Scope for appointments this week
+     */
+    public function scopeThisWeek($query)
+    {
+        return $query->whereBetween('start_time', [
+            now()->startOfWeek(),
+            now()->endOfWeek()
+        ])->orderBy('start_time');
+    }
+    
+    /**
+     * Scope for appointments this month
+     */
+    public function scopeThisMonth($query)
+    {
+        return $query->whereBetween('start_time', [
+            now()->startOfMonth(),
+            now()->endOfMonth()
+        ])->orderBy('start_time');
+    }
+    
+    /**
+     * Scope to eager load contact with basic fields only
+     */
+    public function scopeWithContactBasic($query)
+    {
+        return $query->with('contact:id,first_name,last_name,email,phone');
+    }
+    
+    /**
+     * Scope to eager load professional with basic fields only
+     */
+    public function scopeWithProfessionalBasic($query)
+    {
+        return $query->with('professional:id,user_id,profession_type');
+    }
+    
+    /**
+     * Scope for past appointments
+     */
+    public function scopePast($query)
+    {
+        return $query->where('start_time', '<', now())
+                     ->orderBy('start_time', 'desc');
+    }
+    
+    /**
+     * Scope for completed appointments
+     */
+    public function scopeCompleted($query)
+    {
+        return $query->where('status', AppointmentStatus::COMPLETED)
+                     ->orderBy('start_time', 'desc');
+    }
 }
