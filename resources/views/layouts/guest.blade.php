@@ -104,7 +104,7 @@
     <link rel="preconnect" href="https://fonts.bunny.net" crossorigin>
     <link rel="dns-prefetch" href="https://fonts.bunny.net">
     {{-- Preload critical font (400) to reduce chain latency --}}
-    <link rel="preload" href="https://fonts.bunny.net/files/instrument-sans-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+    {{-- Font preload removed - font loads via CSS --}}
     {{-- Load fonts asynchronously - reduced to critical weights only (400, 600) --}}
     <link href="https://fonts.bunny.net/css?family=instrument-sans:400,600&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
     <noscript>
