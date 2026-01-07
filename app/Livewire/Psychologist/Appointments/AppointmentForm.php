@@ -49,6 +49,9 @@ class AppointmentForm extends Component
             
         if ($id) {
             $this->loadAppointment($id);
+        } elseif (request()->query('duplicate')) {
+            // PHASE 3: Duplicate appointment functionality
+            $this->loadAppointmentForDuplicate(request()->query('duplicate'));
         } else {
             // Get dates from Query String if available
             $this->prepareForCreate(
@@ -56,6 +59,32 @@ class AppointmentForm extends Component
                 request()->query('end')
             );
         }
+    }
+
+    public function loadAppointmentForDuplicate($id)
+    {
+        $appointment = Appointment::find($id);
+        
+        if (!$appointment || $appointment->professional_id !== auth()->user()->professional->id) {
+            return redirect()->route(profession_prefix() . '.appointments.index');
+        }
+
+        // Load appointment data but don't set as editing
+        $this->isEditing = false;
+        $this->contact_id = $appointment->contact_id;
+        $this->type = $appointment->type->value;
+        $this->status = 'scheduled'; // Always set to scheduled for duplicates
+        $this->notes = $appointment->notes;
+        
+        // Set default time to tomorrow at the same hour
+        $tomorrow = now()->addDay();
+        $originalTime = $appointment->start_time;
+        $start = $tomorrow->setTime($originalTime->hour, $originalTime->minute);
+        $this->start_time = $start->format('Y-m-d\TH:i');
+        
+        $duration = $appointment->start_time->diffInMinutes($appointment->end_time);
+        $end = $start->copy()->addMinutes($duration);
+        $this->end_time = $end->format('Y-m-d\TH:i');
     }
 
     public function prepareForCreate($start = null, $end = null)

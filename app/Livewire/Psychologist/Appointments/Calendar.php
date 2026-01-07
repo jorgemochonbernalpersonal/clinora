@@ -57,11 +57,16 @@ class Calendar extends Component
         }
 
         return $query->get()->map(function ($appointment) {
+            // Format dates properly for FullCalendar
+            $start = $appointment->start_time->format('Y-m-d\TH:i:s');
+            $end = $appointment->end_time->format('Y-m-d\TH:i:s');
+            
             return [
                 'id' => $appointment->id,
                 'title' => $appointment->contact->full_name ?? 'Cita',
-                'start' => $appointment->start_time->toIso8601String(),
-                'end' => $appointment->end_time->toIso8601String(),
+                'start' => $start,
+                'end' => $end,
+                'allDay' => false, // Important: ensures time is displayed
                 'backgroundColor' => $this->getStatusColor($appointment->status),
                 'borderColor' => $this->getStatusColor($appointment->status),
                 'extendedProps' => [
@@ -82,6 +87,15 @@ class Calendar extends Component
         $professional_id = auth()->user()->professional->id;
         $now = Carbon::now();
 
+        $total = Appointment::where('professional_id', $professional_id)
+            ->whereMonth('start_time', $now->month)
+            ->count();
+        
+        $cancelled = Appointment::where('professional_id', $professional_id)
+            ->whereMonth('start_time', $now->month)
+            ->where('status', 'cancelled')
+            ->count();
+
         return [
             'today' => Appointment::where('professional_id', $professional_id)
                 ->whereDate('start_time', $now->toDateString())
@@ -93,9 +107,19 @@ class Calendar extends Component
                 ->whereMonth('start_time', $now->month)
                 ->where('status', 'completed')
                 ->count(),
-            'total' => Appointment::where('professional_id', $professional_id)
-                ->whereMonth('start_time', $now->month)
+            'total' => $total,
+            // PHASE 2: Enhanced statistics
+            'pending' => Appointment::where('professional_id', $professional_id)
+                ->whereIn('status', ['scheduled', 'confirmed'])
+                ->where('start_time', '>=', $now)
                 ->count(),
+            'cancelled_rate' => $total > 0 ? round(($cancelled / $total) * 100) : 0,
+            'next_appointment' => Appointment::where('professional_id', $professional_id)
+                ->where('start_time', '>', $now)
+                ->whereIn('status', ['scheduled', 'confirmed'])
+                ->orderBy('start_time')
+                ->with('contact:id,first_name,last_name')
+                ->first(),
         ];
     }
 

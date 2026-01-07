@@ -1,7 +1,7 @@
 <div class="space-y-6 pb-8 animate-in fade-in duration-500">
 
     {{-- Stats Grid --}}
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
         {{-- Hoy --}}
         <div class="group bg-white rounded-2xl p-5 border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300">
             <div class="flex items-center justify-between mb-4">
@@ -75,7 +75,87 @@
                 </div>
             </div>
         </div>
+
+        {{-- PHASE 2: Pendientes --}}
+        <div class="group bg-white rounded-2xl p-5 border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300">
+            <div class="flex items-center justify-between mb-4">
+                <div class="p-2.5 bg-warning-50 text-warning-600 rounded-xl group-hover:bg-warning-100 transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+            </div>
+            <div>
+                <p class="text-sm font-medium text-text-secondary uppercase tracking-wider">Pendientes</p>
+                <div class="flex items-baseline gap-2">
+                    <h3 class="text-2xl font-bold text-primary-500">{{ $stats['pending'] }}</h3>
+                    <span class="text-xs text-text-muted">próximas</span>
+                </div>
+            </div>
+        </div>
+
+        {{-- PHASE 2: Tasa de Cancelación --}}
+        <div class="group bg-white rounded-2xl p-5 border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300">
+            <div class="flex items-center justify-between mb-4">
+                <div class="p-2.5 bg-error-50 text-error-600 rounded-xl group-hover:bg-error-100 transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </div>
+                <div class="text-xs font-bold {{ $stats['cancelled_rate'] > 20 ? 'text-error-700 bg-error-50' : 'text-success-700 bg-success-50' }} px-2 py-0.5 rounded-full">
+                    {{ $stats['cancelled_rate'] }}%
+                </div>
+            </div>
+            <div>
+                <p class="text-sm font-medium text-text-secondary uppercase tracking-wider">Cancelaciones (mes)</p>
+                <div class="w-full bg-gray-100 rounded-full h-1.5 mt-2">
+                    <div class="{{ $stats['cancelled_rate'] > 20 ? 'bg-error-500' : 'bg-success-500' }} h-1.5 rounded-full shadow-sm" style="width: {{ min($stats['cancelled_rate'], 100) }}%"></div>
+                </div>
+            </div>
+        </div>
     </div>
+
+
+    {{-- PHASE 2: Next Appointment Card --}}
+    @if($stats['next_appointment'])
+    <div class="bg-gradient-to-br from-primary-500 to-primary-600 rounded-2xl p-6 text-white shadow-lg border border-primary-400/20">
+        <div class="flex items-start justify-between">
+            <div class="flex-1">
+                <div class="flex items-center gap-2 mb-3">
+                    <div class="p-2 bg-white/10 rounded-lg">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <p class="text-sm font-bold text-white/90 uppercase tracking-wider">Próxima Cita</p>
+                </div>
+                <h3 class="text-2xl font-bold mb-3">{{ $stats['next_appointment']->contact->full_name }}</h3>
+                <div class="flex flex-wrap items-center gap-3 text-sm">
+                    <span class="flex items-center gap-1.5 bg-white/10 px-3 py-1.5 rounded-lg">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                        <span class="font-semibold">{{ $stats['next_appointment']->start_time->format('d M Y') }}</span>
+                    </span>
+                    <span class="flex items-center gap-1.5 bg-white/10 px-3 py-1.5 rounded-lg">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span class="font-semibold">{{ $stats['next_appointment']->start_time->format('H:i') }}</span>
+                    </span>
+                    <span class="bg-white/20 px-3 py-1.5 rounded-lg font-semibold text-xs">
+                        {{ $stats['next_appointment']->start_time->diffForHumans() }}
+                    </span>
+                </div>
+            </div>
+            <a href="{{ profession_route('appointments.index') }}" class="p-3 bg-white/10 hover:bg-white/20 rounded-xl transition-all hover:scale-105">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+            </a>
+        </div>
+    </div>
+    @endif
 
     {{-- Filters & Search --}}
     <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-2">
@@ -197,6 +277,23 @@
             }
             .fc-license-message {
                 display: none !important;
+            }
+            
+            /* PHASE 3: Visual reminder animation for upcoming appointments */
+            .appointment-soon {
+                animation: pulse-appointment 2s infinite;
+            }
+            
+            @keyframes pulse-appointment {
+                0% {
+                    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7);
+                }
+                70% {
+                    box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
+                }
+                100% {
+                    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+                }
             }
         </style>
         
@@ -320,14 +417,17 @@
 
                             {{-- Main Actions --}}
                             <div class="flex gap-2 pt-2">
+                                <a :href="`{{ url('psychologist/appointments/create') }}?duplicate=${open}`" 
+                                   class="flex-1 bg-secondary-500 hover:bg-secondary-600 text-white px-4 py-2.5 rounded-xl font-bold text-center text-sm transition-all">
+                                    Duplicar
+                                </a>
                                 <a :href="`{{ url('psychologist/appointments') }}/${open}/edit`" 
-                                   class="flex-1 bg-gray-900 hover:bg-black text-white px-6 py-3 rounded-xl font-bold text-center transition-all shadow-lg shadow-black/10">
-                                    Editar Cita
+                                   class="flex-1 bg-gray-900 hover:bg-black text-white px-4 py-2.5 rounded-xl font-bold text-center text-sm transition-all shadow-lg shadow-black/10">
+                                    Editar
                                 </a>
                                 <button 
                                     @click="if(confirm('¿Seguro que deseas eliminar esta cita?')) { $wire.deleteAppointment(open); open = null; }"
-                                    class="w-14 h-12 flex items-center justify-center bg-error-50 hover:bg-error-100 text-error-600 rounded-xl transition-all"
-                                >
+                                    class="w-12 h-12 flex items-center justify-center bg-error-50 hover:bg-error-100 text-error-600 rounded-xl transition-all">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                                     </svg>
@@ -369,11 +469,17 @@
                 this.calendar = new window.Calendar(calendarEl, {
                     plugins: window.CalendarPlugins || [],
                     locale: window.CalendarLocale || 'es',
-                    initialView: 'timeGridWeek', 
-                    headerToolbar: {
+                    // PHASE 1: Mobile-responsive initial view
+                    initialView: window.innerWidth < 768 ? 'listWeek' : 'timeGridWeek',
+                    // PHASE 1: Mobile-responsive toolbar
+                    headerToolbar: window.innerWidth < 768 ? {
+                        left: 'prev,next',
+                        center: 'title',
+                        right: 'today'
+                    } : {
                         left: 'prev,next today',
                         center: 'title',
-                        right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                        right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
                     },
                     navLinks: true,
                     editable: true,
@@ -385,10 +491,18 @@
                     slotMaxTime: '21:30:00',
                     allDaySlot: false,
                     expandRows: true,
-                    height: 'auto',
+                    // PHASE 1: Mobile-responsive height
+                    height: window.innerWidth < 768 ? 'auto' : 750,
                     events: this.events,
                     nowIndicator: true,
                     handleWindowResize: true,
+                    
+                    // PHASE 2: List view configuration
+                    views: {
+                        listWeek: {
+                            buttonText: 'Lista'
+                        }
+                    },
                     
                     slotLabelFormat: {
                         hour: 'numeric',
@@ -397,24 +511,57 @@
                         meridiem: 'short'
                     },
 
+                    // PHASE 1: Adaptive event rendering for monthly view
                     eventContent: function(arg) {
-                        let innerHtml = `
-                            <div class="flex flex-col h-full overflow-hidden">
-                                <div class="flex items-center gap-1.5 mb-1">
-                                    <div class="w-1.5 h-1.5 rounded-full bg-white/60"></div>
-                                    <span class="text-[9px] font-bold text-white/80 uppercase truncate">${arg.event.extendedProps.type}</span>
+                        const view = arg.view.type;
+                        
+                        // Monthly view - compact design
+                        if (view === 'dayGridMonth') {
+                            return {
+                                html: `
+                                    <div class="flex items-center gap-1 px-1 overflow-hidden">
+                                        <div class="w-1 h-1 rounded-full bg-white/80 flex-shrink-0"></div>
+                                        <span class="text-[10px] font-semibold text-white truncate">
+                                            ${arg.timeText} ${arg.event.title}
+                                        </span>
+                                    </div>
+                                `
+                            };
+                        }
+                        
+                        // Weekly/daily view - detailed design
+                        return {
+                            html: `
+                                <div class="flex flex-col h-full overflow-hidden">
+                                    <div class="flex items-center gap-1.5 mb-1">
+                                        <div class="w-1.5 h-1.5 rounded-full bg-white/60"></div>
+                                        <span class="text-[9px] font-bold text-white/80 uppercase truncate">${arg.event.extendedProps.type}</span>
+                                    </div>
+                                    <div class="text-[11px] font-bold text-white leading-tight truncate">${arg.event.title}</div>
+                                    <div class="mt-auto text-[9px] font-medium text-white/70">${arg.timeText}</div>
                                 </div>
-                                <div class="text-[11px] font-bold text-white leading-tight truncate">${arg.event.title}</div>
-                                <div class="mt-auto text-[9px] font-medium text-white/70">${arg.timeText}</div>
-                            </div>
-                        `;
-                        return { html: innerHtml };
+                            `
+                        };
                     },
                     
+                    // PHASE 1: Create appointment from any view (including monthly)
                     select: (info) => {
                         const url = new URL('{{ profession_route('appointments.create') }}');
-                        url.searchParams.set('start', info.startStr);
-                        url.searchParams.set('end', info.endStr);
+                        
+                        // Handle monthly view - set default time
+                        if (info.view.type === 'dayGridMonth') {
+                            const start = new Date(info.start);
+                            start.setHours(9, 0, 0, 0);
+                            const end = new Date(start);
+                            end.setHours(10, 0, 0, 0);
+                            
+                            url.searchParams.set('start', start.toISOString());
+                            url.searchParams.set('end', end.toISOString());
+                        } else {
+                            url.searchParams.set('start', info.startStr);
+                            url.searchParams.set('end', info.endStr);
+                        }
+                        
                         window.location.href = url.toString();
                     },
 
@@ -436,10 +583,81 @@
                     
                     eventClick: (info) => {
                         self.$wire.set('selectedAppointmentId', info.event.id);
+                    },
+                    
+                    // PHASE 2: Tooltips on hover
+                    eventMouseEnter: function(info) {
+                        const tooltip = document.createElement('div');
+                        tooltip.className = 'appointment-tooltip';
+                        tooltip.innerHTML = `
+                            <div class="bg-gray-900 text-white p-3 rounded-lg shadow-xl text-sm z-[9999] max-w-xs">
+                                <div class="font-bold">${info.event.title}</div>
+                                <div class="text-gray-300 text-xs mt-1">${info.event.extendedProps.type}</div>
+                                <div class="text-gray-400 text-xs">${info.timeText}</div>
+                                ${info.event.extendedProps.notes ? 
+                                    `<div class="text-gray-400 text-xs mt-2 pt-2 border-t border-gray-700">${info.event.extendedProps.notes}</div>` 
+                                    : ''}
+                            </div>
+                        `;
+                        document.body.appendChild(tooltip);
+                        
+                        const rect = info.el.getBoundingClientRect();
+                        tooltip.style.position = 'fixed';
+                        tooltip.style.left = rect.left + 'px';
+                        tooltip.style.top = (rect.top - tooltip.offsetHeight - 10) + 'px';
+                        tooltip.style.zIndex = '9999';
+                        
+                        // Adjust if tooltip goes off screen
+                        const tooltipRect = tooltip.getBoundingClientRect();
+                        if (tooltipRect.top < 0) {
+                            tooltip.style.top = (rect.bottom + 10) + 'px';
+                        }
+                        if (tooltipRect.left < 0) {
+                            tooltip.style.left = '10px';
+                        }
+                        if (tooltipRect.right > window.innerWidth) {
+                            tooltip.style.left = (window.innerWidth - tooltipRect.width - 10) + 'px';
+                        }
+                        
+                        info.el._tooltip = tooltip;
+                    },
+                    
+                    eventMouseLeave: function(info) {
+                        if (info.el._tooltip) {
+                            info.el._tooltip.remove();
+                            delete info.el._tooltip;
+                        }
+                    },
+                    
+                    // PHASE 3: Visual reminders for upcoming appointments
+                    eventDidMount: function(info) {
+                        const now = new Date();
+                        const start = new Date(info.event.start);
+                        const diffHours = (start - now) / (1000 * 60 * 60);
+                        
+                        if (diffHours > 0 && diffHours < 2) {
+                            info.el.classList.add('appointment-soon');
+                        }
                     }
                 });
                 
                 this.calendar.render();
+                
+                // PHASE 3: Keyboard navigation
+                document.addEventListener('keydown', (e) => {
+                    if (!this.calendar) return;
+                    
+                    if (e.ctrlKey && e.key === 'ArrowLeft') {
+                        e.preventDefault();
+                        this.calendar.prev();
+                    } else if (e.ctrlKey && e.key === 'ArrowRight') {
+                        e.preventDefault();
+                        this.calendar.next();
+                    } else if (e.ctrlKey && e.key === 't') {
+                        e.preventDefault();
+                        this.calendar.today();
+                    }
+                });
                 
                 // Observer to re-render on resize if needed
                 new ResizeObserver(() => {
