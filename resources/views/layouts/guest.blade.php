@@ -1,6 +1,30 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
+    {{-- Google Consent Mode v2 - MUST be first --}}
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        
+        gtag('consent', 'default', {
+            'ad_storage': 'denied',
+            'ad_user_data': 'denied',
+            'ad_personalization': 'denied',
+            'analytics_storage': 'denied',
+            'functionality_storage': 'granted',
+            'personalization_storage': 'denied',
+            'security_storage': 'granted'
+        });
+        
+        const cookieConsent = localStorage.getItem('cookie_consent');
+        if (cookieConsent === 'accepted') {
+            gtag('consent', 'update', {
+                'analytics_storage': 'granted',
+                'personalization_storage': 'granted'
+            });
+        }
+    </script>
+    
     <!-- Google Tag Manager -->
     <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
     new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -9,7 +33,18 @@
     })(window,document,'script','dataLayer','GTM-KQV6Q5MS');</script>
     <!-- End Google Tag Manager -->
     
-    {{-- Google Analytics will be initialized after Consent Mode in cookie-banner.blade.php --}}
+    <!-- Google Analytics (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-TJ20C7QSTH"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-TJ20C7QSTH', {
+            'anonymize_ip': true,
+            'cookie_flags': 'SameSite=None;Secure'
+        });
+    </script>
+    <!-- End Google Analytics -->
     
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">

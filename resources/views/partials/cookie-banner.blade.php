@@ -1,84 +1,40 @@
-{{-- Google Consent Mode v2 Configuration --}}
-<script>
-    // Initialize Consent Mode BEFORE gtag loads
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    
-    // Default consent state (denied until user accepts)
-    gtag('consent', 'default', {
-        'ad_storage': 'denied',
-        'ad_user_data': 'denied',
-        'ad_personalization': 'denied',
-        'analytics_storage': 'denied',
-        'functionality_storage': 'granted', // Essential cookies
-        'personalization_storage': 'denied',
-        'security_storage': 'granted' // Essential for security
-    });
-    
-    // Check if user has already made a choice
-    const cookieConsent = localStorage.getItem('cookie_consent');
-    if (cookieConsent === 'accepted') {
-        gtag('consent', 'update', {
-            'analytics_storage': 'granted',
-            'ad_storage': 'denied', // Still deny ads (not using them)
-            'ad_user_data': 'denied',
-            'ad_personalization': 'denied',
-            'personalization_storage': 'granted'
-        });
-    }
-</script>
-
-{{-- Load Google Analytics AFTER Consent Mode is configured --}}
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-TJ20C7QSTH"></script>
-<script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-TJ20C7QSTH', {
-        'anonymize_ip': true, // Anonymize IPs for privacy
-        'cookie_flags': 'SameSite=None;Secure' // Secure cookies
-    });
-</script>
-
 <div x-data="{ 
         cookieBanner: !localStorage.getItem('cookie_consent'),
         acceptCookies() {
             // Update consent
-            gtag('consent', 'update', {
-                'analytics_storage': 'granted',
-                'personalization_storage': 'granted'
-            });
-            
-            // Save preference
-            localStorage.setItem('cookie_consent', 'accepted');
-            this.cookieBanner = false;
-            
-            // Send event to Analytics
             if (typeof gtag !== 'undefined') {
+                gtag('consent', 'update', {
+                    'analytics_storage': 'granted',
+                    'personalization_storage': 'granted'
+                });
+                
                 gtag('event', 'cookie_consent_granted', {
                     'event_category': 'consent',
                     'event_label': 'accepted'
                 });
             }
-        },
-        rejectCookies() {
-            // Keep consent denied (already set in default)
-            gtag('consent', 'update', {
-                'analytics_storage': 'denied',
-                'personalization_storage': 'denied'
-            });
             
             // Save preference
-            localStorage.setItem('cookie_consent', 'rejected');
+            localStorage.setItem('cookie_consent', 'accepted');
             this.cookieBanner = false;
-            
-            // Send event (will be anonymized)
+        },
+        rejectCookies() {
+            // Keep consent denied
             if (typeof gtag !== 'undefined') {
+                gtag('consent', 'update', {
+                    'analytics_storage': 'denied',
+                    'personalization_storage': 'denied'
+                });
+                
                 gtag('event', 'cookie_consent_rejected', {
                     'event_category': 'consent',
                     'event_label': 'rejected'
                 });
             }
+            
+            // Save preference
+            localStorage.setItem('cookie_consent', 'rejected');
+            this.cookieBanner = false;
         }
     }" 
     x-show="cookieBanner" 
