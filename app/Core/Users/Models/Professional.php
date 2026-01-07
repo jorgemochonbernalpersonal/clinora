@@ -165,7 +165,7 @@ class Professional extends \Illuminate\Database\Eloquent\Model
      */
     public function getProfessionRoute(): string
     {
-        return $this->profession_type->routePrefix();
+        return ($this->profession_type ?? ProfessionType::PSYCHOLOGIST)->routePrefix();
     }
     
     /**
@@ -173,7 +173,7 @@ class Professional extends \Illuminate\Database\Eloquent\Model
      */
     public function getProfessionLabel(): string
     {
-        return $this->profession_type->label();
+        return ($this->profession_type ?? ProfessionType::PSYCHOLOGIST)->label();
     }
 
     /**
@@ -186,7 +186,7 @@ class Professional extends \Illuminate\Database\Eloquent\Model
      */
     public function isProfession(ProfessionType $type): bool
     {
-        return $this->profession_type === $type;
+        return ($this->profession_type ?? ProfessionType::PSYCHOLOGIST) === $type;
     }
     
     /**
