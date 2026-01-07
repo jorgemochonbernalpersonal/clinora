@@ -36,12 +36,11 @@
     <!-- Google Analytics (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-TJ20C7QSTH"></script>
     <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
         gtag('config', 'G-TJ20C7QSTH', {
             'anonymize_ip': true,
-            'cookie_flags': 'SameSite=None;Secure'
+            'cookie_flags': 'SameSite=None;Secure',
+            'send_page_view': true
         });
     </script>
     <!-- End Google Analytics -->
