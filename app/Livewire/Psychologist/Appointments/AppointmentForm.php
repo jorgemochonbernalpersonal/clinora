@@ -21,7 +21,7 @@ class AppointmentForm extends Component
     public $contact_id;
     public $start_time;
     public $end_time;
-    public $type = 'consultation';
+    public $type = 'in_person';
     public $status = 'scheduled';
     public $notes;
     

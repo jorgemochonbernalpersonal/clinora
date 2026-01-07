@@ -13,7 +13,6 @@ enum AppointmentStatus: string
     case COMPLETED = 'completed';
     case CANCELLED = 'cancelled';
     case NO_SHOW = 'no_show';
-    case RESCHEDULED = 'rescheduled';
 
     /**
      * Get a human-readable label
@@ -27,7 +26,6 @@ enum AppointmentStatus: string
             self::COMPLETED => 'Completada',
             self::CANCELLED => 'Cancelada',
             self::NO_SHOW => 'No Asistió',
-            self::RESCHEDULED => 'Reprogramada',
         };
     }
 
@@ -43,7 +41,6 @@ enum AppointmentStatus: string
             self::COMPLETED => 'gray',
             self::CANCELLED => 'red',
             self::NO_SHOW => 'orange',
-            self::RESCHEDULED => 'purple',
         };
     }
 }

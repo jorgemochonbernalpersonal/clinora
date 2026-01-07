@@ -9,6 +9,32 @@ class VerifyEmail extends Component
 {
     public ?string $successMessage = null;
     public ?string $errorMessage = null;
+    public bool $isVerified = false;
+
+    public function mount()
+    {
+        // If already verified, redirect immediately
+        if (auth()->user()->hasVerifiedEmail()) {
+            $this->isVerified = true;
+        }
+    }
+
+    public function checkVerificationStatus()
+    {
+        try {
+            // Refresh user from database
+            auth()->user()->refresh();
+            
+            if (auth()->user()->hasVerifiedEmail()) {
+                $this->isVerified = true;
+            }
+        } catch (\Exception $e) {
+            // Silently fail - user might have logged out in another tab
+            Log::debug('[VERIFY_EMAIL] Error checking verification status', [
+                'error' => $e->getMessage(),
+            ]);
+        }
+    }
 
     public function resend()
     {
@@ -18,7 +44,7 @@ class VerifyEmail extends Component
             $user = auth()->user();
 
             if ($user->hasVerifiedEmail()) {
-                $this->errorMessage = 'Tu email ya está verificado';
+                $this->isVerified = true;
                 return;
             }
 

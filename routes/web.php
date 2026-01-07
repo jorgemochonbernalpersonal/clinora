@@ -90,11 +90,19 @@ Route::get('/profile/settings', function () {
     return redirect()->route($prefix . '.profile.settings');
 })->name('profile.settings')->middleware('auth');
 
+// Logout routes
 Route::post('/logout', function () {
     session()->forget(['api_token', 'user']);
     auth()->logout();
-    return redirect()->route('login');
+    request()->session()->invalidate();
+    request()->session()->regenerateToken();
+    return redirect()->route('login')->with('success', 'Sesión cerrada correctamente');
 })->name('logout')->middleware('auth');
+
+// GET logout - redirect to login (for safety, in case someone tries to access via GET)
+Route::get('/logout', function () {
+    return redirect()->route('login')->with('info', 'Por favor, cierra sesión desde el botón correspondiente');
+})->name('logout.get');
 
 // ============================================================================
 // Redirect old /dashboard/* routes to /psychologist/* (backwards compatibility)

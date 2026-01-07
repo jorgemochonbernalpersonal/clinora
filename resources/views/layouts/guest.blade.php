@@ -119,6 +119,27 @@
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
     
+    {{-- Flash Messages --}}
+    @if(session('success') || session('error') || session('info'))
+        <div class="fixed top-4 right-4 z-50 max-w-md">
+            @if(session('success'))
+                <div class="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg shadow-lg mb-2" role="alert">
+                    <p class="text-sm">{{ session('success') }}</p>
+                </div>
+            @endif
+            @if(session('error'))
+                <div class="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg shadow-lg mb-2" role="alert">
+                    <p class="text-sm">{{ session('error') }}</p>
+                </div>
+            @endif
+            @if(session('info'))
+                <div class="bg-blue-50 border border-blue-200 text-blue-800 px-4 py-3 rounded-lg shadow-lg mb-2" role="alert">
+                    <p class="text-sm">{{ session('info') }}</p>
+                </div>
+            @endif
+        </div>
+    @endif
+    
     {{-- Main Content --}}
     <main>
         @yield('content')

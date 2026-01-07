@@ -31,29 +31,64 @@
             </div>
         @endif
 
-        {{-- Instructions --}}
-        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-            <p class="text-sm text-blue-800">
-                Revisa tu bandeja de entrada y haz clic en el enlace para verificar tu cuenta.
-            </p>
-        </div>
+        {{-- Verified - Redirecting --}}
+        @if($isVerified)
+            <div class="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg mb-4">
+                <p class="text-sm">✅ ¡Email verificado! Redirigiendo al dashboard...</p>
+            </div>
+            <script>
+                setTimeout(() => {
+                    window.location.href = '{{ route('dashboard') }}';
+                }, 1000);
+            </script>
+        @else
+            {{-- Instructions --}}
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+                <p class="text-sm text-blue-800 mb-2">
+                    📧 Revisa tu bandeja de entrada y haz clic en el enlace para verificar tu cuenta.
+                </p>
+                <p class="text-xs text-blue-600">
+                    ✨ Esta página se actualizará automáticamente cuando verifiques tu email.
+                </p>
+            </div>
 
-        {{-- Resend Button --}}
-        <button 
-            wire:click="resend"
-            class="w-full bg-primary-500 hover:bg-primary-600 text-white px-6 py-3 rounded-lg font-semibold transition-colors disabled:opacity-50 mb-4"
-            wire:loading.attr="disabled"
-        >
-            <span wire:loading.remove>Reenviar Email</span>
-            <span wire:loading>Enviando...</span>
-        </button>
-
-        {{-- Logout Link --}}
-        <form method="POST" action="{{ route('logout') }}" class="text-center">
-            @csrf
-            <button type="submit" class="text-sm text-primary-600 hover:text-primary-700">
-                Cerrar Sesión
+            {{-- Resend Button --}}
+            <button 
+                wire:click="resend"
+                class="w-full bg-primary-500 hover:bg-primary-600 text-white px-6 py-3 rounded-lg font-semibold transition-colors disabled:opacity-50 mb-4"
+                wire:loading.attr="disabled"
+            >
+                <span wire:loading.remove>Reenviar Email</span>
+                <span wire:loading>Enviando...</span>
             </button>
-        </form>
+
+            {{-- Logout Link --}}
+            <form method="POST" action="{{ route('logout') }}" class="text-center">
+                @csrf
+                <button type="submit" class="text-sm text-primary-600 hover:text-primary-700">
+                    Cerrar Sesión
+                </button>
+            </form>
+        @endif
     </div>
+
+    {{-- JavaScript to check verification status on window focus --}}
+    <script>
+        // Check verification when user returns to this tab
+        window.addEventListener('focus', function() {
+            // Check if email was verified (set by verification page)
+            if (localStorage.getItem('email_verified') === 'true') {
+                localStorage.removeItem('email_verified');
+                window.location.reload();
+            }
+        });
+
+        // Check every 5 seconds if still on page
+        setInterval(function() {
+            if (localStorage.getItem('email_verified') === 'true') {
+                localStorage.removeItem('email_verified');
+                window.location.reload();
+            }
+        }, 5000);
+    </script>
 </div>
