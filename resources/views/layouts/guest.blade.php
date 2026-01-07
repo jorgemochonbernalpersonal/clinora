@@ -9,9 +9,15 @@
     })(window,document,'script','dataLayer','GTM-KQV6Q5MS');</script>
     <!-- End Google Tag Manager -->
     
+    {{-- Google Analytics will be initialized after Consent Mode in cookie-banner.blade.php --}}
+    
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    
+    {{-- Google Search Console Verification --}}
+    {{-- TODO: Replace with your actual verification code from https://search.google.com/search-console --}}
+    {{-- <meta name="google-site-verification" content="YOUR_VERIFICATION_CODE_HERE" /> --}}
 
     {{-- Primary Meta Tags --}}
     <title>@yield('title', 'Clinora - Software para Psicólogos y Salud Mental')</title>
@@ -54,6 +60,10 @@
 
     {{-- Canonical URL --}}
     <link rel="canonical" href="{{ url()->current() }}">
+    
+    {{-- Performance: Preconnect to critical third-party domains --}}
+    <link rel="preconnect" href="https://www.google-analytics.com" crossorigin>
+    <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin>
     
     {{-- Fonts with preconnect for performance --}}
     <link rel="preconnect" href="https://fonts.bunny.net" crossorigin>
