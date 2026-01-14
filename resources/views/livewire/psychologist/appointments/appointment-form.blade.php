@@ -10,9 +10,6 @@
         loading-target="save"
     />
 
-    {{-- Flash Messages --}}
-    <x-forms.flash-messages />
-
     <x-slot:main>
         {{-- Sección: Horario y Tipo --}}
         <x-forms.section section="schedule" title="Horario y Tipo" icon="schedule" :open="true">

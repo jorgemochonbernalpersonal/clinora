@@ -9,9 +9,6 @@
         loading-target="photo, save"
     />
 
-    {{-- Flash Messages --}}
-    <x-forms.flash-messages />
-
     <x-slot:main>
         {{-- Sección: Datos Básicos --}}
         <x-forms.section section="basic" title="Datos Identificativos" icon="user" :open="true">

@@ -31,13 +31,13 @@ class ClinicalNotesTest extends TestCase
             'objective' => 'Observaciones...',
             'assessment' => 'Evaluación...',
             'plan' => 'Plan de tratamiento...',
-            'risk_assessment' => 'sin_riesgo',
+            'risk_assessment' => 'none',
         ]);
 
         $this->assertDatabaseHas('clinical_notes', [
             'id' => $note->id,
             'session_number' => 1,
-            'risk_assessment' => 'sin_riesgo',
+            'risk_assessment' => 'none',
         ]);
     }
 

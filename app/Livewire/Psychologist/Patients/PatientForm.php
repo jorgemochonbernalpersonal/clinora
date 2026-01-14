@@ -103,8 +103,17 @@ class PatientForm extends Component
             // Marketing / Legal
             'referral_source' => 'nullable|string|max:255',
             'data_protection_consent' => 'accepted',
-            'photo' => 'nullable|image|max:1024', // 1MB Max
+            'photo' => 'nullable|image|max:5120', // 5MB Max
             'tags' => 'nullable|string',
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'photo.max' => 'La foto es demasiado grande. El máximo permitido son 5MB.',
+            'photo.image' => 'El archivo seleccionado debe ser una imagen.',
+            'data_protection_consent.accepted' => 'Debe aceptar el consentimiento de protección de datos.',
         ];
     }
     
@@ -183,7 +192,7 @@ class PatientForm extends Component
             if (!$planLimits->canAddPatient($professional)) {
                 $stats = $planLimits->getUsageStats($professional);
                 
-                session()->flash('error', sprintf(
+                $this->dispatch('show-toast', type: 'error', message: sprintf(
                     '¡Has alcanzado el límite de %d pacientes de tu plan %s!',
                     $stats['patient_limit'],
                     $professional->subscription_plan->label()

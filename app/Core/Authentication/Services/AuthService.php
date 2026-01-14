@@ -2,24 +2,35 @@
 
 namespace App\Core\Authentication\Services;
 
+use App\Core\Authentication\DTOs\LoginCredentialsDTO;
+use App\Core\Authentication\DTOs\RegisterUserDTO;
+use App\Core\Authentication\Repositories\ProfessionalRepository;
+use App\Core\Authentication\Repositories\UserRepository;
 use App\Models\User;
 use App\Shared\Interfaces\ServiceInterface;
+use App\Shared\Traits\Loggable;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 use Spatie\Permission\Models\Role;
 
 class AuthService implements ServiceInterface
 {
+    use Loggable;
+
+    public function __construct(
+        private readonly UserRepository $userRepository,
+        private readonly ProfessionalRepository $professionalRepository,
+    ) {}
+
     /**
      * Authenticate user and generate token
      */
-    public function login(array $credentials): array
+    public function login(LoginCredentialsDTO $credentials): array
     {
-        $user = User::where('email', $credentials['email'])->first();
+        $user = $this->userRepository->findByEmail($credentials->email);
 
-        if (!$user || !Hash::check($credentials['password'], $user->password)) {
+        if (!$user || !Hash::check($credentials->password, $user->password)) {
             throw ValidationException::withMessages([
                 'email' => ['Las credenciales proporcionadas son incorrectas.'],
             ]);
@@ -32,10 +43,7 @@ class AuthService implements ServiceInterface
         }
 
         // Update last login
-        $user->update([
-            'last_login_at' => now(),
-            'last_login_ip' => request()->ip(),
-        ]);
+        $this->userRepository->updateLastLogin($user, request()->ip());
 
         // Create token
         $token = $user->createToken('auth-token')->plainTextToken;
@@ -49,62 +57,30 @@ class AuthService implements ServiceInterface
     /**
      * Register a new professional user
      */
-    public function register(array $data): array
+    public function register(RegisterUserDTO $dto): array
     {
-        return DB::transaction(function () use ($data) {
+        return DB::transaction(function () use ($dto) {
             try {
-                // Create user
-                $userData = [
-                    'email' => $data['email'],
-                    'password' => Hash::make($data['password']),
-                    'first_name' => $data['first_name'],
-                    'last_name' => $data['last_name'],
-                    'phone' => $data['phone'] ?? null,
-                    'user_type' => 'professional',
-                    'language' => 'es',
-                    'timezone' => 'Europe/Madrid',
-                    'is_active' => true,
-                ];
+                // Prepare user data with hashed password
+                $userData = $dto->getUserData();
+                $userData['password'] = Hash::make($dto->password);
 
-                $user = User::create($userData);
+                // Create user
+                $user = $this->userRepository->create($userData);
 
                 // Create professional profile
-                // Map profession string to ProfessionType enum
-                $professionType = match($data['profession'] ?? 'psychology') {
-                    'psychology', 'psychologist' => \App\Shared\Enums\ProfessionType::PSYCHOLOGIST,
-                    'therapy', 'therapist' => \App\Shared\Enums\ProfessionType::THERAPIST,
-                    'nutrition', 'nutritionist' => \App\Shared\Enums\ProfessionType::NUTRITIONIST,
-                    'psychiatry', 'psychiatrist' => \App\Shared\Enums\ProfessionType::PSYCHIATRIST,
-                    default => \App\Shared\Enums\ProfessionType::PSYCHOLOGIST,
-                };
-
-                $professionalData = [
-                    'license_number' => $data['license_number'] ?: null,
-                    'profession' => $data['profession'],
-                    'profession_type' => $professionType,  // ← FIX: Set profession_type enum
-                    'specialties' => $data['specialties'] ?? null,
-                    'subscription_plan' => \App\Shared\Enums\SubscriptionPlan::default()->value,
-                    'subscription_status' => 'active',
-                    // Mark as early adopter if registering before beta end date (April 30, 2026)
-                    'is_early_adopter' => now()->lte('2026-04-30 23:59:59'),
-                ];
-
-                $professional = $user->professional()->create($professionalData);
+                $professionalData = $dto->getProfessionalData();
+                $professional = $this->professionalRepository->createForUser(
+                    $user->id,
+                    $professionalData
+                );
 
                 // Assign professional role
                 $professionalRole = Role::firstOrCreate(['name' => 'professional']);
                 $user->assignRole($professionalRole);
 
-                // Send email verification
-                try {
-                    $user->sendEmailVerificationNotification();
-                } catch (\Exception $e) {
-                    Log::warning('[AUTH_SERVICE] No se pudo enviar email de verificación', [
-                        'error' => $e->getMessage(),
-                        'user_id' => $user->id,
-                    ]);
-                    // No fallar el registro si el email falla
-                }
+                // Send email verification (non-blocking)
+                $this->sendVerificationEmail($user);
 
                 // Create token
                 $token = $user->createToken('auth-token')->plainTextToken;
@@ -116,10 +92,8 @@ class AuthService implements ServiceInterface
                     'token' => $token,
                 ];
             } catch (\Exception $e) {
-                Log::error('[AUTH_SERVICE] Error durante el registro', [
-                    'error' => $e->getMessage(),
-                    'file' => $e->getFile(),
-                    'line' => $e->getLine(),
+                $this->logError('Error durante el registro', $e, [
+                    'email' => $dto->email,
                 ]);
                 throw $e;
             }
@@ -131,8 +105,7 @@ class AuthService implements ServiceInterface
      */
     public function logout(User $user): void
     {
-        // Revoke current token only
-        $user->currentAccessToken()->delete();
+        $user->currentAccessToken()?->delete();
     }
 
     /**
@@ -141,5 +114,20 @@ class AuthService implements ServiceInterface
     public function logoutAllDevices(User $user): void
     {
         $user->tokens()->delete();
+    }
+
+    /**
+     * Send verification email (non-blocking)
+     */
+    private function sendVerificationEmail(User $user): void
+    {
+        try {
+            $user->sendEmailVerificationNotification();
+        } catch (\Exception $e) {
+            $this->logWarning('No se pudo enviar email de verificación', [
+                'error' => $e->getMessage(),
+                'user_id' => $user->id,
+            ]);
+        }
     }
 }

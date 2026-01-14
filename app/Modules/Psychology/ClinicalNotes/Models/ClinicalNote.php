@@ -134,7 +134,7 @@ class ClinicalNote extends Model
      */
     public function scopeHighRisk($query)
     {
-        return $query->whereIn('risk_assessment', ['riesgo_alto', 'riesgo_inminente']);
+        return $query->whereIn('risk_assessment', ['high', 'imminent']);
     }
 }
 

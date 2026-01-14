@@ -29,6 +29,15 @@ class CoreServiceProvider extends ServiceProvider
             \App\Core\ConsentForms\Repositories\ConsentFormRepository::class
         );
 
+        // Register Authentication Repositories
+        $this->app->singleton(
+            \App\Core\Authentication\Repositories\UserRepository::class
+        );
+
+        $this->app->singleton(
+            \App\Core\Authentication\Repositories\ProfessionalRepository::class
+        );
+
         // Register Services
         $this->app->singleton(
             \App\Core\Contacts\Services\ContactService::class,
@@ -50,6 +59,17 @@ class CoreServiceProvider extends ServiceProvider
 
         $this->app->singleton(
             \App\Core\ConsentForms\Services\ConsentFormService::class
+        );
+
+        // Register Authentication Service
+        $this->app->singleton(
+            \App\Core\Authentication\Services\AuthService::class,
+            function ($app) {
+                return new \App\Core\Authentication\Services\AuthService(
+                    $app->make(\App\Core\Authentication\Repositories\UserRepository::class),
+                    $app->make(\App\Core\Authentication\Repositories\ProfessionalRepository::class)
+                );
+            }
         );
     }
 

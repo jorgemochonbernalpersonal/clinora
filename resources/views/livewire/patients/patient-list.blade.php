@@ -22,12 +22,6 @@
             class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
     </div>
 
-    {{-- Flash Messages --}}
-    @if (session()->has('success'))
-        <div class="bg-success-50 border border-success-200 text-success-700 px-4 py-3 rounded-lg mb-4">
-            {{ session('success') }}
-        </div>
-    @endif
 
     {{-- Patient Grid --}}
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">

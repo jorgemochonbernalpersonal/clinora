@@ -26,7 +26,7 @@ class ClinicalNoteForm extends Component
     public $assessment;
     public $plan;
     
-    public $risk_assessment = 'sin_riesgo';
+    public $risk_assessment = 'none';
     
     // UI State
     public $isEditing = false;
@@ -43,7 +43,7 @@ class ClinicalNoteForm extends Component
             'objective' => 'nullable|string',
             'assessment' => 'nullable|string',
             'plan' => 'required|string',
-            'risk_assessment' => 'required|in:sin_riesgo,riesgo_bajo,riesgo_medio,riesgo_alto,riesgo_inminente',
+            'risk_assessment' => 'required|in:none,low,moderate,high,imminent',
         ];
     }
     
@@ -68,7 +68,7 @@ class ClinicalNoteForm extends Component
     public function prepareForCreate()
     {
         $this->reset(['note', 'isEditing', 'subjective', 'objective', 'assessment', 'plan']);
-        $this->risk_assessment = 'sin_riesgo';
+        $this->risk_assessment = 'none';
         $this->session_date = now()->format('Y-m-d');
         $this->isEditing = false;
     }
@@ -92,7 +92,7 @@ class ClinicalNoteForm extends Component
         $this->objective = $note->objective;
         $this->assessment = $note->assessment;
         $this->plan = $note->plan;
-        $this->risk_assessment = $note->risk_assessment ?? 'sin_riesgo';
+        $this->risk_assessment = $note->risk_assessment ?? 'none';
     }
     
     // Auto-calculate session number when patient changes

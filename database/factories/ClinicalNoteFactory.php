@@ -38,9 +38,9 @@ class ClinicalNoteFactory extends Factory
                 fake()->numberBetween(1, 3)
             ),
             'homework' => fake()->optional()->sentence(),
-            'risk_assessment' => fake()->randomElement(['sin_riesgo', 'riesgo_bajo', 'riesgo_medio', 'riesgo_alto']),
+            'risk_assessment' => fake()->randomElement(['none', 'low', 'moderate', 'high']),
             'risk_details' => function (array $attributes) {
-                return in_array($attributes['risk_assessment'], ['riesgo_bajo', 'riesgo_medio', 'riesgo_alto'])
+                return in_array($attributes['risk_assessment'], ['low', 'moderate', 'high'])
                     ? fake()->sentence()
                     : null;
             },

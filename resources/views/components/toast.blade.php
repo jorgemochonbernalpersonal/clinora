@@ -1,23 +1,56 @@
 @props(['type' => 'info', 'message' => ''])
 
 <div 
-    x-data="{ show: false, message: '{{ $message }}', type: '{{ $type }}' }"
+    x-data="{ 
+        show: false, 
+        message: '{{ $message }}', 
+        type: '{{ $type }}',
+        progress: 100,
+        interval: null,
+        timeout: null,
+        showToast(type, message) {
+            if (this.timeout) clearTimeout(this.timeout);
+            if (this.interval) clearInterval(this.interval);
+            
+            this.type = type;
+            this.message = message;
+            this.show = true;
+            this.progress = 100;
+            
+            const duration = 5000;
+            const step = 10;
+            const decrement = (step / duration) * 100;
+            
+            this.interval = setInterval(() => {
+                this.progress -= decrement;
+                if (this.progress <= 0) {
+                    clearInterval(this.interval);
+                }
+            }, step);
+
+            this.timeout = setTimeout(() => { 
+                this.show = false;
+            }, duration);
+        }
+    }"
+    x-init="
+        @if(session('success')) showToast('success', '{{ session('success') }}'); @endif
+        @if(session('error')) showToast('error', '{{ session('error') }}'); @endif
+        @if(session('warning')) showToast('warning', '{{ session('warning') }}'); @endif
+        @if(session('info')) showToast('info', '{{ session('info') }}'); @endif
+    "
+    @show-toast.window="showToast($event.detail.type, $event.detail.message)"
     x-show="show"
     x-transition:enter="transform ease-out duration-300 transition"
-    x-transition:enter-start="translate-y-2 opacity-0 sm:translate-y-0 sm:translate-x-2"
+    x-transition:enter-start="translate-y-2 opacity-0 sm:translate-y-0 sm:-translate-x-2"
     x-transition:enter-end="translate-y-0 opacity-100 sm:translate-x-0"
     x-transition:leave="transition ease-in duration-100"
     x-transition:leave-start="opacity-100"
     x-transition:leave-end="opacity-0"
-    @show-toast.window="
-        type = $event.detail.type || 'info';
-        message = $event.detail.message || '';
-        show = true;
-        setTimeout(() => { show = false }, 5000);
-    "
-    class="fixed top-4 right-4 z-50 max-w-md w-full"
+    class="fixed bottom-4 left-4 z-50 max-w-md w-full"
     style="display: none;"
 >
+
     <div 
         class="rounded-lg shadow-lg p-4 flex items-start gap-3"
         :class="{
@@ -80,5 +113,19 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
             </svg>
         </button>
+    </div>
+    
+    <!-- Progress Bar -->
+    <div class="h-1 w-full bg-black/5 rounded-b-lg overflow-hidden">
+        <div 
+            class="h-full transition-all ease-linear duration-100"
+            :class="{
+                'bg-green-500': type === 'success',
+                'bg-red-500': type === 'error',
+                'bg-yellow-500': type === 'warning',
+                'bg-blue-500': type === 'info'
+            }"
+            :style="`width: ${progress}%`"
+        ></div>
     </div>
 </div>

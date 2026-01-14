@@ -51,7 +51,7 @@ class ClinicalNoteController extends Controller
             'plan' => 'nullable|string',
             'interventions_used' => 'nullable|array',
             'homework' => 'nullable|string',
-            'risk_assessment' => 'nullable|in:sin_riesgo,riesgo_bajo,riesgo_moderado,riesgo_alto,riesgo_inminente',
+            'risk_assessment' => 'nullable|in:none,low,moderate,high,imminent',
             'risk_details' => 'nullable|string',
             'progress_rating' => 'nullable|integer|min:1|max:10',
         ]);
@@ -71,7 +71,7 @@ class ClinicalNoteController extends Controller
             ]);
 
             // Log high risk assessments
-            if (in_array($note->risk_assessment, ['riesgo_alto', 'riesgo_inminente'])) {
+            if (in_array($note->risk_assessment, ['high', 'imminent'])) {
                 $this->logWarning('Nota clínica con riesgo alto detectado', [
                     'note_id' => $note->id,
                     'contact_id' => $note->contact_id,

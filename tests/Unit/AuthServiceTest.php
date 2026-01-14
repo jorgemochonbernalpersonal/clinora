@@ -3,6 +3,8 @@
 namespace Tests\Unit;
 
 use App\Core\Authentication\Services\AuthService;
+use App\Core\Authentication\DTOs\LoginCredentialsDTO;
+use App\Core\Authentication\DTOs\RegisterUserDTO;
 use App\Core\Users\Models\Professional;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -20,7 +22,7 @@ class AuthServiceTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->service = new AuthService();
+        $this->service = app(AuthService::class);
     }
 
     /** @test */
@@ -32,10 +34,10 @@ class AuthServiceTest extends TestCase
             'is_active' => true,
         ]);
 
-        $result = $this->service->login([
-            'email' => 'test@example.com',
-            'password' => 'password123',
-        ]);
+        $result = $this->service->login(new LoginCredentialsDTO(
+            email: 'test@example.com',
+            password: 'password123',
+        ));
 
         $this->assertArrayHasKey('user', $result);
         $this->assertArrayHasKey('token', $result);
@@ -53,10 +55,10 @@ class AuthServiceTest extends TestCase
 
         $this->expectException(ValidationException::class);
 
-        $this->service->login([
-            'email' => 'test@example.com',
-            'password' => 'wrongpassword',
-        ]);
+        $this->service->login(new LoginCredentialsDTO(
+            email: 'test@example.com',
+            password: 'wrongpassword',
+        ));
     }
 
     /** @test */
@@ -70,10 +72,10 @@ class AuthServiceTest extends TestCase
 
         $this->expectException(ValidationException::class);
 
-        $this->service->login([
-            'email' => 'test@example.com',
-            'password' => 'password123',
-        ]);
+        $this->service->login(new LoginCredentialsDTO(
+            email: 'test@example.com',
+            password: 'password123',
+        ));
     }
 
     /** @test */
@@ -86,10 +88,10 @@ class AuthServiceTest extends TestCase
             'last_login_at' => null,
         ]);
 
-        $this->service->login([
-            'email' => 'test@example.com',
-            'password' => 'password123',
-        ]);
+        $this->service->login(new LoginCredentialsDTO(
+            email: 'test@example.com',
+            password: 'password123',
+        ));
 
         $user->refresh();
         $this->assertNotNull($user->last_login_at);
@@ -109,7 +111,7 @@ class AuthServiceTest extends TestCase
             'profession' => 'Psicólogo',
         ];
 
-        $result = $this->service->register($data);
+        $result = $this->service->register(RegisterUserDTO::fromArray($data));
 
         $this->assertArrayHasKey('user', $result);
         $this->assertArrayHasKey('token', $result);
@@ -133,7 +135,7 @@ class AuthServiceTest extends TestCase
             'profession' => 'Psicólogo',
         ];
 
-        $result = $this->service->register($data);
+        $result = $this->service->register(RegisterUserDTO::fromArray($data));
 
         $this->assertNotNull($result['user']->professional);
         $this->assertEquals('12345', $result['user']->professional->license_number);
@@ -153,7 +155,7 @@ class AuthServiceTest extends TestCase
             'profession' => 'Psicólogo',
         ];
 
-        $result = $this->service->register($data);
+        $result = $this->service->register(RegisterUserDTO::fromArray($data));
 
         $this->assertTrue($result['user']->hasRole('professional'));
     }

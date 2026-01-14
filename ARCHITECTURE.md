@@ -565,11 +565,95 @@ class AppointmentService
 
 ### 3. DTO (Data Transfer Object) Pattern
 
-**Propósito**: Transferir datos de forma estructurada.
+**Propósito**: Transferir datos de forma estructurada y type-safe.
+
+**⚠️ Enfoque Híbrido**: Los DTOs se usan **selectivamente** en módulos que requieren transformaciones complejas o type safety crítico. No todos los módulos los usan.
+
+#### Cuándo Usar DTOs
+
+**✅ Usa DTOs cuando:**
+- Transformaciones complejas de datos
+- Type safety crítico (seguridad, validaciones)
+- Múltiples fuentes de datos (API, Web, Interno)
+- Lógica de negocio encapsulada en transformación
+- Inmutabilidad es importante
+
+**❌ No uses DTOs cuando:**
+- Datos simples sin transformaciones complejas
+- Arrays son suficientes para la complejidad
+- Simplicidad es prioridad
+
+#### Módulos que Usan DTOs
+
+| Módulo | DTOs | Razón |
+|--------|------|-------|
+| **Authentication** | ✅ Sí | Datos complejos, múltiples transformaciones, seguridad crítica |
+| **Appointments** | ✅ Sí (opcional) | Transformaciones de fechas, validaciones complejas |
+| **Assessments** | ✅ Sí | Cálculos complejos, resultados estructurados |
+| **Contacts** | ❌ No | Datos simples, arrays suficientes |
+| **ConsentForms** | ❌ No | Datos simples, arrays suficientes |
+
+#### Ejemplo: Authentication DTOs
+
+```php
+// app/Core/Authentication/DTOs/LoginCredentialsDTO.php
+readonly class LoginCredentialsDTO
+{
+    public function __construct(
+        public string $email,
+        public string $password,
+        public bool $remember = false,
+        public ?string $twoFactorCode = null,
+    ) {}
+
+    public static function fromArray(array $data): self
+    {
+        return new self(
+            email: $data['email'],
+            password: $data['password'],
+            remember: $data['remember'] ?? false,
+            twoFactorCode: $data['two_factor_code'] ?? null,
+        );
+    }
+}
+
+// app/Core/Authentication/DTOs/RegisterUserDTO.php
+readonly class RegisterUserDTO
+{
+    public function __construct(
+        public string $email,
+        public string $password,
+        public string $firstName,
+        public string $lastName,
+        // ... más propiedades
+    ) {}
+
+    public function getUserData(): array
+    {
+        // Encapsula lógica de transformación
+        return [
+            'email' => $this->email,
+            'first_name' => $this->firstName,
+            // ...
+        ];
+    }
+
+    public function getProfessionalData(): array
+    {
+        // Encapsula lógica de transformación
+        return [
+            'profession_type' => $this->getProfessionType(),
+            // ...
+        ];
+    }
+}
+```
+
+#### Ejemplo: Appointments DTO (Opcional)
 
 ```php
 // app/Core/Appointments/DTOs/CreateAppointmentDTO.php
-class CreateAppointmentDTO
+readonly class CreateAppointmentDTO
 {
     public function __construct(
         public readonly string $professionalId,
@@ -595,6 +679,23 @@ class CreateAppointmentDTO
     }
 }
 ```
+
+#### Ejemplo: Sin DTOs (Arrays Simples)
+
+```php
+// app/Core/Contacts/Services/ContactService.php
+public function createForProfessional(
+    Professional $professional, 
+    array $data,  // ← Array simple, suficiente
+    int $createdBy
+): Contact {
+    $data['professional_id'] = $professional->id;
+    $data['created_by'] = $createdBy;
+    return $this->repository->create($data);
+}
+```
+
+**Decisión**: Usar arrays cuando los datos son simples y no requieren transformaciones complejas. Usar DTOs cuando la complejidad y type safety lo justifican.
 
 ### 4. Strategy Pattern
 
@@ -1480,26 +1581,49 @@ class CheckModuleEnabled
 
 ## 🔐 Autenticación y Autorización
 
+### Módulo Authentication
+
+El módulo de autenticación utiliza **DTOs** para transferencia de datos debido a la complejidad de transformaciones y la criticidad de seguridad. Ver documentación completa en [`app/Core/Authentication/README.md`](app/Core/Authentication/README.md).
+
+**Estructura:**
+- **DTOs**: `LoginCredentialsDTO`, `RegisterUserDTO`
+- **Repositories**: `UserRepository`, `ProfessionalRepository`
+- **Services**: `AuthService`, `TwoFactorService`
+- **Controllers**: `AuthController`, `EmailVerificationController`, `PasswordResetController`
+
 ### Laravel Sanctum para API
 
 ```php
 // app/Core/Authentication/Services/AuthService.php
 class AuthService
 {
-    public function login(string $email, string $password): array
-    {
-        $user = User::where('email', $email)->first();
+    public function __construct(
+        private readonly UserRepository $userRepository,
+        private readonly ProfessionalRepository $professionalRepository,
+    ) {}
 
-        if (!$user || !Hash::check($password, $user->password)) {
-            throw new AuthenticationException('Invalid credentials');
+    public function login(LoginCredentialsDTO $credentials): array
+    {
+        $user = $this->userRepository->findByEmail($credentials->email);
+
+        if (!$user || !Hash::check($credentials->password, $user->password)) {
+            throw ValidationException::withMessages([
+                'email' => ['Las credenciales proporcionadas son incorrectas.'],
+            ]);
         }
 
-        $token = $user->createToken('api-token')->plainTextToken;
+        $token = $user->createToken('auth-token')->plainTextToken;
 
         return [
-            'user' => new UserResource($user),
+            'user' => $user->load(['professional', 'roles', 'permissions']),
             'token' => $token,
         ];
+    }
+
+    public function register(RegisterUserDTO $dto): array
+    {
+        // Lógica de registro usando DTOs
+        // Ver app/Core/Authentication/README.md para detalles
     }
 }
 ```

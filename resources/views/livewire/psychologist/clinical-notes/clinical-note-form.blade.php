@@ -114,11 +114,11 @@
                          <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Evaluación de Riesgo</label>
                             <select wire:model="risk_assessment" class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 text-sm">
-                                <option value="sin_riesgo">Sin Riesgo</option>
-                                <option value="riesgo_bajo">Riesgo Bajo</option>
-                                <option value="riesgo_medio">Riesgo Medio</option>
-                                <option value="riesgo_alto">Riesgo Alto</option>
-                                <option value="riesgo_inminente">Riesgo Inminente</option>
+                                <option value="none">Sin Riesgo</option>
+                                <option value="low">Riesgo Bajo</option>
+                                <option value="moderate">Riesgo Medio</option>
+                                <option value="high">Riesgo Alto</option>
+                                <option value="imminent">Riesgo Inminente</option>
                             </select>
                             @error('risk_assessment') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                         </div>

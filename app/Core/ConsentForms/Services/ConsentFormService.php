@@ -6,6 +6,7 @@ use App\Core\ConsentForms\Models\ConsentForm;
 use App\Core\ConsentForms\Services\ConsentFormTemplateRegistry;
 use App\Core\Users\Models\Professional;
 use App\Core\Contacts\Models\Contact;
+use App\Shared\Enums\ProfessionType;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use InvalidArgumentException;
@@ -26,7 +27,7 @@ class ConsentFormService
         $contact = Contact::findOrFail($data['contact_id']);
         
         // Get module from professional (map profession_type to module name)
-        $module = $this->getModuleNameFromProfessionType($professional->profession_type ?? 'psychologist');
+        $module = $this->getModuleNameFromProfessionType($professional->profession_type?->value ?? 'psychologist');
         $consentType = $data['consent_type'] ?? ConsentForm::TYPE_INITIAL_TREATMENT;
 
         // Get template from registry
@@ -124,7 +125,7 @@ class ConsentFormService
      */
     public function getAvailableTypes(Professional $professional): array
     {
-        $module = $this->getModuleNameFromProfessionType($professional->profession_type ?? 'psychologist');
+        $module = $this->getModuleNameFromProfessionType($professional->profession_type?->value ?? 'psychologist');
         $templates = ConsentFormTemplateRegistry::getModuleTemplates($module);
 
         $availableTypes = [];

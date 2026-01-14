@@ -15,17 +15,6 @@
         </button>
     </div>
 
-    {{-- Flash Messages --}}
-    @if (session()->has('success'))
-        <div class="bg-success-50 border border-success-200 text-success-700 px-4 py-3 rounded-lg mb-4">
-            {{ session('success') }}
-        </div>
-    @endif
-    @if (session()->has('error'))
-        <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4">
-            {{ session('error') }}
-        </div>
-    @endif
 
     {{-- Appointments List --}}
     <div class="space-y-4">

@@ -116,9 +116,9 @@
                                         <span class="text-xs text-gray-400 mx-1">·</span>
                                         <span class="text-xs text-gray-500">{{ $note->duration_minutes }} min</span>
                                     </div>
-                                    @if($note->risk_assessment && $note->risk_assessment !== 'sin_riesgo')
+                                    @if($note->risk_assessment && $note->risk_assessment !== 'none')
                                         <span class="shrink-0 px-2.5 py-0.5 text-xs font-bold rounded-full bg-red-100 text-red-700 border border-red-200">
-                                            @if($note->risk_assessment == 'riesgo_alto' || $note->risk_assessment == 'riesgo_inminente') ⚠️ @endif
+                                            @if($note->risk_assessment == 'high' || $note->risk_assessment == 'imminent') ⚠️ @endif
                                             {{ ucfirst(str_replace('_', ' ', $note->risk_assessment)) }}
                                         </span>
                                     @endif

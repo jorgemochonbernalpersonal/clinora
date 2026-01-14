@@ -10,9 +10,6 @@
         loading-target="save"
     />
 
-    {{-- Flash Messages --}}
-    <x-forms.flash-messages />
-
     <x-slot:main>
         {{-- Sección: Evolución SOAP --}}
         <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
@@ -130,11 +127,11 @@
                     <x-forms.select 
                         name="risk_assessment" 
                         :options="[
-                            'sin_riesgo' => 'Sin Riesgo',
-                            'riesgo_bajo' => 'Riesgo Bajo',
-                            'riesgo_medio' => 'Riesgo Medio',
-                            'riesgo_alto' => 'Riesgo Alto',
-                            'riesgo_inminente' => 'Riesgo Inminente'
+                            'none' => 'Sin Riesgo',
+                            'low' => 'Riesgo Bajo',
+                            'moderate' => 'Riesgo Medio',
+                            'high' => 'Riesgo Alto',
+                            'imminent' => 'Riesgo Inminente'
                         ]"
                         size="sm"
                     />

@@ -3,6 +3,7 @@
 namespace App\Livewire\Auth;
 
 use App\Core\Authentication\Services\AuthService;
+use App\Core\Authentication\DTOs\RegisterUserDTO;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 
@@ -63,7 +64,7 @@ class RegisterForm extends Component
             ];
 
             // Llamar directamente al servicio
-            $result = app(AuthService::class)->register($registerData);
+            $result = app(AuthService::class)->register(RegisterUserDTO::fromArray($registerData));
             
             // Store token in session
             session(['api_token' => $result['token']]);

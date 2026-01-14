@@ -2,6 +2,8 @@
 
 namespace App\Core\Authentication\Controllers;
 
+use App\Core\Authentication\DTOs\LoginCredentialsDTO;
+use App\Core\Authentication\DTOs\RegisterUserDTO;
 use App\Core\Authentication\Requests\LoginRequest;
 use App\Core\Authentication\Requests\RegisterRequest;
 use App\Core\Authentication\Resources\AuthenticationResource;
@@ -10,7 +12,6 @@ use App\Core\Authentication\Services\AuthService;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
@@ -25,7 +26,8 @@ class AuthController extends Controller
                 'email' => $request->input('email'),
             ]);
 
-            $result = $this->authService->login($request->validated());
+            $credentials = LoginCredentialsDTO::fromArray($request->validated());
+            $result = $this->authService->login($credentials);
 
             $this->logUserAction('Login exitoso', [
                 'user_id' => $result['user']->id,
@@ -48,56 +50,43 @@ class AuthController extends Controller
                 'message' => 'Credenciales incorrectas',
                 'errors' => $e->errors(),
             ], 422);
+        } catch (\Exception $e) {
+            $this->logError('Error inesperado en login', $e, [
+                'email' => $request->input('email'),
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al iniciar sesión',
+            ], 500);
         }
     }
 
     public function register(RegisterRequest $request): JsonResponse
     {
-        Log::info('[REGISTER] Inicio del proceso de registro', [
-            'email' => $request->input('email'),
-            'ip' => $request->ip(),
-            'user_agent' => $request->userAgent(),
-            'timestamp' => now()->toIso8601String(),
-        ]);
-
         try {
-            // Log datos recibidos (sin password)
-            $logData = $request->validated();
-            unset($logData['password'], $logData['password_confirmation']);
-
-            Log::info('[REGISTER] Datos validados recibidos', [
-                'data' => $logData,
-                'has_password' => $request->has('password'),
-                'has_password_confirmation' => $request->has('password_confirmation'),
+            $this->logInfo('Inicio del proceso de registro', [
+                'email' => $request->input('email'),
+                'ip' => $request->ip(),
             ]);
 
-            Log::info('[REGISTER] Llamando a AuthService::register');
-            $result = $this->authService->register($request->validated());
-
-            Log::info('[REGISTER] Usuario creado exitosamente', [
-                'user_id' => $result['user']->id,
-                'email' => $result['user']->email,
-                'has_professional' => $result['user']->professional !== null,
-                'professional_id' => $result['user']->professional?->id,
-                'has_token' => !empty($result['token']),
-            ]);
+            $dto = RegisterUserDTO::fromArray($request->validated());
+            $result = $this->authService->register($dto);
 
             $this->logUserAction('Registro exitoso', [
                 'user_id' => $result['user']->id,
                 'email' => $result['user']->email,
             ]);
 
-            Log::info('[REGISTER] Preparando respuesta exitosa');
             return response()->json([
                 'success' => true,
                 'message' => 'Registro exitoso. ¡Bienvenido a Clinora!',
                 'data' => new AuthenticationResource($result),
             ], 201);
         } catch (\Illuminate\Validation\ValidationException $e) {
-            Log::warning('[REGISTER] Error de validación', [
+            $this->logWarning('Error de validación en registro', [
                 'email' => $request->input('email'),
                 'errors' => $e->errors(),
-                'message' => $e->getMessage(),
             ]);
 
             return response()->json([
@@ -106,15 +95,6 @@ class AuthController extends Controller
                 'errors' => $e->errors(),
             ], 422);
         } catch (\Illuminate\Database\QueryException $e) {
-            Log::error('[REGISTER] Error de base de datos', [
-                'email' => $request->input('email'),
-                'error' => $e->getMessage(),
-                'error_code' => $e->getCode(),
-                'sql' => $e->getSql() ?? 'N/A',
-                'bindings' => $e->getBindings() ?? [],
-                'trace' => $e->getTraceAsString(),
-            ]);
-
             $this->logError('Error de base de datos en registro', $e, [
                 'email' => $request->input('email'),
             ]);
@@ -125,15 +105,6 @@ class AuthController extends Controller
                 'error' => config('app.debug') ? $e->getMessage() : 'Error del servidor',
             ], 500);
         } catch (\Exception $e) {
-            Log::error('[REGISTER] Error general en registro', [
-                'email' => $request->input('email'),
-                'error' => $e->getMessage(),
-                'file' => $e->getFile(),
-                'line' => $e->getLine(),
-                'code' => $e->getCode(),
-                'trace' => $e->getTraceAsString(),
-            ]);
-
             $this->logError('Error en registro de usuario', $e, [
                 'email' => $request->input('email'),
             ]);
