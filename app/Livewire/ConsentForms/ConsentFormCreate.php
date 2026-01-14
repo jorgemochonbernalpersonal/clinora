@@ -23,6 +23,13 @@ class ConsentFormCreate extends Component
     public ?string $platform = null;
     public ?string $securityInfo = null;
     public bool $recordingConsent = false;
+    
+    // For minors
+    public ?string $legalGuardianName = null;
+    public ?string $legalGuardianRelationship = null;
+    public ?string $legalGuardianIdDocument = null;
+    public bool $minorAssent = false;
+    public ?string $minorAssentDetails = null;
 
     public $availableTypes = [];
     public $contacts = [];
@@ -38,6 +45,11 @@ class ConsentFormCreate extends Component
         'platform' => 'nullable|string|required_if:consentType,teleconsultation',
         'securityInfo' => 'nullable|string',
         'recordingConsent' => 'nullable|boolean',
+        'legalGuardianName' => 'required_if:consentType,minors|string|max:255',
+        'legalGuardianRelationship' => 'nullable|string|max:100',
+        'legalGuardianIdDocument' => 'nullable|string|max:50',
+        'minorAssent' => 'nullable|boolean',
+        'minorAssentDetails' => 'nullable|string',
     ];
 
     protected $messages = [
@@ -45,6 +57,7 @@ class ConsentFormCreate extends Component
         'contactId.exists' => 'El paciente seleccionado no existe',
         'consentType.required' => 'Debe seleccionar un tipo de consentimiento',
         'platform.required_if' => 'La plataforma es requerida para teleconsulta',
+        'legalGuardianName.required_if' => 'El nombre del tutor legal es requerido para menores',
     ];
 
     public function mount(?int $contactId = null)
@@ -85,11 +98,27 @@ class ConsentFormCreate extends Component
             $this->platform = null;
             $this->securityInfo = null;
         }
+
+        if ($this->consentType !== ConsentForm::TYPE_MINORS) {
+            $this->legalGuardianName = null;
+            $this->legalGuardianRelationship = null;
+            $this->legalGuardianIdDocument = null;
+            $this->minorAssent = false;
+            $this->minorAssentDetails = null;
+        }
     }
 
     public function save()
     {
-        $this->validate();
+        try {
+            $this->validate();
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            \Log::error('Consent form validation failed', [
+                'errors' => $e->errors(),
+                'data' => $this->all(),
+            ]);
+            throw $e;
+        }
 
         try {
             $service = app(ConsentFormService::class);
@@ -107,6 +136,11 @@ class ConsentFormCreate extends Component
                 'platform' => $this->platform,
                 'security_info' => $this->securityInfo,
                 'recording_consent' => $this->recordingConsent,
+                'legal_guardian_name' => $this->legalGuardianName,
+                'legal_guardian_relationship' => $this->legalGuardianRelationship,
+                'legal_guardian_id_document' => $this->legalGuardianIdDocument,
+                'minor_assent' => $this->minorAssent,
+                'minor_assent_details' => $this->minorAssentDetails,
             ];
 
             $consentForm = $service->create($data, auth()->id());

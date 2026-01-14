@@ -1,4 +1,19 @@
-<div class="grid grid-cols-1 lg:grid-cols-4 gap-8 h-[calc(100vh-200px)]">
+<div class="space-y-6">
+    {{-- Header --}}
+    <div class="flex justify-between items-center">
+        <div>
+            <h2 class="text-2xl font-bold text-gray-900">Historial Clínico</h2>
+            <p class="text-sm text-gray-500">Cronología de sesiones y evolución</p>
+        </div>
+        <a href="{{ profession_route('clinical-notes.create', $selectedPatientId ? ['contact_id' => $selectedPatientId] : []) }}" class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2 shadow-sm">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+            </svg>
+            Nueva Nota
+        </a>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-8 h-[calc(100vh-250px)]">
     
     {{-- Sidebar: Patient List --}}
     <div class="lg:col-span-1 flex flex-col bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
@@ -188,4 +203,5 @@
             @endforelse
         </div>
     </div>
+</div>
 </div>
