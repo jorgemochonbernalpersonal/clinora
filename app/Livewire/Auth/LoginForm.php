@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Auth;
 
+use App\Core\Authentication\DTOs\LoginCredentialsDTO;
 use App\Core\Authentication\Services\AuthService;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
@@ -26,11 +27,12 @@ class LoginForm extends Component
         $this->errorMessage = null;
 
         try {
-            // Preparar datos validados (Livewire ya validó con $this->validate())
-            $credentials = [
-                'email' => $this->email,
-                'password' => $this->password,
-            ];
+            // Crear DTO con los datos validados
+            $credentials = new LoginCredentialsDTO(
+                email: $this->email,
+                password: $this->password,
+                remember: $this->remember,
+            );
 
             // Llamar directamente al servicio
             $result = app(AuthService::class)->login($credentials);
