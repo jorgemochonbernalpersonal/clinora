@@ -45,7 +45,7 @@ class ConsentFormCreate extends Component
         'platform' => 'nullable|string|required_if:consentType,teleconsultation',
         'securityInfo' => 'nullable|string',
         'recordingConsent' => 'nullable|boolean',
-        'legalGuardianName' => 'required_if:consentType,minors|string|max:255',
+        'legalGuardianName' => 'required_if:consentType,minors|nullable|string|max:255',
         'legalGuardianRelationship' => 'nullable|string|max:100',
         'legalGuardianIdDocument' => 'nullable|string|max:50',
         'minorAssent' => 'nullable|boolean',
