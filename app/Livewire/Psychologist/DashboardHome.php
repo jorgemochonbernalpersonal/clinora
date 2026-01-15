@@ -3,6 +3,7 @@
 namespace App\Livewire\Psychologist;
 
 use App\Core\Appointments\Models\Appointment;
+use App\Core\Billing\Models\Invoice;
 use App\Core\Contacts\Models\Contact;
 use Illuminate\Support\Facades\Cache;
 use Livewire\Attributes\Layout;
@@ -47,11 +48,38 @@ class DashboardHome extends Component
             ->withCount('appointments')
             ->get();
 
+        // Get invoice statistics
+        $invoiceStats = Cache::remember(
+            "dashboard.invoice_stats.{$professionalId}",
+            now()->addMinutes(5),
+            fn() => [
+                'pending' => Invoice::forProfessional($professionalId)
+                    ->whereIn('status', ['draft', 'sent'])
+                    ->count(),
+                'overdue' => Invoice::forProfessional($professionalId)
+                    ->overdue()
+                    ->count(),
+                'pending_amount' => Invoice::forProfessional($professionalId)
+                    ->whereIn('status', ['draft', 'sent'])
+                    ->sum('total'),
+                'overdue_amount' => Invoice::forProfessional($professionalId)
+                    ->overdue()
+                    ->sum('total'),
+            ]
+        );
+
+        $recentInvoices = Invoice::forProfessional($professionalId)
+            ->with('contact')
+            ->recent(5)
+            ->get();
+
         return view('livewire.psychologist.dashboard-home', compact(
             'stats', 
             'todaysAppointments', 
             'upcomingAppointments', 
-            'recentPatients'
+            'recentPatients',
+            'invoiceStats',
+            'recentInvoices'
         ));
     }
 }

@@ -81,6 +81,14 @@ class Appointment extends Model
     }
 
     /**
+     * Get the invoice for this appointment
+     */
+    public function invoice(): HasOne
+    {
+        return $this->hasOne(\App\Core\Billing\Models\Invoice::class);
+    }
+
+    /**
      * Get duration in minutes
      */
     public function getDurationAttribute(): int

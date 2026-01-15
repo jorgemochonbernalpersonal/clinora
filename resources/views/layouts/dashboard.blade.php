@@ -210,15 +210,14 @@
                     <span class="px-4 text-xs font-semibold text-gray-400 uppercase tracking-wider">Administración</span>
                 </div>
                 
-                <a href="{{ profession_route('under-construction', ['feature' => 'billing']) }}" 
-                   class="flex items-center justify-between px-4 py-3 rounded-lg text-text-primary hover:bg-gray-50 transition-colors">
+                <a href="{{ profession_route('invoices.index') }}" 
+                   class="flex items-center justify-between px-4 py-3 rounded-lg {{ request()->routeIs(profession_prefix() . '.invoices.*') ? 'bg-primary-50 text-primary-600' : 'text-text-primary hover:bg-gray-50' }} transition-colors">
                     <div class="flex items-center gap-3">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2zM10 8.5a.5.5 0 11-1 0 .5.5 0 011 0zm5 5a.5.5 0 11-1 0 .5.5 0 011 0z" />
                         </svg>
                         <span class="font-medium">Facturación VeriFactu</span>
                     </div>
-                    <span class="text-xs px-2 py-0.5 bg-blue-100 text-blue-700 rounded-full">Q2</span>
                 </a>
                 
                 <a href="{{ profession_route('subscription.index') }}" 

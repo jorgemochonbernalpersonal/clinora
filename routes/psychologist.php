@@ -94,6 +94,18 @@ Route::prefix('consent-forms')->name('consent-forms.')->group(function () {
     Route::get('/{id}', \App\Livewire\ConsentForms\ConsentFormShow::class)->name('show');
 });
 
+// Invoices
+Route::prefix('invoices')->name('invoices.')->group(function () {
+    Route::get('/', \App\Livewire\Psychologist\Invoices\InvoiceList::class)->name('index');
+    Route::get('/create', \App\Livewire\Psychologist\Invoices\InvoiceForm::class)->name('create');
+    Route::get('/create/from-appointment/{appointmentId}', \App\Livewire\Psychologist\Invoices\InvoiceForm::class)->name('create-from-appointment');
+    Route::get('/{id}', \App\Livewire\Psychologist\Invoices\InvoiceShow::class)->name('show');
+    Route::get('/{id}/edit', \App\Livewire\Psychologist\Invoices\InvoiceForm::class)->name('edit');
+    Route::get('/{id}/pdf', [\App\Core\Billing\Controllers\InvoiceController::class, 'downloadPdf'])->name('pdf');
+    Route::post('/{id}/payment/session', [\App\Core\Billing\Controllers\InvoiceController::class, 'createPaymentSession'])->name('payment.session');
+    Route::get('/{id}/payment/success', [\App\Core\Billing\Controllers\InvoiceController::class, 'paymentSuccess'])->name('payment.success');
+});
+
 // Subscription Management
 Route::get('/subscription', [SubscriptionController::class, 'index'])->name('subscription.index');
 Route::patch('/subscription/preferences', [SubscriptionController::class, 'updatePreferences'])->name('subscription.update-preferences');
@@ -103,6 +115,11 @@ Route::post('/onboarding/welcome-seen', [OnboardingController::class, 'welcomeSe
 
 // Under construction pages
 Route::get('/under-construction/{feature}', function ($feature) {
+    // Redirect billing to actual invoices page since it's implemented
+    if ($feature === 'billing') {
+        return redirect()->route('psychologist.invoices.index');
+    }
+
     $features = [
         'evaluations' => [
             'title' => 'Evaluaciones Psicológicas',
@@ -155,17 +172,6 @@ Route::get('/under-construction/{feature}', function ($feature) {
                 'Confirmación automática o manual',
                 'Integración con Google Calendar',
                 'Widget embebible para tu web'
-            ]
-        ],
-        'billing' => [
-            'title' => 'Facturación VeriFactu',
-            'description' => 'Sistema de facturación completo cumpliendo con VeriFactu.',
-            'features' => [
-                'Generación de facturas PDF',
-                'Numeración automática legal',
-                'Cumplimiento VeriFactu (AEAT)',
-                'Integración Stripe para pagos',
-                'Control de pagos pendientes'
             ]
         ],
     ];

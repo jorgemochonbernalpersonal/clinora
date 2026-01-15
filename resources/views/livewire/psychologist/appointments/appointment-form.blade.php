@@ -42,6 +42,62 @@
             </div>
         </x-forms.section>
 
+        {{-- Sección: Precio y Facturación --}}
+        @if($isEditing && $appointment)
+            <x-forms.section section="billing" title="Precio y Facturación" icon="money" :open="false">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <x-forms.field name="price" label="Precio (€)">
+                        <x-forms.input 
+                            type="number" 
+                            step="0.01"
+                            name="price" 
+                            wire:model="price"
+                            size="sm" 
+                        />
+                    </x-forms.field>
+                    
+                    <x-forms.field name="is_paid" label="Estado de Pago">
+                        <x-forms.checkbox 
+                            name="is_paid" 
+                            wire:model="is_paid"
+                            label="Marcar como pagada"
+                        />
+                    </x-forms.field>
+                </div>
+                
+                @if($appointment->price && !$appointment->invoice)
+                    <div class="mt-4 p-4 bg-info-50 border border-info-200 rounded-lg">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm font-medium text-info-900">Esta cita tiene precio pero no tiene factura</p>
+                                <p class="text-xs text-info-700 mt-1">Puedes crear una factura automáticamente desde aquí</p>
+                            </div>
+                            <a href="{{ route('psychologist.invoices.create-from-appointment', $appointment->id) }}" 
+                               class="btn btn-sm btn-primary">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                </svg>
+                                Crear Factura
+                            </a>
+                        </div>
+                    </div>
+                @elseif($appointment->invoice)
+                    <div class="mt-4 p-4 bg-success-50 border border-success-200 rounded-lg">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm font-medium text-success-900">Esta cita ya tiene factura</p>
+                                <p class="text-xs text-success-700 mt-1">Factura: {{ $appointment->invoice->invoice_number }}</p>
+                            </div>
+                            <a href="{{ route('psychologist.invoices.show', $appointment->invoice->id) }}" 
+                               class="btn btn-sm btn-outline">
+                                Ver Factura
+                            </a>
+                        </div>
+                    </div>
+                @endif
+            </x-forms.section>
+        @endif
+
         {{-- Sección: Notas y Observaciones --}}
         <x-forms.section section="notes" title="Notas y Observaciones" icon="clinical">
             <x-forms.field name="notes" label="Notas">

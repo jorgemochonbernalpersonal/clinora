@@ -24,6 +24,8 @@ class AppointmentForm extends Component
     public $type = 'in_person';
     public $status = 'scheduled';
     public $notes;
+    public $price;
+    public $is_paid = false;
     
     // UI State
     public $isEditing = false;
@@ -49,6 +51,8 @@ class AppointmentForm extends Component
             
         if ($id) {
             $this->loadAppointment($id);
+            // Load invoice relationship
+            $this->appointment->load('invoice');
         } elseif (request()->query('duplicate')) {
             // PHASE 3: Duplicate appointment functionality
             $this->loadAppointmentForDuplicate(request()->query('duplicate'));
@@ -109,7 +113,7 @@ class AppointmentForm extends Component
 
     public function loadAppointment($id)
     {
-        $appointment = Appointment::find($id);
+        $appointment = Appointment::with('invoice')->find($id);
         
         // Ensure we got a single model, not a collection
         if ($appointment instanceof \Illuminate\Database\Eloquent\Collection) {
@@ -129,6 +133,8 @@ class AppointmentForm extends Component
         $this->type = $appointment->type->value;
         $this->status = $appointment->status->value;
         $this->notes = $appointment->notes;
+        $this->price = $appointment->price;
+        $this->is_paid = $appointment->is_paid ?? false;
     }
     
     public function save()
@@ -143,6 +149,8 @@ class AppointmentForm extends Component
             'type' => $validated['type'],
             'status' => $validated['status'],
             'notes' => $validated['notes'],
+            'price' => $this->price,
+            'is_paid' => $this->is_paid,
         ];
 
         if ($this->isEditing) {
